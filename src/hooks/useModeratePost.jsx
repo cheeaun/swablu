@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { moderatePost } from '@atproto/api';
+import { moderatePost, AtpAgent } from '@atproto/api';
 import { useAuth } from './useAuth';
 import usePreferences from './usePreferences';
 import useLabelDefinitions from './useLabelDefinitions';
@@ -10,8 +10,9 @@ export const ModeratePostProvider = ({ children }) => {
   const { agent } = useAuth();
   const prefs = usePreferences();
   const labelDefs = useLabelDefinitions(prefs);
+  const loggedOut = agent instanceof AtpAgent;
 
-  if (!agent?.did || !prefs || !labelDefs) return null;
+  if (!loggedOut && (!agent?.did || !prefs || !labelDefs)) return null;
 
   const simplerModeratePost = (post) => {
     return moderatePost(post, {
