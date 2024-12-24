@@ -1,0 +1,21 @@
+html {
+  [data-sonner-toaster] {
+    --normal-border: var(--normal-text) !important;
+    --success-border: var(--success-text) !important;
+    --error-border: var(--error-text) !important;
+    --warning-border: var(--warning-text) !important;
+    --info-border: var(--info-text) !important;
+  }
+
+  [data-sonner-toast] {
+    border-width: 2px;
+    box-shadow: 0 0 0 2px var(--bg-alpha-color);
+    padding: var(--spacing);
+  }
+
+  [data-sonner-toast],
+  [data-sonner-toast] * {
+    font-size: inherit !important;
+    font-family: inherit !important;
+  }
+}

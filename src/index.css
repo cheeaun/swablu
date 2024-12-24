@@ -1,0 +1,174 @@
+:root {
+  color-scheme: light dark;
+  --fg-color: light-dark(#444, #ddd);
+  --bg-color: light-dark(#fff, #222);
+  --bg-alpha-color: color-mix(in srgb, var(--bg-color), transparent 25%);
+  --bg-light-color: light-dark(#eee, #333);
+  --border-color: light-dark(#eee, #333);
+  --border-strong-color: light-dark(#ddd, #444);
+  --border-stronger-color: light-dark(#bbb, #666);
+  --spacing: 12px;
+  --radius: 8px;
+  --link-color: light-dark(RoyalBlue, SkyBlue);
+  --link-light-color: color-mix(
+    in srgb,
+    var(--link-color) 30%,
+    var(--bg-color)
+  );
+  --link-lighter-color: color-mix(
+    in srgb,
+    var(--link-color) 15%,
+    var(--bg-color)
+  );
+  --text-size: 16px;
+  --line-color: light-dark(#ccc, #555);
+  --checkerboard-bg: repeating-conic-gradient(
+      var(--bg-light-color) 0% 25%,
+      var(--bg-color) 0% 50%
+    )
+    50% / 16px 16px;
+  --backdrop-color: rgba(0, 0, 0, 0.75);
+
+  --blue-color: light-dark(#007bff, #005cff);
+  --green-color: light-dark(#28a745, #228e22);
+  --red-color: light-dark(#dc3545, #c82333);
+  --orange-color: light-dark(#fd7e14, #c26a00);
+
+  interpolate-size: allow-keywords;
+  --monospace-font: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono';
+}
+
+body {
+  font-family:
+    ui-rounded,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    Noto Sans,
+    sans-serif;
+  font-size: var(--text-size);
+  margin: 0;
+  padding: 0;
+  color: var(--fg-color);
+  background-color: var(--bg-color);
+}
+
+button,
+.button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  box-sizing: border-box;
+  padding: calc(var(--spacing) / 2);
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+}
+
+button,
+.button,
+input[type='submit'],
+input[type='button'],
+select {
+  border: 1px solid var(--border-strong-color);
+  border-radius: var(--radius);
+  font-weight: 500;
+  padding: calc(var(--spacing) / 2) var(--spacing);
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:not(:disabled):hover,
+  &:focus {
+    border-color: var(--border-stronger-color);
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.975);
+  }
+
+  &[data-pressed='true'] {
+    filter: brightness(0.9);
+  }
+
+  &.small {
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+    font-size: small;
+    border-radius: calc(var(--radius) * 0.65);
+  }
+
+  &:is(a) {
+    display: inline-block;
+    border-color: var(--link-light-color);
+    text-decoration: none;
+    color: var(--link-color);
+
+    &:not(:disabled):hover,
+    &:focus {
+      border-color: var(--link-color);
+    }
+  }
+}
+
+:is(button, .button):not([hidden]) {
+  display: inline-flex;
+  place-items: center;
+  justify-content: center;
+
+  &.button-primary {
+    font-weight: bold;
+    border-color: var(--border-stronger-color);
+    box-shadow: inset 0 0 0 1px var(--border-strong-color);
+
+    &:not(:disabled):hover,
+    &:focus {
+      border-color: var(--fg-color);
+    }
+  }
+}
+
+input[type='text'],
+input[type='password'],
+textarea {
+  border: 1px solid var(--border-stronger-color);
+  border-radius: calc(var(--radius) / 2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.insignificant {
+  opacity: 0.6;
+}
+
+a {
+  color: var(--link-color);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+
+  &:not(:hover, &:focus) {
+    text-decoration-color: var(--link-light-color);
+  }
+}
+
+b {
+  font-weight: 500;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-strong-color);
+}

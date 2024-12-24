@@ -1,0 +1,262 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-12-08 14:50+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en-GB\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/AuthorText.jsx:179
+#: src/routes/profile.$actor.jsx:239
+msgid "Mutual"
+msgstr "Mutual"
+
+#: src/components/AuthorText.jsx:181
+#: src/routes/profile.$actor.jsx:241
+msgid "Follows you"
+msgstr "Follows you"
+
+#: src/components/AuthorText.jsx:182
+#: src/components/NavGlobal.jsx:80
+#: src/components/NavMenu.jsx:74
+#: src/routes/index.jsx:61
+#: src/routes/profile.$actor.jsx:243
+msgid "Following"
+msgstr "Following"
+
+#. placeholder {0}: i18n.number(followersCount, STAT_NUMBER_FORMAT)
+#. placeholder {1}: i18n.number(followersCount, STAT_NUMBER_FORMAT)
+#: src/components/AuthorText.jsx:187
+msgid "{followersCount, plural, one {{0} follower} other {{1} followers}}"
+msgstr "{followersCount, plural, one {{0} follower} other {{1} followers}}"
+
+#: src/components/Feed.jsx:76
+#: src/routes/notifications.jsx:185
+msgid "More…"
+msgstr "More…"
+
+#. placeholder {0}: root.replyCount
+#: src/components/Feed.jsx:113
+msgid "{0, plural, one {# reply. View full thread} other {# replies. View full thread}}"
+msgstr "{0, plural, one {# reply. View full thread} other {# replies. View full thread}}"
+
+#: src/components/Feed.jsx:119
+msgid "View full thread"
+msgstr "View full thread"
+
+#: src/components/FeedHeader.jsx:100
+#: src/routes/notifications.jsx:103
+#: src/routes/post.$uri.jsx:126
+msgid "Refresh"
+msgstr "Refresh"
+
+#: src/components/NavGlobal.jsx:129
+msgid "Global Navigation"
+msgstr "Global Navigation"
+
+#: src/components/NavGlobal.jsx:135
+msgid "Home"
+msgstr "Home"
+
+#: src/components/NavGlobal.jsx:149
+msgid "No saved feeds"
+msgstr "No saved feeds"
+
+#: src/components/NavGlobal.jsx:194
+msgid "My Feeds"
+msgstr "My Feeds"
+
+#: src/components/NavGlobal.jsx:202
+#: src/components/NavMenu.jsx:127
+#: src/routes/notifications.jsx:17
+#: src/routes/notifications.jsx:94
+msgid "Notifications"
+msgstr "Notifications"
+
+#: src/components/NavGlobal.jsx:244
+#: src/routes/post.$uri.jsx:66
+#: src/routes/post.$uri.jsx:105
+msgid "Post"
+msgstr "Post"
+
+#: src/components/NavGlobal.jsx:252
+#: src/components/NavMenu.jsx:131
+msgid "Profile"
+msgstr "Profile"
+
+#: src/components/NavGlobal.jsx:320
+#: src/components/NavMenu.jsx:144
+msgid "Log out"
+msgstr "Log out"
+
+#: src/components/NavGlobal.jsx:325
+#: src/components/NavMenu.jsx:149
+#: src/routes/about.jsx:71
+#: src/routes/login.jsx:14
+#: src/routes/login.jsx:23
+#: src/routes/login.jsx:51
+msgid "Log in"
+msgstr "Log in"
+
+#: src/components/NavGlobal.jsx:332
+#: src/components/NavMenu.jsx:91
+msgid "Menu"
+msgstr "Menu"
+
+#: src/components/NavGlobal.jsx:350
+msgid "Global Navigation 2"
+msgstr "Global Navigation 2"
+
+#: src/components/RichPost.jsx:397
+#: src/components/RichPost.jsx:434
+msgid "{replyCount, plural, one {# reply} other {# replies}}"
+msgstr "{replyCount, plural, one {# reply} other {# replies}}"
+
+#: src/components/RichPost.jsx:439
+msgid "{likeCount, plural, one {# like} other {# likes}}"
+msgstr "{likeCount, plural, one {# like} other {# likes}}"
+
+#: src/components/RichPost.jsx:444
+msgid "{repostCount, plural, one {# repost} other {# reposts}}"
+msgstr "{repostCount, plural, one {# repost} other {# reposts}}"
+
+#: src/components/RichPost.jsx:449
+msgid "{quoteCount, plural, one {# quote} other {# quotes}}"
+msgstr "{quoteCount, plural, one {# quote} other {# quotes}}"
+
+#: src/components/RichPost.jsx:520
+msgid "Unlike"
+msgstr "Unlike"
+
+#: src/components/RichPost.jsx:520
+msgid "Like"
+msgstr "Like"
+
+#: src/components/RichPost.jsx:536
+msgid "Reply"
+msgstr "Reply"
+
+#: src/components/RichPost.jsx:568
+msgid "Unrepost"
+msgstr "Unrepost"
+
+#: src/components/RichPost.jsx:568
+msgid "Repost"
+msgstr "Repost"
+
+#: src/components/RichPost.jsx:572
+msgid "Quote"
+msgstr "Quote"
+
+#: src/components/RichPost.jsx:579
+msgid "Unrepost or Quote…"
+msgstr "Unrepost or Quote…"
+
+#: src/components/RichPost.jsx:581
+msgid "Repost or Quote…"
+msgstr "Repost or Quote…"
+
+#: src/components/RichPost.jsx:592
+msgid "View post"
+msgstr "View post"
+
+#: src/components/RichReason.jsx:19
+msgid "Pinned"
+msgstr "Pinned"
+
+#: src/main.jsx:74
+msgid "Page not found"
+msgstr "Page not found"
+
+#: src/main.jsx:77
+msgid "Go to home"
+msgstr "Go to home"
+
+#: src/routes/about.jsx:12
+msgid "About"
+msgstr "About"
+
+#: src/routes/about.jsx:18
+msgid "Experimental opinionated web client for <0>Bluesky</0>."
+msgstr "Experimental opinionated web client for <0>Bluesky</0>."
+
+#: src/routes/feed.$uri.jsx:73
+#: src/routes/feed.$uri.jsx:76
+msgid "Feed"
+msgstr "Feed"
+
+#: src/routes/list.$uri.jsx:71
+msgid "List"
+msgstr "List"
+
+#: src/routes/login.jsx:56
+msgid "Back to home"
+msgstr "Back to home"
+
+#: src/routes/notifications.jsx:192
+msgid "The end."
+msgstr "The end."
+
+#. placeholder {0}: otherProps.replies?.length
+#: src/routes/post.$uri.jsx:222
+msgid "{0, plural, one {# reply} other {# replies}}"
+msgstr "{0, plural, one {# reply} other {# replies}}"
+
+#: src/routes/post.$uri.jsx:230
+msgid "{allRepliesCount, plural, one {# comment} other {# comments}}"
+msgstr "{allRepliesCount, plural, one {# comment} other {# comments}}"
+
+#: src/routes/profile.$actor.jsx:205
+msgid "{followersCount, plural, one {# follower} other {# followers}}"
+msgstr "{followersCount, plural, one {# follower} other {# followers}}"
+
+#: src/routes/profile.$actor.jsx:212
+msgid "{followsCount, plural, other {# following}}"
+msgstr "{followsCount, plural, other {# following}}"
+
+#: src/routes/profile.$actor.jsx:215
+msgid "{postsCount, plural, one {# post} other {# posts}}"
+msgstr "{postsCount, plural, one {# post} other {# posts}}"
+
+#: src/routes/profile.$actor.jsx:232
+msgid "Unfollow"
+msgstr "Unfollow"
+
+#: src/routes/profile.$actor.jsx:234
+msgid "Follow back"
+msgstr "Follow back"
+
+#: src/routes/profile.$actor.jsx:235
+msgid "Follow"
+msgstr "Follow"
+
+#: src/routes/profile.$actor.jsx:264
+msgid "Posts"
+msgstr "Posts"
+
+#: src/routes/profile.$actor.jsx:269
+msgid "+ Replies"
+msgstr "+ Replies"
+
+#: src/routes/profile.$actor.jsx:274
+msgid "Media"
+msgstr "Media"
+
+#: src/routes/tag.$tag.jsx:54
+msgid "#{tag}"
+msgstr "#{tag}"
+
+#: src/routes/tag.$tag.jsx:72
+msgid "Top"
+msgstr "Top"
+
+#: src/routes/tag.$tag.jsx:81
+msgid "Latest"
+msgstr "Latest"
