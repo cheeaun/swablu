@@ -15,7 +15,7 @@ import {
   IconBrightnessFilled,
   IconInfoSquareRounded,
 } from '@tabler/icons-react';
-import { useLinkProps } from '@tanstack/react-router';
+import { useLinkProps, useMatchRoute } from '@tanstack/react-router';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Button,
@@ -38,6 +38,7 @@ export default function NavGlobal() {
   const { agent } = useAuth();
   const signedIn = !!agent?.did;
   const preferences = usePreferences();
+  const matchRoute = useMatchRoute();
 
   const [feeds, setFeeds] = useState([]);
   useEffect(() => {
@@ -128,7 +129,15 @@ export default function NavGlobal() {
   return (
     <nav ref={navRef} className="nav-global" aria-label={t`Global Navigation`}>
       <TooltipTrigger>
-        <RALink to="/" resetScroll={false}>
+        <RALink
+          to="/"
+          resetScroll={false}
+          onClick={() => {
+            if (matchRoute({ to: '/' })) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+        >
           <IconHome size={24} />
         </RALink>
         <Tooltip placement={popoverPlacement}>
@@ -195,7 +204,15 @@ export default function NavGlobal() {
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <RALink to="/notifications" resetScroll={false}>
+            <RALink
+              to="/notifications"
+              resetScroll={false}
+              onClick={() => {
+                if (matchRoute({ to: '/notifications' })) {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+            >
               <IconBell size={24} />
             </RALink>
             <Tooltip placement={popoverPlacement}>
