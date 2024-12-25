@@ -45,6 +45,9 @@ export function Login() {
             type="text"
             name="identity"
             required
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck="false"
             disabled={uiState === 'loading'}
           />{' '}
           <button type="submit" disabled={uiState === 'loading'}>
