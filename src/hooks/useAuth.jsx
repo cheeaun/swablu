@@ -5,6 +5,9 @@ import store from '../utils/store';
 
 const AuthContext = createContext({});
 
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
 export const AuthProvider = ({ children }) => {
   const [agent, setAgent] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -47,8 +50,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (identity) => {
+    const display = isSafari && isTouch ? undefined : 'popup';
     const session = await client.signIn(identity, {
-      // display: 'popup',
+      display,
     });
     console.log('SIGN IN', { client, session });
     if (session?.did) {
