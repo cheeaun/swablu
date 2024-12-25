@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (identity) => {
     const session = await client.signIn(identity, {
-      display: 'popup',
+      // display: 'popup',
     });
     console.log('SIGN IN', { client, session });
     if (session?.did) {
