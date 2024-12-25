@@ -1497,6 +1497,7 @@ header {
         font-family: var(--monospace-font);
         font-variant-numeric: slashed-zero;
         font-feature-settings: 'ss01';
+        overflow-wrap: anywhere;
       }
 
       .profile-description {
