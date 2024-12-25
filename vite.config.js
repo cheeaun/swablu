@@ -75,12 +75,6 @@ export default defineConfig({
           if (/(prosemirror|tiptap|popperjs|tippy)/i.test(id)) {
             return 'editor';
           }
-          // App-related stuff
-          if (
-            /(lingui|tabler|tanstack|punycode|react|sonner|tldts)/i.test(id)
-          ) {
-            return 'main';
-          }
           // The rest
           if (id.includes('node_modules')) {
             return 'vendor';
