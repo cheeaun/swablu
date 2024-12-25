@@ -221,15 +221,7 @@ export function NavSecondary({ popoverPlacement }) {
     if (!appearance) return;
     store.local.set('appearance', appearance);
     setAppearance(appearance);
-    // Change color-scheme CSS in :root
-    document.documentElement.style.setProperty(
-      'color-scheme',
-      {
-        light: 'light',
-        dark: 'dark',
-        auto: 'light dark',
-      }[appearance] || 'light-dark',
-    );
+    document.documentElement.dataset.theme = appearance;
   };
 
   return (

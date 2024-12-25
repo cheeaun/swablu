@@ -80,23 +80,23 @@ msgstr "My Feeds"
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/NavGlobal.jsx:244
+#: src/components/NavGlobal.jsx:236
 #: src/routes/post.$uri.jsx:66
 #: src/routes/post.$uri.jsx:105
 msgid "Post"
 msgstr "Post"
 
-#: src/components/NavGlobal.jsx:252
+#: src/components/NavGlobal.jsx:244
 #: src/components/NavMenu.jsx:131
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/NavGlobal.jsx:320
+#: src/components/NavGlobal.jsx:312
 #: src/components/NavMenu.jsx:144
 msgid "Log out"
 msgstr "Log out"
 
-#: src/components/NavGlobal.jsx:325
+#: src/components/NavGlobal.jsx:317
 #: src/components/NavMenu.jsx:149
 #: src/routes/about.jsx:71
 #: src/routes/login.jsx:14
@@ -105,12 +105,12 @@ msgstr "Log out"
 msgid "Log in"
 msgstr "Log in"
 
-#: src/components/NavGlobal.jsx:332
+#: src/components/NavGlobal.jsx:324
 #: src/components/NavMenu.jsx:91
 msgid "Menu"
 msgstr "Menu"
 
-#: src/components/NavGlobal.jsx:350
+#: src/components/NavGlobal.jsx:342
 msgid "Global Navigation 2"
 msgstr "Global Navigation 2"
 
@@ -171,11 +171,11 @@ msgstr "View post"
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/main.jsx:74
+#: src/main.jsx:71
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/main.jsx:77
+#: src/main.jsx:74
 msgid "Go to home"
 msgstr "Go to home"
 

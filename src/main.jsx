@@ -26,10 +26,7 @@ import { ModeratePostProvider } from './hooks/useModeratePost';
 // Set appearance
 const currentAppearance = store.local.get('appearance');
 if (currentAppearance) {
-  document.documentElement.style.setProperty(
-    'color-scheme',
-    currentAppearance === 'auto' ? 'light dark' : currentAppearance,
-  );
+  document.documentElement.dataset.theme = currentAppearance;
 }
 
 // Load the messages for the default language
