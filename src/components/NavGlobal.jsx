@@ -128,7 +128,7 @@ export default function NavGlobal() {
   return (
     <nav ref={navRef} className="nav-global" aria-label={t`Global Navigation`}>
       <TooltipTrigger>
-        <RALink to="/">
+        <RALink to="/" resetScroll={false}>
           <IconHome size={24} />
         </RALink>
         <Tooltip placement={popoverPlacement}>
@@ -195,7 +195,7 @@ export default function NavGlobal() {
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <RALink to="/notifications">
+            <RALink to="/notifications" resetScroll={false}>
               <IconBell size={24} />
             </RALink>
             <Tooltip placement={popoverPlacement}>
@@ -237,7 +237,10 @@ export function NavSecondary({ popoverPlacement }) {
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <RALink to={`/profile/${encodeURIComponent(agent.did)}`}>
+            <RALink
+              to={`/profile/${encodeURIComponent(agent.did)}`}
+              resetScroll={false}
+            >
               <IconUserCircle size={24} />
             </RALink>
             <Tooltip placement={popoverPlacement}>
