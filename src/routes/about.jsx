@@ -23,6 +23,11 @@ export function About() {
             .
           </Trans>
         </p>
+        <p className="warning-block">
+          <b>⚠️ Warning</b>: This project is in early development. Features are
+          incomplete. Bugs are expected. Experimental designs are subject to
+          change.
+        </p>
         <p>
           <a
             href="https://github.com/cheeaun/swablu"

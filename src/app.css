@@ -179,6 +179,11 @@ header {
   }
 }
 
+.warning-block {
+  background-color: color-mix(in srgb, var(--orange-color), transparent 90%);
+  padding: var(--spacing);
+}
+
 .feed {
   --line-position-start: calc(var(--spacing) + var(--avatar-side) / 2);
   --line-position-top: calc(var(--spacing) + var(--avatar-top-margin));
