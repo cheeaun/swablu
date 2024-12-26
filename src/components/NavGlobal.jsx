@@ -278,7 +278,7 @@ export function NavSecondary({ popoverPlacement }) {
                   <IconBrightnessFilled size={16} />
                   Appearance
                 </MenuItem>
-                <Popover>
+                <Popover placement="top end">
                   <Menu>
                     <MenuItem
                       data-icon
