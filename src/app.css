@@ -160,6 +160,11 @@ header {
     position: sticky;
     top: 0;
     background-color: var(--bg-alpha-color);
+    background-image: linear-gradient(
+      to top,
+      var(--bg-alpha-color),
+      var(--bg-color)
+    );
     z-index: 100;
   }
 
