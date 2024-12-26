@@ -729,6 +729,18 @@ header {
     .post-external {
       --radius: calc(var(--recursive-radius) / 2);
     }
+
+    position: relative;
+    .post-quote-view-action {
+      position: absolute;
+      top: var(--spacing);
+      right: var(--spacing);
+      opacity: 0;
+      transition: opacity 0.3s ease-in;
+    }
+    &:is(:hover, :focus) .post-quote-view-action {
+      opacity: 1;
+    }
   }
 
   .post-images {

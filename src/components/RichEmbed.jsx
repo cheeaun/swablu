@@ -7,6 +7,7 @@ import { useIntersection } from 'react-use';
 import AuthorText from './AuthorText';
 import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
+import { IconArrowRight } from '@tabler/icons-react';
 
 const INTERSECTION_THRESHOLD = 0.9;
 
@@ -65,6 +66,13 @@ export default function RichEmbed({ embed }) {
             post={embed?.record?.record ? embed?.record : embed}
             small
           />
+          <Link
+            to={`/post/${encodeURIComponent(embed?.record?.record?.uri || embed.record.uri)}`}
+            className="small button post-quote-view-action"
+            state={{ post: embed?.record?.record ? embed?.record : embed }}
+          >
+            View post <IconArrowRight size={16} />
+          </Link>
         </blockquote>
       )}
       {hasNotFoundQuote && (
