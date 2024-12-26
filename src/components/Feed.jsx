@@ -22,8 +22,6 @@ export default function Feed({ query, massageFeed }) {
 
   const { moderatePost } = useModeratePost();
 
-  console.log('RENDER FEED');
-
   return (
     <>
       {!!pages?.length && (
@@ -98,7 +96,7 @@ function _FeedItem(props) {
     <Component
       onPointerEnter={(e) => {
         // Debugging
-        if (e.shiftKey) console.log(item, modUI);
+        if (e.shiftKey) console.log(item);
       }}
       {...otherProps}
     >
