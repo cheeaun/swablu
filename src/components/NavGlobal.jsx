@@ -206,7 +206,6 @@ export default function NavGlobal() {
           <TooltipTrigger>
             <RALink
               to="/notifications"
-              resetScroll={false}
               onClick={() => {
                 if (matchRoute({ to: '/notifications' })) {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
