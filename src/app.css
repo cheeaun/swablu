@@ -897,7 +897,7 @@ header {
       );
     }
 
-    @container video-control-bar (width <= 240px) {
+    @container video-control-bar (width <= 290px) {
       media-time-display,
       media-pip-button,
       media-fullscreen-button {
