@@ -28,6 +28,8 @@ client.addEventListener('deleted', (event) => {
   toast.error(`You've been logged out. Cause: "${cause}"`, {
     duration: 10_000,
   });
+  // Redirect to login page
+  location.hash = '/login';
 });
 
 export default client;
