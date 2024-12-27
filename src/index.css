@@ -34,6 +34,11 @@
   --red-color: light-dark(#dc3545, #c82333);
   --orange-color: light-dark(#fd7e14, #c26a00);
 
+  --sai-top: env(safe-area-inset-top);
+  --sai-right: env(safe-area-inset-right);
+  --sai-bottom: env(safe-area-inset-bottom);
+  --sai-left: env(safe-area-inset-left);
+
   interpolate-size: allow-keywords;
   --monospace-font: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono';
 }

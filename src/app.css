@@ -58,6 +58,7 @@
       flex-grow: 1;
       text-align: center;
       padding: var(--spacing);
+      padding-bottom: max(var(--spacing), var(--sai-bottom));
       opacity: 0.6;
       background-color: transparent;
 
@@ -1814,6 +1815,10 @@ header {
     .post-author-link {
       pointer-events: none;
     }
+  }
+
+  &:not(.collapsed) {
+    padding-bottom: var(--sai-bottom);
   }
 }
 .composer-instance {
