@@ -678,5 +678,6 @@ const translateText = throttle(async (text, { detectedLangCode }) => {
     `https://${INSTANCE}/api/v1/auto/${detectedLangCode}/${encodeURIComponent(text)}`,
   );
   const json = await result.json();
+  if (json.info?.detectedSource === detectedLangCode) return null;
   return json;
 });
