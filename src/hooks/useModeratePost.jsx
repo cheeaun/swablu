@@ -15,11 +15,14 @@ export const ModeratePostProvider = ({ children }) => {
   if (!loggedOut && (!agent?.did || !prefs || !labelDefs)) return null;
 
   const simplerModeratePost = (post) => {
-    return moderatePost(post, {
-      userDid: agent.did,
-      prefs: prefs.moderationPrefs,
-      labelDefs,
-    });
+    try {
+      return moderatePost(post, {
+        userDid: agent.did,
+        prefs: prefs.moderationPrefs,
+        labelDefs,
+      });
+    } catch (e) {}
+    return null;
   };
 
   return (
