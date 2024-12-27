@@ -721,8 +721,9 @@ header {
     overflow: hidden;
     white-space: pre-wrap;
     transition:
-      opacity 0.3s,
-      block-size 0.3s;
+      margin-top 1s,
+      opacity 1s,
+      block-size 1s;
 
     svg {
       opacity: 0.6;
@@ -731,6 +732,7 @@ header {
     }
 
     @starting-style {
+      margin-top: calc(var(--spacing) * -1);
       opacity: 0;
       block-size: 0;
     }
