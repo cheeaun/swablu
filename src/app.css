@@ -719,6 +719,7 @@ header {
     opacity: 0.9;
     display: flex;
     overflow: hidden;
+    white-space: pre-wrap;
     transition:
       opacity 0.3s,
       block-size 0.3s;

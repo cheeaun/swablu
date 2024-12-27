@@ -645,7 +645,8 @@ function TranslationBlock({ text, detectedLangCode }) {
           detectedLangCode,
         });
         if (json) {
-          setInlineTranslation(json.translation);
+          const translation = json.translation.replace(/\n{2,}/g, '\n');
+          setInlineTranslation(translation);
         }
       } catch (e) {
         console.error(e);
