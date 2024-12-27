@@ -36,7 +36,10 @@
 
   interpolate-size: allow-keywords;
   --monospace-font: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono';
+}
 
+html,
+body {
   text-size-adjust: none;
   --webkit-text-size-adjust: none;
 }
