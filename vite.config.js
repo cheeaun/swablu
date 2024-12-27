@@ -5,10 +5,14 @@ import { SondaRollupPlugin } from 'sonda';
 import { defineConfig, loadEnv } from 'vite';
 import generateFile from 'vite-plugin-generate-file';
 import { run } from 'vite-plugin-run';
+import { VitePWA } from 'vite-plugin-pwa';
 
 import { clientMetadata } from './src/utils/clientMetadata';
 
-const { VITE_PUBLIC_URL: PUBLIC_URL } = loadEnv('production', process.cwd());
+const { VITE_APP_NAME: APP_NAME, VITE_PUBLIC_URL: PUBLIC_URL } = loadEnv(
+  'production',
+  process.cwd(),
+);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -45,6 +49,42 @@ export default defineConfig({
         }),
       },
     ]),
+    VitePWA({
+      manifest: {
+        name: APP_NAME,
+        short_name: APP_NAME,
+        description: 'Experimental opinionated web client for Bluesky',
+        icons: [
+          {
+            src: 'logo-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'logo-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: 'logo-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+        categories: ['social', 'news'],
+      },
+      strategies: 'injectManifest',
+      injectRegister: 'inline',
+      injectManifest: {
+        // Prevent "Unable to find a place to inject the manifest" error
+        injectionPoint: undefined,
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
+    }),
   ],
   resolve: {
     alias: {
