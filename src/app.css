@@ -714,6 +714,27 @@ header {
     }
   }
 
+  .post-inline-translation {
+    font-size: 0.9em;
+    opacity: 0.9;
+    display: flex;
+    overflow: hidden;
+    transition:
+      opacity 0.3s,
+      block-size 0.3s;
+
+    svg {
+      opacity: 0.6;
+      flex-shrink: 0;
+      margin: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+    }
+
+    @starting-style {
+      opacity: 0;
+      block-size: 0;
+    }
+  }
+
   --recursive-radius: var(--radius);
   .post-quote {
     margin: 0;

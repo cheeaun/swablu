@@ -7,7 +7,9 @@ import {
   IconQuote,
   IconRepeat,
   IconRepeatOff,
+  IconLanguage,
 } from '@tabler/icons-react';
+import { useIntersection } from 'react-use';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState, useRef } from 'react';
@@ -31,6 +33,8 @@ import { compose } from './Composer';
 import RALink from './RALink';
 import RichEmbed from './RichEmbed';
 import TimeAgo from './TimeAgo';
+import store from '../utils/store';
+import pThrottle from 'p-throttle';
 
 export default function RichPost({
   post,
@@ -55,7 +59,7 @@ export default function RichPost({
   const embeds = record?.embeds;
   if (record?.value) record = { ...record, ...record.value };
   const author = post.author || record?.author;
-  const { text, facets, createdAt } = record || {};
+  const { text, facets, createdAt, langs } = record || {};
 
   const richPost = text ? text2Components({ text, facets }) : null;
 
@@ -238,6 +242,29 @@ export default function RichPost({
     },
   });
 
+  // Inline translation
+  const [showInlineTranslation, setShowInlineTranslation] = useState(null);
+  useEffect(() => {
+    if (!langs?.length) return;
+    const detectedLang = store.session.getJSON('detectedLang');
+    if (!detectedLang?.length) return;
+    // TODO: Filter detected lang codes to the ones that engines can support
+    // But for now, let's do this the lazy hacky way
+    // Get the first 2-char code
+    const detectedLangCode = detectedLang.find((code) => code.length === 2);
+    if (!detectedLangCode) return;
+    // If there's one code in langs that's not in detectedLang, show inline translation
+    const containsDetectedLang = langs.find((code) =>
+      detectedLang.includes(code),
+    );
+    if (!containsDetectedLang) {
+      setShowInlineTranslation({
+        text,
+        detectedLangCode,
+      });
+    }
+  }, [langs, text]);
+
   if (isEmpty) return null;
 
   return (
@@ -377,6 +404,12 @@ export default function RichPost({
         </div>
         <div className="post-body">
           {!!richPost && <div className="post-content">{richPost}</div>}
+          {!!showInlineTranslation && (
+            <TranslationBlock
+              text={showInlineTranslation.text}
+              detectedLangCode={showInlineTranslation.detectedLangCode}
+            />
+          )}
           <RichEmbed embed={embed} />
           {embeds?.length > 0 && (
             <div className="post-embeds">
@@ -596,3 +629,53 @@ function PostActions({
     </div>
   );
 }
+
+function TranslationBlock({ text, detectedLangCode }) {
+  const intersectRef = useRef();
+  const intersection = useIntersection(intersectRef, {
+    threshold: 1,
+  });
+
+  const [inlineTranslation, setInlineTranslation] = useState(null);
+  useEffect(() => {
+    if (!intersection?.isIntersecting) return;
+    (async () => {
+      try {
+        const json = await translateText(text, {
+          detectedLangCode,
+        });
+        if (json) {
+          setInlineTranslation(json.translation);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, [text, detectedLangCode, intersection?.isIntersecting]);
+
+  if (!inlineTranslation) return <div ref={intersectRef} />;
+
+  return (
+    <div className="post-inline-translation">
+      <IconLanguage size={16} />
+      <div>{inlineTranslation}</div>
+    </div>
+  );
+}
+
+const throttle = pThrottle({
+  limit: 1,
+  interval: 1000,
+});
+const INSTANCE = 'lingva.phanpy.social';
+// e.g. /api/v1/:source/:target/:query
+const translateText = throttle(async (text, { detectedLangCode }) => {
+  if (!text) return null;
+  if (!detectedLangCode) return null;
+  console.log('TRANSLATE', { text, detectedLangCode });
+  const result = await fetch(
+    `https://${INSTANCE}/api/v1/auto/${detectedLangCode}/${encodeURIComponent(text)}`,
+  );
+  const json = await result.json();
+  return json;
+});

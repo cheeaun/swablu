@@ -183,3 +183,16 @@ hr {
   border: 0;
   border-top: 1px solid var(--border-strong-color);
 }
+
+/* :root {
+  --hue: 30deg;
+  filter: hue-rotate(var(--hue));
+  --light-bg-color: hsl(var(--hue) 50% 98%);
+  --dark-bg-color: hsl(var(--hue) 50% 2%);
+  --bg-color: light-dark(var(--light-bg-color), var(--dark-bg-color));
+
+  img,
+  video {
+    filter: hue-rotate(calc(var(--hue) * -1));
+  }
+} */

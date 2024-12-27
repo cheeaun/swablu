@@ -4,7 +4,7 @@ function storageFactory(storage) {
   if (!storage) {
     throw new Error('Storage not available');
   }
-  return {
+  const _store = {
     get: (key) => {
       try {
         return storage.getItem(`${NAMESPACE}:${key}`);
@@ -14,7 +14,7 @@ function storageFactory(storage) {
       }
     },
     getJSON: (key) => {
-      const value = storage.get(key);
+      const value = _store.get(key);
       if (!value) return null;
       try {
         return JSON.parse(value);
@@ -32,7 +32,7 @@ function storageFactory(storage) {
     },
     setJSON: (key, value) => {
       try {
-        storage.set(key, JSON.stringify(value));
+        _store.set(key, JSON.stringify(value));
       } catch (e) {
         console.error(e);
       }
@@ -52,6 +52,7 @@ function storageFactory(storage) {
       }
     },
   };
+  return _store;
 }
 
 const store = {

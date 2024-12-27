@@ -22,6 +22,7 @@ import { AuthProvider, useAuth } from './hooks/useAuth';
 import { messages } from './locales/en-GB.po';
 import store from './utils/store';
 import { ModeratePostProvider } from './hooks/useModeratePost';
+import detectLang from './utils/detectLang';
 
 // Set appearance
 const currentAppearance = store.local.get('appearance');
@@ -32,6 +33,8 @@ if (currentAppearance) {
 // Load the messages for the default language
 i18n.load('en-GB', messages);
 i18n.activate('en-GB');
+const detectedLang = detectLang();
+store.session.setJSON('detectedLang', detectedLang);
 
 const queryClient = new QueryClient({
   defaultOptions: {
