@@ -23,6 +23,18 @@ import { messages } from './locales/en-GB.po';
 import store from './utils/store';
 import { ModeratePostProvider } from './hooks/useModeratePost';
 import detectLang from './utils/detectLang';
+import React from 'react';
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginReact from '@bugsnag/plugin-react';
+import BugsnagPerformance from '@bugsnag/browser-performance';
+
+const { VITE_BUGSNAG_API_KEY: BUGSNAG_API_KEY } = import.meta.env;
+
+Bugsnag.start({
+  apiKey: BUGSNAG_API_KEY,
+  plugins: [new BugsnagPluginReact()],
+});
+BugsnagPerformance.start({ apiKey: BUGSNAG_API_KEY });
 
 // Set appearance
 const currentAppearance = store.local.get('appearance');
@@ -88,16 +100,20 @@ const App = () => {
   return <RouterProvider router={router} context={{ auth, queryClient }} />;
 };
 
+const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+
 const rootNode = document.getElementById('root');
 const root = createRoot(rootNode);
 root.render(
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider i18n={i18n}>
-        <ModeratePostProvider>
-          <App />
-        </ModeratePostProvider>
-      </I18nProvider>
-    </QueryClientProvider>
-  </AuthProvider>,
+  <ErrorBoundary>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <I18nProvider i18n={i18n}>
+          <ModeratePostProvider>
+            <App />
+          </ModeratePostProvider>
+        </I18nProvider>
+      </QueryClientProvider>
+    </AuthProvider>
+  </ErrorBoundary>,
 );

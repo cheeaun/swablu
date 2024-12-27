@@ -11,6 +11,9 @@
   "dependencies": {
     "@atproto/api": "~0.13.22",
     "@atproto/oauth-client-browser": "~0.3.5",
+    "@bugsnag/browser-performance": "~2.10.1",
+    "@bugsnag/js": "~8.1.2",
+    "@bugsnag/plugin-react": "~8.1.1",
     "@lingui/core": "~5.1.2",
     "@lingui/detect-locale": "~5.1.2",
     "@lingui/react": "~5.1.2",
@@ -32,7 +35,7 @@
     "hls-video-element": "~1.4.1",
     "idb-keyval": "~6.2.1",
     "media-chrome": "~4.3.0",
-    "p-throttle": "^7.0.0",
+    "p-throttle": "~7.0.0",
     "prosemirror-state": "~1.4.3",
     "prosemirror-view": "~1.37.1",
     "punycode": "~2.3.1",
