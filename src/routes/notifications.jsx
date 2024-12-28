@@ -90,9 +90,9 @@ export function Notifications() {
           {isFetching ? (
             <div className="loader" />
           ) : (
-            <h1>
+            <h2>
               <Trans>Notifications</Trans>
-            </h1>
+            </h2>
           )}
         </div>
         <div>
