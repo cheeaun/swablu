@@ -21,7 +21,7 @@ html {
 
   @media (width <= calc(40em + 72px)) {
     [data-sonner-toaster][data-y-position='bottom'] {
-      bottom: calc(var(--nav-global-height) + 10px + var(--sai-bottom));
+      bottom: calc(var(--nav-global-height) + 10px);
     }
   }
 }
