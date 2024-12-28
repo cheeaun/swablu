@@ -27,7 +27,7 @@ export const Route = createFileRoute('/')({
     console.log('INDEX BEFORE LOAD', { context });
     if (!context.auth.agent?.did) {
       throw redirect({
-        to: '/login',
+        to: '/about',
       });
     }
   },
