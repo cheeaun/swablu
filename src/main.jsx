@@ -36,6 +36,53 @@ Bugsnag.start({
 });
 BugsnagPerformance.start({ apiKey: BUGSNAG_API_KEY });
 
+// Change theme-color based on current theme (html[data-theme])
+// Use the --bg-color variable for the theme-color
+{
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      // console.log({ mutation });
+      if (mutation.attributeName === 'data-theme') {
+        // Get theme
+        const theme = document.documentElement.dataset.theme;
+        // Get current --bg-color
+        const bgColor = getComputedStyle(
+          document.documentElement,
+        ).getPropertyValue('--bg-color');
+        // Get the correct --bg-color
+        // console.log({ theme, bgColor });
+        let realBgColor = bgColor;
+        if (/light-dark/i.test(bgColor)) {
+          const [_, lightColor, darkColor] = bgColor.match(
+            /light-dark\((.+),(.+)\)/,
+          );
+          if (theme === 'auto') {
+            const currentTheme = window.matchMedia(
+              '(prefers-color-scheme: dark)',
+            ).matches
+              ? 'dark'
+              : 'light';
+            realBgColor = currentTheme === 'dark' ? darkColor : lightColor;
+          } else {
+            realBgColor = theme === 'dark' ? darkColor : lightColor;
+          }
+        }
+        // Set meta[theme-color]
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute('content', realBgColor);
+        } else {
+          const newMeta = document.createElement('meta');
+          newMeta.setAttribute('name', 'theme-color');
+          newMeta.setAttribute('content', realBgColor);
+          document.head.appendChild(newMeta);
+        }
+      }
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true });
+}
+
 // Set appearance
 const currentAppearance = store.local.get('appearance');
 if (currentAppearance) {
