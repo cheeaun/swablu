@@ -654,7 +654,13 @@ function TranslationBlock({ text, detectedLangCode }) {
     })();
   }, [text, detectedLangCode, intersection?.isIntersecting]);
 
-  if (!inlineTranslation) return <div ref={intersectRef} />;
+  if (!inlineTranslation)
+    return (
+      <div
+        ref={intersectRef}
+        className="post-inline-translation-intersection"
+      />
+    );
 
   return (
     <div className="post-inline-translation">

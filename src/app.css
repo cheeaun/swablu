@@ -706,6 +706,11 @@ header {
     }
   }
 
+  .post-inline-translation-intersection {
+    margin-top: calc(var(--spacing) * -1);
+    opacity: 0;
+    block-size: 0;
+  }
   .post-inline-translation {
     font-size: 0.9em;
     opacity: 0.9;
