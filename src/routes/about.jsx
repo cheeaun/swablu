@@ -2,6 +2,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { useTitle } from 'react-use';
 const { VITE_APP_NAME: APP_NAME } = import.meta.env;
+import logoSVGURL from '../../design/swablu.svg';
 
 export const Route = createFileRoute('/about')({
   component: About,
@@ -13,6 +14,16 @@ export function About() {
   return (
     <main>
       <div className="main-body">
+        <img
+          src={logoSVGURL}
+          alt=""
+          width={100}
+          height={100}
+          style={{
+            borderRadius: 16,
+            marginTop: 32,
+          }}
+        />
         <h1>{APP_NAME}</h1>
         <p>
           <Trans>
