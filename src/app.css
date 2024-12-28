@@ -760,6 +760,7 @@ header {
       right: var(--spacing);
       opacity: 0;
       transition: opacity 0.3s ease-in;
+      background-color: var(--link-lighter-color);
     }
     &:is(:hover, :focus) .post-quote-view-action {
       opacity: 1;
