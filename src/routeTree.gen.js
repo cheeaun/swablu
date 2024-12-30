@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SearchImport } from './routes/search'
 import { Route as NotificationsImport } from './routes/notifications'
 import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
@@ -22,6 +23,12 @@ import { Route as ListUriImport } from './routes/list.$uri'
 import { Route as FeedUriImport } from './routes/feed.$uri'
 
 // Create/Update Routes
+
+const SearchRoute = SearchImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRoute,
+})
 
 const NotificationsRoute = NotificationsImport.update({
   id: '/notifications',
@@ -84,6 +91,7 @@ const rootRouteChildren = {
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
+  SearchRoute: SearchRoute,
   FeedUriRoute: FeedUriRoute,
   ListUriRoute: ListUriRoute,
   PostUriRoute: PostUriRoute,
@@ -103,6 +111,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)
         "/about",
         "/login",
         "/notifications",
+        "/search",
         "/feed/$uri",
         "/list/$uri",
         "/post/$uri",
@@ -121,6 +130,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)
     },
     "/notifications": {
       "filePath": "notifications.jsx"
+    },
+    "/search": {
+      "filePath": "search.jsx"
     },
     "/feed/$uri": {
       "filePath": "feed.$uri.jsx"

@@ -14,6 +14,7 @@ import {
   IconCheck,
   IconBrightnessFilled,
   IconInfoSquareRounded,
+  IconSearch,
 } from '@tabler/icons-react';
 import { useLinkProps, useMatchRoute } from '@tanstack/react-router';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -201,6 +202,14 @@ export default function NavGlobal() {
             </MenuTrigger>
             <Tooltip placement={popoverPlacement}>
               <Trans>My Feeds</Trans>
+            </Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <RALink to="/search">
+              <IconSearch size={24} />
+            </RALink>
+            <Tooltip placement={popoverPlacement}>
+              <Trans>Search</Trans>
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>

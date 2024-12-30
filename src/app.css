@@ -15,12 +15,14 @@
     z-index: 100;
     display: flex;
     border-top: 1px solid var(--border-color);
+    overflow-x: auto;
 
     &.nav-global-2 {
       display: none;
     }
 
     @media (width > calc(40em + 72px)) {
+      overflow-x: visible;
       flex-direction: column;
       align-items: flex-start;
       /* position: fixed; */
@@ -2085,5 +2087,13 @@ header {
     flex-shrink: 0;
     border-top: 1px solid var(--border-color);
     padding: var(--spacing);
+  }
+}
+
+.view-search {
+  > header {
+    form input[type='search'] {
+      width: 100%;
+    }
   }
 }

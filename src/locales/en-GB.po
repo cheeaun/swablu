@@ -74,6 +74,11 @@ msgid "My Feeds"
 msgstr "My Feeds"
 
 #: src/components/NavGlobal.jsx
+#: src/routes/search.jsx
+msgid "Search"
+msgstr "Search"
+
+#: src/components/NavGlobal.jsx
 #: src/components/NavMenu.jsx
 #: src/routes/notifications.jsx
 #: src/routes/notifications.jsx
@@ -248,6 +253,11 @@ msgstr "+ Replies"
 #: src/routes/profile.$actor.jsx
 msgid "Media"
 msgstr "Media"
+
+#. placeholder {0}: q ? `: ${q}` : ''
+#: src/routes/search.jsx
+msgid "Search{0}"
+msgstr "Search{0}"
 
 #: src/routes/tag.$tag.jsx
 msgid "#{tag}"
