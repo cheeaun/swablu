@@ -13,23 +13,27 @@ const finalClientMetadata = import.meta.env.DEV
       CLIENT_ID: `${PUBLIC_URL}/client-metadata.json`,
     });
 
-console.log('CLIENT METADATA', finalClientMetadata);
-const client = new BrowserOAuthClient({
-  handleResolver: 'https://bsky.social',
-  redirect_uri: REDIRECT_URI,
-  responseMode: 'query',
-  clientMetadata: finalClientMetadata,
-});
-
-client.addEventListener('deleted', (event) => {
-  const { sub, cause } = event.detail;
-  console.error(`Session for ${sub} is no longer available (cause: ${cause})`);
-  store.session.del('currentAccountDid');
-  toast.error(`You've been logged out. Cause: "${cause}"`, {
-    duration: 10_000,
+export const DEFAULT_HANDLE_RESOLVER = 'https://bsky.social';
+export function initClient({ handleResolver } = {}) {
+  const client = new BrowserOAuthClient({
+    handleResolver: handleResolver || DEFAULT_HANDLE_RESOLVER,
+    redirect_uri: REDIRECT_URI,
+    responseMode: 'query',
+    clientMetadata: finalClientMetadata,
   });
-  // Redirect to login page
-  location.hash = '/login';
-});
 
-export default client;
+  client.addEventListener('deleted', (event) => {
+    const { sub, cause } = event.detail;
+    console.error(
+      `Session for ${sub} is no longer available (cause: ${cause})`,
+    );
+    store.session.del('currentAccountDid');
+    toast.error(`You've been logged out. Cause: "${cause}"`, {
+      duration: 10_000,
+    });
+    // Redirect to login page
+    location.hash = '/login';
+  });
+
+  return client;
+}

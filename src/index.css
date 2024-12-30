@@ -159,6 +159,7 @@ select {
 input[type='text'],
 input[type='password'],
 input[type='search'],
+input[type='url'],
 textarea {
   border: 1px solid var(--border-stronger-color);
   border-radius: calc(var(--radius) / 2);
