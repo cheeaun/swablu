@@ -7,6 +7,8 @@ import { useDebounce } from 'react-use';
 export default function TranslationBlock({ text, detectedLangCode }) {
   const intersectRef = useRef();
   const intersection = useIntersection(intersectRef, {
+    trackVisibility: true,
+    delay: 100,
     threshold: 1,
   });
   const [isIntersecting, setIsIntersecting] = useState(false);

@@ -9,7 +9,7 @@ import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
 
-const INTERSECTION_THRESHOLD = 0.9;
+const INTERSECTION_THRESHOLD = 1;
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -143,6 +143,8 @@ function Gif({ embed }) {
 
   const videoObj = parseTenorGif(embed.external.uri);
   const intersection = useIntersection(gifRef, {
+    trackVisibility: true,
+    delay: 100,
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
@@ -214,6 +216,8 @@ function Video({ embed }) {
   }, []);
 
   const intersection = useIntersection(videoRef, {
+    trackVisibility: true,
+    delay: 100,
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
