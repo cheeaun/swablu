@@ -7,9 +7,7 @@ import {
   IconQuote,
   IconRepeat,
   IconRepeatOff,
-  IconLanguage,
 } from '@tabler/icons-react';
-import { useIntersection } from 'react-use';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState, useRef } from 'react';
@@ -34,7 +32,7 @@ import RALink from './RALink';
 import RichEmbed from './RichEmbed';
 import TimeAgo from './TimeAgo';
 import store from '../utils/store';
-import pThrottle from 'p-throttle';
+import TranslationBlock from './TranslationBlock';
 
 export default function RichPost({
   post,
@@ -629,61 +627,3 @@ function PostActions({
     </div>
   );
 }
-
-function TranslationBlock({ text, detectedLangCode }) {
-  const intersectRef = useRef();
-  const intersection = useIntersection(intersectRef, {
-    threshold: 1,
-  });
-
-  const [inlineTranslation, setInlineTranslation] = useState(null);
-  useEffect(() => {
-    if (!intersection?.isIntersecting) return;
-    (async () => {
-      try {
-        const json = await translateText(text, {
-          detectedLangCode,
-        });
-        if (json) {
-          const translation = json.translation.replace(/\n{2,}/g, '\n');
-          setInlineTranslation(translation);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, [text, detectedLangCode, intersection?.isIntersecting]);
-
-  if (!inlineTranslation)
-    return (
-      <div
-        ref={intersectRef}
-        className="post-inline-translation-intersection"
-      />
-    );
-
-  return (
-    <div className="post-inline-translation">
-      <IconLanguage size={16} />
-      <div>{inlineTranslation}</div>
-    </div>
-  );
-}
-
-const throttle = pThrottle({
-  limit: 1,
-  interval: 1000,
-});
-const INSTANCE = 'lingva.phanpy.social';
-// e.g. /api/v1/:source/:target/:query
-const translateText = throttle(async (text, { detectedLangCode }) => {
-  if (!text) return null;
-  if (!detectedLangCode) return null;
-  console.log('TRANSLATE', { text, detectedLangCode });
-  const result = await fetch(
-    `https://${INSTANCE}/api/v1/auto/${detectedLangCode}/${encodeURIComponent(text)}`,
-  );
-  const json = await result.json();
-  if (json.info?.detectedSource === detectedLangCode) return null;
-  return json;
-});
