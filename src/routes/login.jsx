@@ -38,7 +38,7 @@ export function Login() {
             }
             setUIState('loading');
             try {
-              const provider = e.target.provider.value.trim();
+              const provider = e.target.provider?.value?.trim?.();
               const value = e.target.identity.value.trim();
               await login(value, { handleResolver: provider });
               // 1s wait
@@ -52,7 +52,7 @@ export function Login() {
             setUIState('idle');
           }}
         >
-          <label
+          {/* <label
             style={{
               display: 'block',
               paddingBottom: 10,
@@ -67,7 +67,8 @@ export function Login() {
               disabled={uiState === 'loading'}
             />
           </label>
-          <br />@{' '}
+          <br /> */}
+          @{' '}
           <input
             type="text"
             name="identity"

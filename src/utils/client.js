@@ -13,7 +13,7 @@ const finalClientMetadata = import.meta.env.DEV
       CLIENT_ID: `${PUBLIC_URL}/client-metadata.json`,
     });
 
-export const DEFAULT_HANDLE_RESOLVER = 'https://bsky.social';
+export const DEFAULT_HANDLE_RESOLVER = 'https://api.bsky.app';
 export function initClient({ handleResolver } = {}) {
   const client = new BrowserOAuthClient({
     handleResolver: handleResolver || DEFAULT_HANDLE_RESOLVER,
