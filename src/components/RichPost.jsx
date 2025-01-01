@@ -366,7 +366,7 @@ export default function RichPost({
       )}
       {showSide && (
         <div className="post-side">
-          <Link to={`/profile/${author?.did}`}>
+          <Link to={`/profile/${author?.did}`} state={{ profile: author }}>
             <img
               className="post-author-avatar"
               src={author?.avatar}

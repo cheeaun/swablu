@@ -112,15 +112,15 @@ export default function AuthorText({
     return <Component>{linkChildren}</Component>;
   }
 
+  const theAuthor = profileData || author;
+
   if (noTooltip) {
     return (
-      <Link className={linkClassName} to={link}>
+      <Link className={linkClassName} to={link} state={{ profile: theAuthor }}>
         {linkChildren}
       </Link>
     );
   }
-
-  const theAuthor = profileData || author;
 
   return (
     <TooltipTrigger delay={600}>

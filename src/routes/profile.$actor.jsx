@@ -5,7 +5,7 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute, useRouterState } from '@tanstack/react-router';
 import punycode from 'punycode';
 import { useEffect, useState } from 'react';
 import { useTitle } from 'react-use';
@@ -52,6 +52,9 @@ export function Profile() {
   const { agent } = useAuth();
   const { actor } = Route.useParams();
   const { view } = Route.useSearch();
+  const placeholderProfile = useRouterState({
+    select: ({ location }) => location.state?.profile,
+  });
   const query = useInfiniteQuery(
     authorFeedQueryOptions({
       agent,
@@ -66,7 +69,7 @@ export function Profile() {
   });
   console.debug('PROFILE DATA', { query, profileQuery, agent });
 
-  const profileData = profileQuery?.data?.data;
+  const profileData = profileQuery?.data?.data || placeholderProfile;
   const {
     avatar,
     banner,
