@@ -55,6 +55,8 @@
 
     > a,
     > button {
+      min-width: 64px;
+      color: inherit;
       outline: 0;
       border: 0;
       border-radius: 0;
@@ -87,7 +89,7 @@
       }
 
       &.active {
-        background-color: var(--link-lighter-color);
+        background-color: var(--bg-light-color);
       }
     }
   }
