@@ -143,8 +143,6 @@ function Gif({ embed }) {
 
   const videoObj = parseTenorGif(embed.external.uri);
   const intersection = useIntersection(gifRef, {
-    trackVisibility: true,
-    delay: 100,
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
