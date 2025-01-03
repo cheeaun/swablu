@@ -45,7 +45,8 @@
     "react-use": "~17.6.0",
     "sonner": "~1.7.1",
     "tippy.js": "~6.3.7",
-    "tldts": "~6.1.69"
+    "tldts": "~6.1.69",
+    "workbox-navigation-preload": "~7.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
