@@ -40,9 +40,11 @@ export default function AuthorText({
 
   const profileData = profileQuery?.data?.data || null;
 
-  const { publicSuffix } = parse(handle, {
-    allowPrivateDomains: true,
-  });
+  const { publicSuffix } = /\./.test(handle)
+    ? parse(handle, {
+        allowPrivateDomains: true,
+      })
+    : {};
 
   const trueHandle = punycode.toUnicode(handle);
   const handleTooLong = trueHandle.length > MAX_HANDLE_LENGTH;
