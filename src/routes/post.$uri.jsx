@@ -67,8 +67,8 @@ export function Post() {
 
   // const [thread, replies] = walkThread([{ post }], _replies);
   const thread = walkThread(post, _replies);
-  const replies = [];
-  console.log('POST THREAD', { parent, post, thread, replies });
+  const parents = walkParents(parent);
+  console.log('POST THREAD', { parent, parents, post, thread });
 
   const headerRef = useRef();
   const viewportRef = useRef();
@@ -76,6 +76,7 @@ export function Post() {
   useLayoutEffect(() => {
     if (!prevParent.current && parent && viewportRef.current && !isStale) {
       viewportRef.current.scrollIntoView();
+      prevParent.current = parent;
     }
   }, [parent, isStale]);
 
@@ -129,7 +130,7 @@ export function Post() {
           </button>
         </div>
       </header>
-      <Parents parent={parent} />
+      <Parents parents={parents} />
       <div className="viewport" ref={viewportRef}>
         <Thread thread={thread} />
       </div>
@@ -137,21 +138,12 @@ export function Post() {
   );
 }
 
-function Parents({ parent }) {
-  if (!parent) return null;
-
-  const flatParents = [];
-  let theParent = parent;
-  do {
-    const { post, parent: parentParent = null } = theParent;
-    // flatParents.push(post);
-    flatParents.unshift(post);
-    theParent = parentParent;
-  } while (theParent);
+function Parents({ parents }) {
+  if (!parents?.length) return null;
 
   return (
     <ul className="parents">
-      {flatParents.map((p) => (
+      {parents.map((p) => (
         <li
           key={p.uri}
           onPointerEnter={(e) => {
@@ -342,6 +334,18 @@ function MiniMap({ parent, thread }) {
       ))}
     </ul>
   );
+}
+
+function walkParents(parent) {
+  if (!parent) return null;
+  const parents = [];
+  let theParent = parent;
+  do {
+    const { post, parent: parentParent = null } = theParent;
+    parents.unshift(post);
+    theParent = parentParent;
+  } while (theParent);
+  return parents;
 }
 
 function walkThread(post, replies = [], thread = []) {
