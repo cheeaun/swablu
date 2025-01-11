@@ -215,6 +215,47 @@ header {
     @media (width > 40em) {
       padding-block: min(calc(100vw - 40em), var(--spacing));
     }
+
+    &.thread-same-author {
+      .post-parent {
+        .post-side > *,
+        .post-header .post-author {
+          display: none;
+        }
+        .post-main {
+          display: flex;
+          justify-content: space-between;
+          gap: calc(var(--spacing) / 2);
+
+          .post-header {
+            order: 1;
+          }
+        }
+      }
+
+      .post:last-child {
+        .post-header .post-author {
+          display: none;
+        }
+        .post-main {
+          display: grid;
+          grid-template-areas:
+            'body body'
+            'footer header';
+          grid-template-columns: 1fr 1fr;
+
+          .post-header {
+            grid-area: header;
+            margin-top: calc(var(--spacing) * 0.75);
+            text-align: end;
+            display: block;
+          }
+          .post-body {
+            grid-area: body;
+          }
+        }
+      }
+    }
   }
 }
 

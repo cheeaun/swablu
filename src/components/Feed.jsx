@@ -92,12 +92,18 @@ function _FeedItem(props) {
     !reason && showRoot && parent?.record?.reply?.parent?.uri !== root?.uri;
   const showParent = !reason && parent?.cid;
 
+  const threadSameAuthor =
+    showRoot &&
+    root?.author?.did === parent?.author?.did &&
+    parent?.author?.did === post?.author?.did;
+
   return (
     <Component
       onPointerEnter={(e) => {
         // Debugging
         if (e.shiftKey) console.log(item);
       }}
+      className={threadSameAuthor ? 'thread-same-author' : ''}
       {...otherProps}
     >
       {showRoot && <RichPost post={root} className="post-root" />}
