@@ -881,8 +881,8 @@ header {
       max-width: 100%;
       max-height: 50vh;
       object-fit: contain;
-      outline: 1px solid var(--border-strong-color);
-      outline-offset: -1px;
+      outline: var(--hairline-width) solid var(--border-strong-color);
+      outline-offset: calc(var(--hairline-width) * -1);
       border-radius: var(--radius);
       /* background-color: var(--bg-light-color); */
       background: var(--checkerboard-bg);

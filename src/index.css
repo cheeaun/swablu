@@ -41,6 +41,11 @@
 
   interpolate-size: allow-keywords;
   --monospace-font: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono';
+
+  --hairline-width: 1px;
+  @media (min-resolution: 2dppx) {
+    --hairline-width: 0.5px;
+  }
 }
 
 html,
