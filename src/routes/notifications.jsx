@@ -1,5 +1,12 @@
 import { Trans, useLingui } from '@lingui/react/macro';
-import { IconReload } from '@tabler/icons-react';
+import {
+  IconReload,
+  IconHeartFilled,
+  IconRepeat,
+  IconMessageCircle,
+  IconQuote,
+  IconUserPlus,
+} from '@tabler/icons-react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
@@ -78,6 +85,17 @@ export function Notifications() {
     }
   }, [pages?.length, agent]);
 
+  const notificationIcon = (reason) => {
+    return {
+      repost: <IconRepeat size={12} />,
+      like: <IconHeartFilled size={12} />,
+      reply: <IconMessageCircle size={12} />,
+      mention: <IconMessageCircle size={12} />,
+      quote: <IconQuote size={12} />,
+      follow: <IconUserPlus size={12} />,
+    }[reason.toLowerCase()];
+  };
+
   console.debug('NOTIFICATIONS', { pages, posts, query });
 
   return (
@@ -124,6 +142,7 @@ export function Notifications() {
                 const showDate = i === 0 || dateString !== currentDate.current;
                 currentDate.current = dateString;
                 const notificationSubject = reason === 'mention' ? uri : null;
+                const icon = notificationIcon(reason);
                 return (
                   <Fragment key={uri}>
                     {showDate && (
@@ -135,7 +154,11 @@ export function Notifications() {
                       <span
                         className={`notifcation-reason ${reason.toLowerCase()}`}
                       >
-                        {reason}
+                        {icon ? (
+                          <span className="notification-icon">{icon}</span>
+                        ) : (
+                          reason
+                        )}
                       </span>{' '}
                       {author?.handle && <AuthorText author={author} />}
                       {record?.text ? (

@@ -29,10 +29,26 @@
     50% / 16px 16px;
   --backdrop-color: rgba(0, 0, 0, 0.75);
 
-  --blue-color: light-dark(#007bff, #005cff);
-  --green-color: light-dark(#28a745, #228e22);
-  --red-color: light-dark(#dc3545, #c82333);
-  --orange-color: light-dark(#fd7e14, #c26a00);
+  --real-blue-color: #007bff;
+  --blue-color: light-dark(
+    color-mix(in srgb, var(--real-blue-color) 70%, #000),
+    color-mix(in srgb, var(--real-blue-color) 70%, #fff)
+  );
+  --real-green-color: #28a745;
+  --green-color: light-dark(
+    color-mix(in srgb, var(--real-green-color) 70%, #000),
+    color-mix(in srgb, var(--real-green-color) 70%, #fff)
+  );
+  --real-red-color: #dc3545;
+  --red-color: light-dark(
+    color-mix(in srgb, var(--real-red-color) 70%, #000),
+    color-mix(in srgb, var(--real-red-color) 70%, #fff)
+  );
+  --real-orange-color: #fd7e14;
+  --orange-color: light-dark(
+    color-mix(in srgb, var(--real-orange-color) 70%, #000),
+    color-mix(in srgb, var(--real-orange-color) 30%, #fff)
+  );
 
   --sai-top: env(safe-area-inset-top);
   --sai-right: env(safe-area-inset-right);

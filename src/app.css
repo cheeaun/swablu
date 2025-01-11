@@ -1724,32 +1724,28 @@ header {
         gap: calc(var(--spacing) / 2);
         transition: transform 0.1s ease-in-out;
 
-        &:before {
-          content: '';
+        .notification-icon {
           display: inline-block;
-          width: calc(var(--spacing) / 2);
-          height: calc(var(--spacing) / 2);
-          border-radius: calc(var(--spacing) / 2);
-          background-color: var(--bg-color);
+          width: 12px;
+          height: 12px;
         }
-
-        &.follow:before {
-          background-color: var(--orange-color);
+        &.follow .notification-icon {
+          color: var(--orange-color);
         }
-        &.reply:before,
-        &.mention:before {
-          background-color: var(--blue-color);
+        &.reply .notification-icon,
+        &.mention .notification-icon {
+          color: var(--blue-color);
         }
-        &.quote:before,
-        &.repost:before {
-          background-color: var(--green-color);
+        &.quote .notification-icon,
+        &.repost .notification-icon {
+          color: var(--green-color);
         }
-        &.like:before {
-          background-color: var(--red-color);
+        &.like .notification-icon {
+          color: var(--red-color);
         }
       }
       &:hover .notifcation-reason {
-        transform: translateX(calc(var(--spacing) / 2));
+        transform: scale(1.5);
       }
     }
   }
