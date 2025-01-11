@@ -6,6 +6,8 @@ import {
   IconMovie,
   IconTrashX,
   IconX,
+  IconDots,
+  IconSparkles,
 } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
 import equal from 'fast-deep-equal';
@@ -19,6 +21,9 @@ import {
   Dialog,
   CheckboxGroup,
   Checkbox,
+  Menu,
+  MenuItem,
+  MenuTrigger,
 } from 'react-aria-components';
 import { toast } from 'sonner';
 import { useAuth } from '../hooks/useAuth';
@@ -404,22 +409,64 @@ const ComposerInstance = memo(
                       }}
                     />
                     <div className="composer-image-action">
-                      <Button
-                        type="button"
-                        className="small"
-                        disabled={isPosting}
-                        onPress={() => {
-                          setImages((prevImages) =>
-                            prevImages.filter((_, index) => index !== i),
-                          );
-                          drafts.update(id, (val) => ({
-                            ...val,
-                            [`images-alt-${i}`]: undefined,
-                          }));
-                        }}
-                      >
-                        <IconTrashX size={16} />
-                      </Button>
+                      <MenuTrigger>
+                        <Button className="small">
+                          <IconDots size={16} />
+                        </Button>
+                        <Popover>
+                          <Menu>
+                            <MenuItem
+                              data-icon
+                              onAction={async () => {
+                                const imageId = `${i}-${file.type}-${file.name}-${Date.now()}`;
+                                const toastId = toast(imageId);
+                                toast.loading(
+                                  'Attempting to describe image. Please wait…',
+                                  {
+                                    id: toastId,
+                                  },
+                                );
+                                try {
+                                  const { description } =
+                                    await describeImage(file);
+                                  toast.dismiss(toastId);
+                                  // Fill the textarea for image-alt-${i} with description
+                                  formRef.current[`image-alt-${i}`].value =
+                                    description;
+                                  // Better way is to trigger 'change' event on textarea, but React makes it difficult
+                                  drafts.update(id, (val) => ({
+                                    ...val,
+                                    [`images-alt-${i}`]: description,
+                                  }));
+                                } catch (error) {
+                                  console.error(error);
+                                  toast.error('Failed to describe image', {
+                                    id: toastId,
+                                  });
+                                }
+                              }}
+                            >
+                              <IconSparkles size={16} />
+                              Describe image
+                            </MenuItem>
+                            <MenuItem
+                              data-icon
+                              onAction={() => {
+                                setImages((prevImages) =>
+                                  prevImages.filter((_, index) => index !== i),
+                                );
+                                drafts.update(id, (val) => ({
+                                  ...val,
+                                  [`images-alt-${i}`]: undefined,
+                                }));
+                              }}
+                            >
+                              <IconTrashX size={16} />
+                              Remove
+                            </MenuItem>
+                          </Menu>
+                        </Popover>
+                      </MenuTrigger>
                     </div>
                   </div>
                 ))}
@@ -685,4 +732,13 @@ export function compose({ record, replyPreview, quotePreview }) {
   const id = Math.random().toString(36).slice(2);
   ComposerInstances.set(id, { record, replyPreview, quotePreview });
   rerenderComposer();
+}
+
+const API_URL = 'https://img-alt.phanpy.social';
+async function describeImage(file) {
+  const body = new FormData();
+  body.append('image', file);
+  const response = await fetch(API_URL, { method: 'POST', body });
+  const json = await response.json();
+  return json;
 }
