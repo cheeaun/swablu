@@ -1322,6 +1322,8 @@ header {
       display: inline-block;
       list-style: none;
       justify-items: flex-start;
+      text-size-adjust: none;
+      --webkit-text-size-adjust: none;
 
       &::-webkit-details-marker {
         display: none;
