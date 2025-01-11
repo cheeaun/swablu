@@ -3,8 +3,8 @@ import {
   IconReload,
   IconHeartFilled,
   IconRepeat,
-  IconMessageCircle,
-  IconQuote,
+  IconMessageCircleFilled,
+  IconQuoteFilled,
   IconUserPlus,
 } from '@tabler/icons-react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
@@ -87,12 +87,12 @@ export function Notifications() {
 
   const notificationIcon = (reason) => {
     return {
-      repost: <IconRepeat size={12} />,
+      repost: <IconRepeat size={12} stroke="4" />,
       like: <IconHeartFilled size={12} />,
-      reply: <IconMessageCircle size={12} />,
-      mention: <IconMessageCircle size={12} />,
-      quote: <IconQuote size={12} />,
-      follow: <IconUserPlus size={12} />,
+      reply: <IconMessageCircleFilled size={12} />,
+      mention: <IconMessageCircleFilled size={12} />,
+      quote: <IconQuoteFilled size={12} />,
+      follow: <IconUserPlus size={12} stroke="4" />,
     }[reason.toLowerCase()];
   };
 

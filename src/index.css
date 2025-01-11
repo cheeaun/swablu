@@ -31,22 +31,22 @@
 
   --real-blue-color: #007bff;
   --blue-color: light-dark(
-    color-mix(in srgb, var(--real-blue-color) 70%, #000),
+    var(--real-blue-color),
     color-mix(in srgb, var(--real-blue-color) 70%, #fff)
   );
   --real-green-color: #28a745;
   --green-color: light-dark(
-    color-mix(in srgb, var(--real-green-color) 70%, #000),
+    var(--real-green-color),
     color-mix(in srgb, var(--real-green-color) 70%, #fff)
   );
   --real-red-color: #dc3545;
   --red-color: light-dark(
-    color-mix(in srgb, var(--real-red-color) 70%, #000),
+    var(--real-red-color),
     color-mix(in srgb, var(--real-red-color) 70%, #fff)
   );
   --real-orange-color: #fd7e14;
   --orange-color: light-dark(
-    color-mix(in srgb, var(--real-orange-color) 70%, #000),
+    var(--real-orange-color),
     color-mix(in srgb, var(--real-orange-color) 30%, #fff)
   );
 
