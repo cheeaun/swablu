@@ -277,6 +277,12 @@ header {
   + .post {
     padding-top: calc(var(--spacing) / 2);
   }
+
+  &:is(.post-reason-repost) {
+    svg {
+      color: var(--green-color);
+    }
+  }
 }
 
 .post-root {

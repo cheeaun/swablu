@@ -6,14 +6,14 @@ export default function RichReason({ reason }) {
   if (!reason?.$type) return null;
   if (/#reasonRepost/i.test(reason.$type)) {
     return (
-      <div className="post-reason">
+      <div className="post-reason post-reason-repost">
         <IconRepeat size={16} /> <AuthorText author={reason.by} showAvatar />
       </div>
     );
   }
   if (/#reasonPin/i.test(reason.$type)) {
     return (
-      <div className="post-reason">
+      <div className="post-reason post-reason-pin">
         <IconPinned size={16} />{' '}
         <span>
           <Trans>Pinned</Trans>
