@@ -302,12 +302,12 @@ header {
   .post-side .post-author-avatar {
     transform: scale(0.6);
     transform-origin: top center;
-    opacity: 0.6;
+    /* opacity: 0.6;
     transition: opacity 1s ease-in-out;
 
     .post:is(:hover, :focus) & {
       opacity: 1;
-    }
+    } */
   }
 
   .post-header .post-author-name {
@@ -345,12 +345,12 @@ header {
   .post-side .post-author-avatar {
     transform: scale(0.8);
     transform-origin: top center;
-    opacity: 0.8;
+    /* opacity: 0.8;
     transition: opacity 1s ease-in-out;
 
     .post:is(:hover, :focus) & {
       opacity: 1;
-    }
+    } */
   }
 
   .post-header .post-author-name {
@@ -495,6 +495,15 @@ header {
     top: calc(
       var(--header-height, 58px) + var(--bar-height, 0px) + var(--spacing)
     );
+
+    &:not(.post-author-following) {
+      opacity: 0.5;
+      transition: opacity 1s ease-in-out;
+
+      .post:is(:hover, :focus) & {
+        opacity: 1;
+      }
+    }
   }
 
   .post-main {

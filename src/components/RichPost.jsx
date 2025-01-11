@@ -263,6 +263,8 @@ export default function RichPost({
     }
   }, [langs, text]);
 
+  const following = !!post?.author?.viewer?.following;
+
   if (isEmpty) return null;
 
   return (
@@ -368,7 +370,7 @@ export default function RichPost({
         <div className="post-side">
           <Link to={`/profile/${author?.did}`} state={{ profile: author }}>
             <img
-              className="post-author-avatar"
+              className={`post-author-avatar ${following ? 'post-author-following' : ''}`}
               src={author?.avatar}
               alt=""
               width="36"
