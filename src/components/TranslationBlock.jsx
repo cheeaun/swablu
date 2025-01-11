@@ -5,7 +5,7 @@ import { IconLanguage } from '@tabler/icons-react';
 import { useDebounce, useIdle } from 'react-use';
 
 export default function TranslationBlock({ text, detectedLangCode }) {
-  const isIdle = useIdle(2_000);
+  const isIdle = useIdle(1_000);
   const intersectRef = useRef();
   const intersection = useIntersection(intersectRef, {
     trackVisibility: true,
