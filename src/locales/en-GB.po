@@ -209,6 +209,14 @@ msgstr "Back to home"
 msgid "The end."
 msgstr "The end."
 
+#: src/routes/post.$uri.jsx
+msgid "Scroll back down"
+msgstr "Scroll back down"
+
+#: src/routes/post.$uri.jsx
+msgid "Scroll to top"
+msgstr "Scroll to top"
+
 #. placeholder {0}: otherProps.replies?.length
 #: src/routes/post.$uri.jsx
 msgid "{0, plural, one {# reply} other {# replies}}"

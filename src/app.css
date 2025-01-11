@@ -99,6 +99,8 @@
     width: 100%;
 
     @media (width > calc(40em + 72px)) {
+      width: calc(100% - 72px * 2);
+
       > *:not(header, .profile-banner) {
         max-width: 40em;
         margin: 0 auto;
@@ -254,6 +256,7 @@ header {
 .post-author-name {
   font-variant-numeric: slashed-zero;
   font-feature-settings: 'ss01';
+  text-transform: lowercase;
 }
 
 .post-reason {
@@ -1072,6 +1075,25 @@ header {
 .view-post {
   --line-position-start: calc(var(--spacing) + var(--avatar-side) / 2);
   --line-position-top: calc(var(--spacing) + var(--avatar-top-margin));
+
+  header {
+    button {
+      gap: calc(var(--spacing) / 2);
+
+      .post-author-name {
+        font-weight: normal;
+      }
+
+      > * {
+        vertical-align: middle;
+        margin: 0;
+      }
+
+      img {
+        margin: 2px 0;
+      }
+    }
+  }
 
   .parents {
     list-style: none;

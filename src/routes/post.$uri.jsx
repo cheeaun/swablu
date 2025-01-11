@@ -1,12 +1,17 @@
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
-import { IconChevronDown, IconReload } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconReload,
+  IconArrowUp,
+  IconArrowDown,
+} from '@tabler/icons-react';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useParams,
   useRouterState,
 } from '@tanstack/react-router';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useTitle } from 'react-use';
 import AuthorText from '../components/AuthorText';
 import BackButton from '../components/BackButton';
@@ -87,6 +92,38 @@ export function Post() {
     viewportRef.current.style.scrollMarginTop = `${headerHeight}px`;
   }, []);
 
+  const [scrolledTop, setScrolledTop] = useState(false);
+  useLayoutEffect(() => {
+    const onScroll = () => {
+      setScrolledTop(window.scrollY === 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  // List of avatars, deduped
+  const parentAvatars = parents
+    ?.reduce((acc, parent) => {
+      if (!acc.includes(parent.author.avatar)) {
+        acc.push(parent.author.avatar);
+      }
+      return acc;
+    }, [])
+    .map((avatar) => (
+      <img
+        key={avatar}
+        className="post-author-avatar"
+        src={avatar}
+        alt=""
+        width={16}
+        height={16}
+        loading="lazy"
+        decoding="async"
+      />
+    ));
+
   return (
     <main className="view-post">
       <header ref={headerRef}>
@@ -102,18 +139,51 @@ export function Post() {
                 textAlign: 'center',
               }}
             >
-              <b>
-                <Trans>Post</Trans>
-              </b>
-              <div>
-                <small
-                  style={{
-                    opacity: 0.6,
-                  }}
-                >
-                  <AuthorText author={post?.author} showAvatar />
-                </small>
-              </div>
+              {parents?.length ? (
+                scrolledTop ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      viewportRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                      });
+                    }}
+                    aria-label={t`Scroll back down`}
+                  >
+                    <IconArrowDown size={16} />{' '}
+                    <AuthorText author={post?.author} showAvatar as="span" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      });
+                    }}
+                    aria-label={t`Scroll to top`}
+                  >
+                    <IconArrowUp size={16} /> <span>{parentAvatars}</span>{' '}
+                    <small className="insignificant">{parents.length}</small>
+                  </button>
+                )
+              ) : (
+                <>
+                  <b>
+                    <Trans>Post</Trans>
+                  </b>
+                  <div>
+                    <small
+                      style={{
+                        opacity: 0.6,
+                      }}
+                    >
+                      <AuthorText author={post?.author} showAvatar />
+                    </small>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
