@@ -1540,6 +1540,7 @@ header {
         font-weight: 500;
         font-variant-numeric: slashed-zero;
         font-feature-settings: 'ss01';
+        text-transform: lowercase;
       }
 
       .profile-puny,
