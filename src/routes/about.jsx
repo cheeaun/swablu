@@ -48,13 +48,14 @@ export function About() {
             Built
           </a>{' '}
           by{' '}
-          <a
+          {/* <a
             href="https://bsky.app/profile/cheeaun.com"
             target="_blank"
             rel="noreferrer"
           >
             @cheeaun.com
-          </a>
+          </a> */}
+          <Link to="/https://bsky.app/profile/cheeaun.com">@cheeaun.com</Link>
         </p>
         <p>
           <a
@@ -85,6 +86,10 @@ export function About() {
         <p>
           <Link to="/login" className="button">
             <Trans>Log in</Trans>
+          </Link>{' '}
+          or{' '}
+          <Link to="/feed/at%3A%2F%2Fdid%3Aplc%3Az72i7hdynmk6r22z27h6tvur%2Fapp.bsky.feed.generator%2Fwhats-hot">
+            Discover trending posts
           </Link>
         </p>
       </div>
