@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useIntersection } from 'react-use';
 import pThrottle from 'p-throttle';
 import { IconLanguage } from '@tabler/icons-react';
-import { useDebounce } from 'react-use';
+import { useDebounce, useIdle } from 'react-use';
 
 export default function TranslationBlock({ text, detectedLangCode }) {
+  const isIdle = useIdle(2_000);
   const intersectRef = useRef();
   const intersection = useIntersection(intersectRef, {
     trackVisibility: true,
@@ -23,6 +24,7 @@ export default function TranslationBlock({ text, detectedLangCode }) {
   const [inlineTranslation, setInlineTranslation] = useState(null);
   useEffect(() => {
     if (!isIntersecting) return;
+    if (!isIdle) return;
     (async () => {
       try {
         const json = await translateText(text, {
@@ -36,7 +38,7 @@ export default function TranslationBlock({ text, detectedLangCode }) {
         console.error(e);
       }
     })();
-  }, [text, detectedLangCode, isIntersecting]);
+  }, [text, detectedLangCode, isIntersecting, isIdle]);
 
   if (!inlineTranslation)
     return (
