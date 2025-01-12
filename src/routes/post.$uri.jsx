@@ -454,7 +454,7 @@ function walkThread(post, replies = [], thread = []) {
   const repliesBySameAuthor = [];
   const repliesByOthers = [];
   for (const r of replies) {
-    if (r.post.author?.did === post.author?.did) {
+    if (r.post?.author?.did === post.author?.did) {
       repliesBySameAuthor.push(r);
     } else {
       repliesByOthers.push(r);
