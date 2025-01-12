@@ -139,7 +139,7 @@ export function Notifications() {
                   month: 'short',
                   day: 'numeric',
                 });
-                const showDate = i === 0 || dateString !== currentDate.current;
+                const showDate = dateString !== currentDate.current;
                 currentDate.current = dateString;
                 const notificationSubject = reason === 'mention' ? uri : null;
                 const icon = notificationIcon(reason);
