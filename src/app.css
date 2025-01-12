@@ -1299,22 +1299,24 @@ header {
 
   .replies-disclosure {
     /* inline-size: 50ch; */
-    @media (prefers-reduced-motion: no-preference) {
-      interpolate-size: allow-keywords;
-    }
-    &::details-content {
-      opacity: 0;
-      block-size: 0;
-      overflow-y: clip;
-      transition:
-        content-visibility 0.5s allow-discrete,
-        opacity 0.5s,
-        block-size 0.5s;
-    }
-    &[open]::details-content {
-      overflow-y: initial;
-      opacity: 1;
-      block-size: auto;
+    &:not(.default-open) {
+      @media (prefers-reduced-motion: no-preference) {
+        interpolate-size: allow-keywords;
+      }
+      &::details-content {
+        opacity: 0;
+        block-size: 0;
+        overflow-y: clip;
+        transition:
+          content-visibility 0.5s allow-discrete,
+          opacity 0.5s,
+          block-size 0.5s;
+      }
+      &[open]::details-content {
+        overflow-y: initial;
+        opacity: 1;
+        block-size: auto;
+      }
     }
 
     padding: 0 var(--spacing) var(--spacing)

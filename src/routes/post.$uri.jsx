@@ -10,8 +10,9 @@ import {
   createFileRoute,
   useParams,
   useRouterState,
+  useRouter,
 } from '@tanstack/react-router';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { useTitle } from 'react-use';
 import AuthorText from '../components/AuthorText';
 import BackButton from '../components/BackButton';
@@ -265,9 +266,35 @@ function getAllRepliesCount(replies) {
   return total;
 }
 function Replies(props) {
+  const { id, open = true, ...otherProps } = props;
+
+  const router = useRouter();
+  const { lastestLocation } = router;
+  const detailsRef = useRef();
+  const key = `${id}-${lastestLocation}`;
+  const detailsDefaultOpen = useRef(detailsToggleStore.get(key));
+  useLayoutEffect(() => {
+    if (detailsRef.current && detailsDefaultOpen.current) {
+      detailsRef.current.open = true;
+    }
+  }, []);
+
+  const handleToggle = useCallback(
+    (e) => {
+      const open = e.currentTarget.open;
+      if (open) {
+        detailsToggleStore.set(key, open);
+      } else {
+        detailsToggleStore.del(key);
+        // Remove the default open state
+        detailsDefaultOpen.current = false;
+      }
+    },
+    [id, lastestLocation],
+  );
+
   if (!props?.replies?.length) return null;
 
-  const { open = true, ...otherProps } = props;
   if (open) {
     return <InnerReplies {...otherProps} />;
   }
@@ -275,7 +302,11 @@ function Replies(props) {
   const allRepliesCount = getAllRepliesCount(otherProps.replies);
 
   return (
-    <details className="replies-disclosure">
+    <details
+      ref={detailsRef}
+      className={`replies-disclosure ${detailsDefaultOpen.current ? 'default-open' : ''}`}
+      onToggle={handleToggle}
+    >
       <summary className="button">
         <div className="replies-preview">
           <RepliesPreview replies={otherProps.replies} />
@@ -313,7 +344,8 @@ function RepliesPreview({ replies }) {
     return aDate - bDate;
   });
 
-  const someReplies = replies.slice(0, 3);
+  // First 3 with replies text
+  const someReplies = replies.filter((r) => r.post?.record?.text).slice(0, 3);
   return (
     <ul>
       {someReplies.map((r) => {
@@ -385,7 +417,7 @@ function MiniMap({ parent, thread }) {
       <ul>
         {replies.map((r) => (
           <li key={r.post.uri} data-uri={r.post.uri}>
-            <Replies replies={r.replies} />
+            <Replies id={r.post.uri} replies={r.replies} />
           </li>
         ))}
       </ul>
@@ -439,3 +471,20 @@ function walkThread(post, replies = [], thread = []) {
   }
   return thread;
 }
+
+const CACHE_LIMIT = 100;
+const detailsToggleStore = {
+  cache: new Map(),
+  get(key) {
+    return this.cache.get(key);
+  },
+  set(key, value) {
+    this.cache.set(key, value);
+    if (this.cache.size > CACHE_LIMIT) {
+      this.cache.delete(this.cache.keys().next().value);
+    }
+  },
+  del(key) {
+    this.cache.delete(key);
+  },
+};
