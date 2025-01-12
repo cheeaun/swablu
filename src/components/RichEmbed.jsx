@@ -9,7 +9,7 @@ import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
 
-const INTERSECTION_THRESHOLD = 1;
+const INTERSECTION_THRESHOLD = [0.5, 0.75, 1];
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -159,6 +159,7 @@ function Gif({ embed }) {
   if (videoObj?.uri) {
     return (
       <media-controller
+        nohotkeys
         class="post-gif"
         style={{
           aspectRatio:
