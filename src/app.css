@@ -298,6 +298,10 @@ header {
   font-variant-numeric: slashed-zero;
   font-feature-settings: 'ss01';
   text-transform: lowercase;
+
+  .name {
+    text-transform: none;
+  }
 }
 
 .post-reason {
