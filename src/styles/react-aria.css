@@ -49,7 +49,7 @@
 }
 
 .react-aria-Separator {
-  height: 1px;
+  height: var(--hairline-width);
   background: var(--border-color);
   margin: calc(var(--spacing) / 2) 0;
 
@@ -63,7 +63,7 @@
 .react-aria-Tooltip {
   pointer-events: none;
   font-size: small;
-  border: 1px solid var(--border-strong-color);
+  border: var(--hairline-width) solid var(--border-strong-color);
   border-radius: var(--radius);
   background: var(--bg-color);
   color: var(--fg-color);
@@ -118,7 +118,7 @@
 /* Popover */
 
 .react-aria-Popover {
-  border: 1px solid var(--border-stronger-color);
+  border: var(--hairline-width) solid var(--border-stronger-color);
   background: var(--bg-color);
   border-radius: var(--radius);
   color: var(--text-color);

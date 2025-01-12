@@ -14,7 +14,7 @@
     background-color: var(--bg-color);
     z-index: 100;
     display: flex;
-    border-top: 1px solid var(--border-color);
+    border-top: var(--hairline-width) solid var(--border-color);
     overflow-x: auto;
 
     &.nav-global-2 {
@@ -31,7 +31,7 @@
       /* bottom: 0; */
       height: 100vh;
       border-top: 0;
-      border-right: 1px solid var(--border-color);
+      border-right: var(--hairline-width) solid var(--border-color);
 
       .spacer {
         flex-grow: 1;
@@ -43,7 +43,7 @@
 
       &.nav-global-2 {
         border-right: 0;
-        border-left: 1px solid var(--border-color);
+        border-left: var(--hairline-width) solid var(--border-color);
         display: flex;
       }
     }
@@ -133,7 +133,7 @@ main {
 header {
   cursor: default;
   backdrop-filter: grayscale(1);
-  border-block-end: 1px solid var(--border-color);
+  border-block-end: var(--hairline-width) solid var(--border-color);
   padding: 0 var(--spacing);
   min-height: 54px;
   /* display: flex; */
@@ -208,7 +208,7 @@ header {
   }
 
   & > li {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--hairline-width) solid var(--border-color);
     /* content-visibility: auto;
     contain-intrinsic-size: auto 70px; */
 
@@ -461,7 +461,7 @@ header {
 .post-author-avatar {
   vertical-align: top;
   border-radius: 999px;
-  outline: 1px solid var(--border-color);
+  outline: var(--hairline-width) solid var(--border-color);
   background-color: var(--bg-light-color);
 }
 
@@ -674,7 +674,7 @@ header {
     /* transition-delay: 0.15s; */
     background-color: var(--bg-color);
     border-radius: var(--radius);
-    border: 1px solid var(--border-strong-color);
+    border: var(--hairline-width) solid var(--border-strong-color);
     width: fit-content;
     margin-inline-start: auto;
     display: flex;
@@ -801,7 +801,7 @@ header {
   .post-quote {
     margin: 0;
     padding: 0;
-    outline: 1px solid var(--border-strong-color);
+    outline: var(--hairline-width) solid var(--border-strong-color);
     border-radius: var(--radius);
     background-color: var(--bg-alpha-color);
 
@@ -964,7 +964,7 @@ header {
 
   .post-video {
     --media-background-color: var(--bg-light-color);
-    outline: 1px solid var(--border-strong-color);
+    outline: var(--hairline-width) solid var(--border-strong-color);
     border-radius: var(--radius);
     overflow: hidden;
     min-width: 88px;
@@ -996,7 +996,7 @@ header {
   .post-gif {
     --media-background-color: var(--bg-light-color);
     width: fit-content;
-    outline: 1px solid var(--border-strong-color);
+    outline: var(--hairline-width) solid var(--border-strong-color);
     border-radius: var(--radius);
     overflow: hidden;
     max-height: 50vh;
@@ -1010,7 +1010,7 @@ header {
   }
 
   .post-external {
-    outline: 1px solid var(--border-strong-color);
+    outline: var(--hairline-width) solid var(--border-strong-color);
     text-decoration: none;
     display: flex;
     flex-direction: row;
@@ -1042,7 +1042,7 @@ header {
       position: relative;
       flex-shrink: 0;
       flex-basis: 33%;
-      border-inline-end: 1px solid var(--border-strong-color);
+      border-inline-end: var(--hairline-width) solid var(--border-strong-color);
       vertical-align: top;
       background: var(--checkerboard-bg);
 
@@ -1153,7 +1153,7 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--hairline-width) solid var(--border-color);
   }
 
   .parents {
@@ -1176,7 +1176,7 @@ header {
 
   .post-hero {
     + .replies {
-      border-top: 1px solid var(--border-strong-color);
+      border-top: var(--hairline-width) solid var(--border-strong-color);
     }
   }
 
@@ -1201,7 +1201,7 @@ header {
     --pointer-top: calc(var(--spacing) + (22px / 2) - var(--curve-size));
 
     .viewport > &:last-child {
-      border-top: 1px solid var(--border-color);
+      border-top: var(--hairline-width) solid var(--border-color);
       padding-bottom: 50vh;
     }
 
@@ -1344,7 +1344,7 @@ header {
 
       .replies-preview {
         max-width: 100%;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: var(--hairline-width) solid var(--border-color);
         padding-block-end: calc(var(--spacing) / 2);
         margin-block-end: calc(var(--spacing) / 2);
 
@@ -1574,7 +1574,7 @@ header {
   .profile-header {
     line-height: 1.4;
     /* padding-bottom: var(--spacing); */
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--hairline-width) solid var(--border-color);
 
     .profile-avatar {
       float: right;
@@ -1681,7 +1681,7 @@ header {
       display: flex;
       gap: var(--spacing);
       align-items: center;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: var(--hairline-width) solid var(--border-color);
 
       .post-author-link {
         flex-shrink: 0.25;
@@ -1798,7 +1798,7 @@ header {
   display: flex;
   gap: var(--spacing);
   padding: var(--spacing);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: var(--hairline-width) solid var(--border-color);
   position: sticky;
   top: var(--header-height, 0);
   background-color: var(--bg-alpha-color);
@@ -1850,7 +1850,7 @@ header {
   padding: 0;
   background-color: var(--bg-color);
   color: var(--fg-color);
-  border: 1px solid var(--border-stronger-color);
+  border: var(--hairline-width) solid var(--border-stronger-color);
   border-bottom: 0;
   border-start-start-radius: calc(var(--radius) * 2);
   border-start-end-radius: calc(var(--radius) * 2);
@@ -1963,7 +1963,7 @@ header {
         background: var(--bg-color) var(--checkerboard-bg);
         flex-shrink: 0;
         overflow: hidden;
-        outline: 1px solid var(--border-color);
+        outline: var(--hairline-width) solid var(--border-color);
       }
 
       textarea {
@@ -1983,7 +1983,7 @@ header {
       background: var(--bg-color) var(--checkerboard-bg);
       flex-shrink: 0;
       overflow: hidden;
-      outline: 1px solid var(--border-color);
+      outline: var(--hairline-width) solid var(--border-color);
     }
 
     textarea {
@@ -2021,7 +2021,7 @@ header {
   .composer-reply-preview,
   .composer-quote-preview {
     flex-shrink: 0.5;
-    border: 1px solid var(--border-color);
+    border: var(--hairline-width) solid var(--border-color);
     border-radius: var(--radius);
     overflow: auto;
     min-height: calc(3lh + var(--spacing));
@@ -2042,7 +2042,7 @@ header {
 
 .editor {
   position: relative;
-  border: 1px solid var(--border-stronger-color);
+  border: var(--hairline-width) solid var(--border-stronger-color);
   border-radius: calc(var(--radius) / 2);
   line-height: 1.4;
 
@@ -2080,7 +2080,7 @@ header {
 
 .editor-dropdown-menu {
   background-color: var(--bg-color);
-  border: 1px solid var(--border-stronger-color);
+  border: var(--hairline-width) solid var(--border-stronger-color);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
@@ -2149,7 +2149,7 @@ header {
   .composer-languages-header {
     flex-shrink: 0;
     padding: var(--spacing);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--hairline-width) solid var(--border-color);
 
     > * {
       margin: 0;
@@ -2164,7 +2164,7 @@ header {
 
   .composer-languages-footer {
     flex-shrink: 0;
-    border-top: 1px solid var(--border-color);
+    border-top: var(--hairline-width) solid var(--border-color);
     padding: var(--spacing);
   }
 }
