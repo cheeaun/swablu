@@ -4,6 +4,20 @@ import pThrottle from 'p-throttle';
 import { IconLanguage } from '@tabler/icons-react';
 import { useDebounce, useIdle } from 'react-use';
 
+const CACHE_LIMIT = 100;
+const translationsStore = {
+  cache: new Map(),
+  get(key) {
+    return this.cache.get(key);
+  },
+  set(key, value) {
+    this.cache.set(key, value);
+    if (this.cache.size > CACHE_LIMIT) {
+      this.cache.delete(this.cache.keys().next().value);
+    }
+  },
+};
+
 export default function TranslationBlock({ text, detectedLangCode }) {
   const isIdle = useIdle(1_000);
   const intersectRef = useRef();
@@ -21,8 +35,12 @@ export default function TranslationBlock({ text, detectedLangCode }) {
     [intersection?.isIntersecting],
   );
 
-  const [inlineTranslation, setInlineTranslation] = useState(null);
+  const existingTranslation = translationsStore.get(text);
+  const [inlineTranslation, setInlineTranslation] = useState(
+    existingTranslation || null,
+  );
   useEffect(() => {
+    if (inlineTranslation) return;
     if (!isIntersecting) return;
     if (!isIdle) return;
     (async () => {
@@ -33,6 +51,7 @@ export default function TranslationBlock({ text, detectedLangCode }) {
         if (json) {
           const translation = json.translation.replace(/\n{2,}/g, '\n');
           setInlineTranslation(translation);
+          translationsStore.set(text, translation);
         }
       } catch (e) {
         console.error(e);
@@ -49,7 +68,9 @@ export default function TranslationBlock({ text, detectedLangCode }) {
     );
 
   return (
-    <div className="post-inline-translation">
+    <div
+      className={`post-inline-translation ${existingTranslation ? 'translated' : ''}`}
+    >
       <IconLanguage size={16} />
       <div>{inlineTranslation}</div>
     </div>

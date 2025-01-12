@@ -796,10 +796,12 @@ header {
       margin: calc(var(--spacing) / 4);
     }
 
-    @starting-style {
-      margin-top: calc(var(--spacing) * -1);
-      opacity: 0;
-      block-size: 0;
+    &:not(.translated) {
+      @starting-style {
+        margin-top: calc(var(--spacing) * -1);
+        opacity: 0;
+        block-size: 0;
+      }
     }
   }
 
