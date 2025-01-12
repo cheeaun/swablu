@@ -219,17 +219,8 @@ header {
     &.thread-same-author {
       .post-parent {
         .post-side > *,
-        .post-header .post-author {
+        .post-header {
           display: none;
-        }
-        .post-main {
-          display: flex;
-          justify-content: space-between;
-          gap: calc(var(--spacing) / 2);
-
-          .post-header {
-            order: 1;
-          }
         }
       }
 
