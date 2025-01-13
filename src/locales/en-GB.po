@@ -157,6 +157,10 @@ msgid "Repost"
 msgstr "Repost"
 
 #: src/components/RichPost.jsx
+msgid "Quote posts disabled"
+msgstr "Quote posts disabled"
+
+#: src/components/RichPost.jsx
 msgid "Quote"
 msgstr "Quote"
 

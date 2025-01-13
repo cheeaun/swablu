@@ -46,6 +46,11 @@
     font-weight: 500;
     background-color: var(--bg-light-color);
   }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
 .react-aria-Separator {

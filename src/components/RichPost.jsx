@@ -7,6 +7,8 @@ import {
   IconQuote,
   IconRepeat,
   IconRepeatOff,
+  IconMessageCircleOff,
+  IconUsers,
 } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -53,6 +55,7 @@ export default function RichPost({
     quoteCount,
     repostCount,
     viewer,
+    threadgate,
   } = post;
   const embeds = record?.embeds;
   if (record?.value) record = { ...record, ...record.value };
@@ -267,6 +270,18 @@ export default function RichPost({
 
   if (isEmpty) return null;
 
+  let allowReplyGate = 'all';
+  if (threadgate?.record) {
+    const { allow } = threadgate.record;
+    if (allow) {
+      if (!allow?.length) {
+        allowReplyGate = 'none';
+      } else {
+        allowReplyGate = 'some';
+      }
+    }
+  }
+
   return (
     <div
       data-uri={post?.uri}
@@ -284,6 +299,8 @@ export default function RichPost({
               quoteCount={postMeta?.quoteCount}
               reposted={postMeta?.reposted}
               repostCount={postMeta?.repostCount}
+              replyDisabled={viewer?.replyDisabled}
+              quoteDisabled={viewer?.embeddingDisabled}
               likeHandler={() => {
                 if (typeof postMeta?.liked === 'boolean') {
                   // Pending mode
@@ -434,6 +451,20 @@ export default function RichPost({
         )}
         {isHero && (
           <div className="post-footer">
+            {allowReplyGate !== 'all' && (
+              <div>
+                {allowReplyGate === 'none' && (
+                  <>
+                    <IconMessageCircleOff size={12} /> Replies disabled
+                  </>
+                )}
+                {allowReplyGate === 'some' && (
+                  <>
+                    <IconUsers size={12} /> Some people can reply
+                  </>
+                )}
+              </div>
+            )}
             <RichStats
               replyCount={replyCount}
               likeCount={likeCount}
@@ -517,10 +548,12 @@ function PostActions({
   repostHandler,
   postLink,
   postState,
+  replyDisabled,
+  quoteDisabled,
 }) {
   const { i18n } = useLingui();
   const { agent } = useAuth();
-  if (!agent?.did) return null;
+  const loggedIn = !!agent?.did;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const smallNumbers =
@@ -540,7 +573,11 @@ function PostActions({
     >
       {!!likeHandler && (
         <TooltipTrigger delay={ACTIONS_TOOLTIP_DELAY}>
-          <Button className={`${liked ? 'liked' : ''}`} onPress={likeHandler}>
+          <Button
+            className={`${liked ? 'liked' : ''}`}
+            onPress={likeHandler}
+            isDisabled={!loggedIn}
+          >
             {liked ? <IconHeartFilled size={16} /> : <IconHeart size={16} />}
             {likeCount > 0 && (
               <span className="count">
@@ -556,8 +593,15 @@ function PostActions({
       )}
       {!!replyHandler && (
         <TooltipTrigger delay={ACTIONS_TOOLTIP_DELAY}>
-          <Button onPress={replyHandler}>
-            <IconMessageCircle size={16} />
+          <Button
+            onPress={replyHandler}
+            isDisabled={replyDisabled || !loggedIn}
+          >
+            {replyDisabled ? (
+              <IconMessageCircleOff size={16} />
+            ) : (
+              <IconMessageCircle size={16} />
+            )}
             {replyCount > 0 && (
               <span className="count">
                 {' '}
@@ -577,7 +621,10 @@ function PostActions({
               setMenuOpen(open);
             }}
           >
-            <Button className={reposted ? 'reposted' : ''}>
+            <Button
+              className={reposted ? 'reposted' : ''}
+              isDisabled={!loggedIn}
+            >
               <IconRepeat size={16} stroke={reposted ? 3 : 2} />
               {(repostCount > 0 || quoteCount > 0) && (
                 <span className="count">
@@ -600,9 +647,17 @@ function PostActions({
                   )}
                   {reposted ? <Trans>Unrepost</Trans> : <Trans>Repost</Trans>}
                 </MenuItem>
-                <MenuItem data-icon onAction={quoteHandler}>
+                <MenuItem
+                  data-icon
+                  onAction={quoteHandler}
+                  isDisabled={quoteDisabled}
+                >
                   <IconQuote size={16} />
-                  <Trans>Quote</Trans>
+                  {quoteDisabled ? (
+                    <Trans>Quote posts disabled</Trans>
+                  ) : (
+                    <Trans>Quote</Trans>
+                  )}
                 </MenuItem>
               </Menu>
             </Popover>
