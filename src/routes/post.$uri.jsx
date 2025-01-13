@@ -269,9 +269,9 @@ function Replies(props) {
   const { id, open = true, ...otherProps } = props;
 
   const router = useRouter();
-  const { lastestLocation } = router;
+  const { latestLocation } = router;
   const detailsRef = useRef();
-  const key = `${id}-${lastestLocation}`;
+  const key = `${id}-${latestLocation}`;
   const detailsDefaultOpen = useRef(detailsToggleStore.get(key));
   useLayoutEffect(() => {
     if (detailsRef.current && detailsDefaultOpen.current) {
@@ -290,7 +290,7 @@ function Replies(props) {
         detailsDefaultOpen.current = false;
       }
     },
-    [id, lastestLocation],
+    [id, latestLocation],
   );
 
   if (!props?.replies?.length) return null;
@@ -370,6 +370,9 @@ function RepliesPreview({ replies }) {
   );
 }
 
+const MAX_PARENT_REPLIES_COUNT = 30;
+const DEEP_MAX_PARENT_REPLIES_COUNT = 3;
+const MIN_INNER_COMMENTS_COUNT = 2;
 function InnerReplies({ replies, level = 1, unindented }) {
   if (!replies?.length) return null;
 
@@ -387,6 +390,10 @@ function InnerReplies({ replies, level = 1, unindented }) {
         const { post, replies: innerReplies } = r;
         const isUnindented =
           level > 2 && innerReplies?.length === 1 && repliesCount === 1;
+        const innerCommentsCount = getAllRepliesCount(innerReplies);
+        const maxRepliesCount =
+          level > 1 ? DEEP_MAX_PARENT_REPLIES_COUNT : MAX_PARENT_REPLIES_COUNT;
+        const newLevel = isUnindented ? level : level + 1;
         return (
           <li
             key={post.uri}
@@ -397,11 +404,21 @@ function InnerReplies({ replies, level = 1, unindented }) {
             className={unindented ? 'unindented' : ''}
           >
             <RichPost post={post} small context="reply" />
-            <InnerReplies
-              replies={innerReplies}
-              level={isUnindented ? level : level + 1}
-              unindented={isUnindented}
-            />
+            {repliesCount > maxRepliesCount &&
+            innerCommentsCount > MIN_INNER_COMMENTS_COUNT ? (
+              <Replies
+                id={post.uri}
+                replies={innerReplies}
+                open={false}
+                level={newLevel}
+              />
+            ) : (
+              <InnerReplies
+                replies={innerReplies}
+                level={newLevel}
+                unindented={isUnindented}
+              />
+            )}
           </li>
         );
       })}
