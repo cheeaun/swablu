@@ -403,6 +403,12 @@ header {
     background-position: var(--line-position-start) 0;
   }
 
+  .post-image,
+  .post-video,
+  .post-gif {
+    max-height: 25vh !important;
+  }
+
   & + .post-reason {
     background-image: linear-gradient(
       to right,
