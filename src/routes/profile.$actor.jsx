@@ -278,7 +278,7 @@ export function Profile() {
           </Link>
         </li>
       </Bar>
-      <Feed query={query} massageFeed />
+      <Feed query={query} massageFeed={`profile-${actor}-${view}`} />
     </main>
   );
 }

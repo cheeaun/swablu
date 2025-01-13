@@ -64,7 +64,7 @@ export function Index() {
           autoRefresh
           noBack
         />
-        <Feed query={query} massageFeed />
+        <Feed query={query} massageFeed="timeline" />
       </main>
     </>
   );

@@ -31,7 +31,7 @@ export default function Feed({ query, massageFeed }) {
         >
           {pages.map((page) => {
             const posts = page.data.feed || page.data.posts;
-            const feed = massageFeed ? feedMassage(posts) : posts;
+            const feed = massageFeed ? feedMassage(posts, massageFeed) : posts;
             return feed.map((item) => {
               if (!item?.post) item = { post: item };
               const { post, reason } = item;
@@ -138,8 +138,32 @@ const FeedItem = memo(_FeedItem, (oldProps, newProps) => {
   return oldPostUri === newPostUri;
 });
 
-function feedMassage(feed) {
-  const seenPosts = new Set();
+const CACHE_LIMIT = 500;
+const seenPostsStore = () => ({
+  cache: new Set(),
+  add(key) {
+    this.cache.add(key);
+    if (this.cache.size > CACHE_LIMIT) {
+      this.cache.delete(this.cache.values().next().value);
+    }
+  },
+  has(key) {
+    return this.cache.has(key);
+  },
+});
+const seenPostsStores = new Map();
+window.__SEEN_POSTS_STORES__ = seenPostsStores;
+function seenPostsStoreContext(context) {
+  if (seenPostsStores.has(context)) {
+    return seenPostsStores.get(context);
+  }
+  const store = seenPostsStore();
+  seenPostsStores.set(context, store);
+  return store;
+}
+
+function feedMassage(feed, context) {
+  const store = seenPostsStoreContext(context);
   return feed.filter((item) => {
     const { post, reply, reason } = item;
     const { root, parent } = reply || {};
@@ -162,12 +186,12 @@ function feedMassage(feed) {
     }
 
     // If post is already shown, don't show it again
-    if (seenPosts.has(post.uri)) return false;
+    if (store.has(post.uri)) return false;
 
-    if (root?.uri) seenPosts.add(root.uri);
-    if (parent?.uri) seenPosts.add(parent.uri);
-    if (reason) seenPosts.add(post.uri);
-    if (post?.embed?.record?.uri) seenPosts.add(post.embed.record.uri);
+    if (root?.uri) store.add(root.uri);
+    if (parent?.uri) store.add(parent.uri);
+    if (reason) store.add(post.uri);
+    if (post?.embed?.record?.uri) store.add(post.embed.record.uri);
     return true;
   });
 }
