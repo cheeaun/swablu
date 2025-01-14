@@ -770,6 +770,12 @@ header {
         font-weight: normal;
       }
     }
+
+    .post-content-reply-hint {
+      display: block;
+      margin-bottom: calc(var(--spacing) * -0.75);
+      opacity: 0.8;
+    }
   }
 
   .post-inline-translation-intersection {

@@ -9,6 +9,7 @@ import {
   IconRepeatOff,
   IconMessageCircleOff,
   IconUsers,
+  IconCornerLeftUp,
 } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -44,6 +45,7 @@ export default function RichPost({
   showFooter,
   context,
   preview,
+  parentAuthor,
 }) {
   // console.log('RENDER RICHPOST', post?.uri?.slice(-8));
   const { agent } = useAuth();
@@ -420,7 +422,17 @@ export default function RichPost({
           </Link>
         </div>
         <div className="post-body">
-          {!!richPost && <div className="post-content">{richPost}</div>}
+          {!!richPost && (
+            <div className="post-content">
+              {!!parentAuthor?.did && parentAuthor?.did !== author?.did && (
+                <small className="post-content-reply-hint">
+                  <IconCornerLeftUp size={12} stroke={3} />@
+                  <AuthorText author={parentAuthor} />
+                </small>
+              )}
+              {richPost}
+            </div>
+          )}
           {!!showInlineTranslation && (
             <TranslationBlock
               text={showInlineTranslation.text}

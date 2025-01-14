@@ -85,7 +85,7 @@ function _FeedItem(props) {
 
   const { post, reason, reply } = item;
 
-  const { root, parent } = reply || {};
+  const { root, parent, grandparentAuthor } = reply || {};
   const showRoot =
     !reason && root?.cid && parent?.cid && root.cid !== parent.cid;
   const showViewThread =
@@ -126,9 +126,25 @@ function _FeedItem(props) {
           </Link>
         </div>
       )}
-      {showParent && <RichPost post={parent} className="post-parent" />}
+      {showParent && (
+        <RichPost
+          post={parent}
+          className="post-parent"
+          parentAuthor={
+            grandparentAuthor?.did !== root.author?.did && grandparentAuthor
+          }
+        />
+      )}
       <RichReason reason={reason} />
-      <RichPost post={post} showFooter />
+      <RichPost
+        post={post}
+        showFooter
+        parentAuthor={
+          !showParent &&
+          post?.record?.reply?.parent?.uri === parent?.uri &&
+          parent?.author
+        }
+      />
     </Component>
   );
 }
