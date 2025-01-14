@@ -28,13 +28,15 @@ import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
 import BugsnagPerformance from '@bugsnag/browser-performance';
 
-const { VITE_BUGSNAG_API_KEY: BUGSNAG_API_KEY } = import.meta.env;
+const { VITE_BUGSNAG_API_KEY: BUGSNAG_API_KEY, DEV } = import.meta.env;
 
-Bugsnag.start({
-  apiKey: BUGSNAG_API_KEY,
-  plugins: [new BugsnagPluginReact()],
-});
-BugsnagPerformance.start({ apiKey: BUGSNAG_API_KEY });
+if (!DEV) {
+  Bugsnag.start({
+    apiKey: BUGSNAG_API_KEY,
+    plugins: [new BugsnagPluginReact()],
+  });
+  BugsnagPerformance.start({ apiKey: BUGSNAG_API_KEY });
+}
 
 // Change theme-color based on current theme (html[data-theme])
 // Use the --bg-color variable for the theme-color
@@ -164,7 +166,9 @@ const App = () => {
   return <RouterProvider router={router} context={{ auth, queryClient }} />;
 };
 
-const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+const ErrorBoundary = DEV
+  ? React.Fragment
+  : Bugsnag.getPlugin('react').createErrorBoundary(React);
 
 const rootNode = document.getElementById('root');
 const root = createRoot(rootNode);
