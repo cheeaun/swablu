@@ -60,7 +60,7 @@
 
   --hairline-width: 1px;
   @media (min-resolution: 2dppx) {
-    --hairline-width: 0.5px;
+    --hairline-width: 0.7px;
   }
 }
 
