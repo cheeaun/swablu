@@ -808,6 +808,7 @@ header {
     margin: 0;
     padding: 0;
     outline: var(--hairline-width) solid var(--border-strong-color);
+    outline-offset: calc(var(--hairline-width) * -1);
     border-radius: var(--radius);
     background-color: var(--bg-alpha-color);
 
@@ -886,7 +887,6 @@ header {
       max-height: 50vh;
       object-fit: contain;
       outline: var(--hairline-width) solid var(--border-strong-color);
-      outline-offset: calc(var(--hairline-width) * -1);
       border-radius: var(--radius);
       /* background-color: var(--bg-light-color); */
       background: var(--checkerboard-bg);

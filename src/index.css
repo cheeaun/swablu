@@ -5,8 +5,8 @@
   --bg-alpha-color: color-mix(in srgb, var(--bg-color), transparent 25%);
   --bg-light-color: light-dark(#eee, #333);
   --border-color: light-dark(#ddd, #444);
-  --border-strong-color: light-dark(#ccc, #555);
-  --border-stronger-color: light-dark(#aaa, #777);
+  --border-strong-color: light-dark(#bbb, #666);
+  --border-stronger-color: light-dark(#999, #888);
   --spacing: 12px;
   --radius: 8px;
   --link-color: light-dark(RoyalBlue, SkyBlue);
