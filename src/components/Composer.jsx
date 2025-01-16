@@ -32,6 +32,7 @@ import RichPost from './RichPost';
 import Editor from './Editor';
 import { LANGUAGES_MAP_CODE2 } from '../utils/languages';
 import drafts from '../utils/drafts-store';
+import getShortenedLength from '../utils/getShortenedLength';
 
 const ComposerInstances = new Map();
 let rerenderComposer = () => {};
@@ -348,7 +349,8 @@ const ComposerInstance = memo(
                 const text = editor.getText();
                 textareaRef.current.value = text || '';
                 const rt = new RichText({ text });
-                const charCount = rt.graphemeLength;
+                rt.detectFacetsWithoutResolution();
+                const charCount = getShortenedLength(rt);
                 charCountRef.current.textContent = `${MAX_GRAPHEME_LENGTH - charCount}`;
                 editorTextRef.current = text;
                 drafts.update(id, (val) => ({
