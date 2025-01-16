@@ -1846,7 +1846,7 @@ header {
   }
 }
 
-.tab-bar:not([hidden]) {
+.tab-bar {
   list-style: none;
   margin: 0;
   display: flex;
@@ -1858,6 +1858,10 @@ header {
   background-color: var(--bg-alpha-color);
   backdrop-filter: grayscale(1);
   z-index: 10;
+
+  &[hidden] {
+    opacity: 0;
+  }
 
   li {
     margin: 0;
