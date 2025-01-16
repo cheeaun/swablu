@@ -14,6 +14,7 @@ export default function Feed({ query, massageFeed }) {
     isFetching,
     isFetchingNextPage,
     refetch,
+    isRefetching,
   } = query;
 
   console.debug('FEED', { query, dataUpdatedAt: query.dataUpdatedAt });
@@ -29,35 +30,19 @@ export default function Feed({ query, massageFeed }) {
           // className={`feed ${isFetching && !isFetchingNextPage ? 'loading' : ''}`}
           className="feed"
         >
-          {pages.map((page) => {
+          {pages.map((page, index) => {
             const posts = page.data.feed || page.data.posts;
-            const feed = massageFeed ? feedMassage(posts, massageFeed) : posts;
-            return feed.map((item) => {
-              if (!item?.post) item = { post: item };
-              const { post, reason } = item;
-
-              const mod = moderatePost(post);
-              const modUI = mod?.ui?.('contentList');
-              const isFiltered = modUI?.filter;
-
-              if (isFiltered) {
-                console.info(
-                  'FILTERED POST',
-                  post?.uri,
-                  modUI?.filters?.[0]?.label?.val || modUI?.filters?.[0]?.type,
-                  {
-                    post,
-                    modUI,
-                  },
-                );
-                return null;
-              }
-
-              const key =
-                post.uri + (reason?.indexedAt ? `_${reason.indexedAt}` : '');
-
-              return <FeedItem as="li" key={key} item={item} />;
-            });
+            const firstPostID = posts?.[0]?.post?.uri;
+            return (
+              <FeedPage
+                key={firstPostID}
+                firstPostID={firstPostID}
+                posts={posts}
+                context={massageFeed}
+                reset={index === 0 && pages.length === 1}
+                moderatePost={moderatePost}
+              />
+            );
           })}
         </ul>
       )}
@@ -78,6 +63,40 @@ export default function Feed({ query, massageFeed }) {
     </>
   );
 }
+
+function _FeedPage({ posts, context, reset, moderatePost }) {
+  const feed = context ? feedMassage(posts, context, reset) : posts;
+  return feed.map((item) => {
+    if (!item?.post) item = { post: item };
+    const { post, reason } = item;
+
+    const mod = moderatePost(post);
+    const modUI = mod?.ui?.('contentList');
+    const isFiltered = modUI?.filter;
+
+    if (isFiltered) {
+      console.info(
+        'FILTERED POST',
+        post?.uri,
+        modUI?.filters?.[0]?.label?.val || modUI?.filters?.[0]?.type,
+        {
+          post,
+          modUI,
+        },
+      );
+      return null;
+    }
+
+    const key = post.uri + (reason?.indexedAt ? `_${reason.indexedAt}` : '');
+
+    return <FeedItem as="li" key={key} item={item} />;
+  });
+}
+const FeedPage = memo(_FeedPage, (oldProps, newProps) => {
+  const oldFirstPostID = oldProps.firstPostID;
+  const newFirstPostID = newProps.firstPostID;
+  return oldFirstPostID === newFirstPostID;
+});
 
 function _FeedItem(props) {
   const { as, item, ...otherProps } = props;
@@ -166,20 +185,28 @@ const seenPostsStore = () => ({
   has(key) {
     return this.cache.has(key);
   },
+  clear() {
+    this.cache.clear();
+  },
 });
 const seenPostsStores = new Map();
 window.__SEEN_POSTS_STORES__ = seenPostsStores;
-function seenPostsStoreContext(context) {
+function seenPostsStoreContext(context, reset) {
   if (seenPostsStores.has(context)) {
-    return seenPostsStores.get(context);
+    if (reset) {
+      seenPostsStores.get(context).clear();
+    } else {
+      return seenPostsStores.get(context);
+    }
   }
   const store = seenPostsStore();
   seenPostsStores.set(context, store);
   return store;
 }
 
-function feedMassage(feed, context) {
-  const store = seenPostsStoreContext(context);
+function feedMassage(feed, context, reset) {
+  console.log('FEED MASSAGE', { feed, context, reset });
+  const store = seenPostsStoreContext(context, reset);
   return feed.filter((item) => {
     const { post, reply, reason } = item;
     const { root, parent } = reply || {};
