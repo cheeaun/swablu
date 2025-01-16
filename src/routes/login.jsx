@@ -1,11 +1,10 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTitle } from 'react-use';
 import { useAuth } from '../hooks/useAuth';
 import store from '../utils/store';
 import { toast } from 'sonner';
-import { DEFAULT_HANDLE_RESOLVER } from '../utils/client';
 
 export const Route = createFileRoute('/login')({
   component: Login,
@@ -17,6 +16,14 @@ export function Login() {
   const [uiState, setUIState] = useState();
   const { agent, login } = useAuth();
   const navigate = useNavigate();
+
+  const identityRef = useRef();
+  const lastLoginIdentity = store.session.get('lastLoginIdentity');
+  useEffect(() => {
+    if (lastLoginIdentity) {
+      identityRef.current.value = lastLoginIdentity;
+    }
+  }, [lastLoginIdentity]);
 
   return (
     <main>
@@ -70,6 +77,7 @@ export function Login() {
           <br /> */}
           @{' '}
           <input
+            ref={identityRef}
             type="text"
             name="identity"
             required
