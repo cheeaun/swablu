@@ -39,20 +39,36 @@ export default function text2Components({ text, facets }) {
         // E.g. https://www.google.com/longlongpath -> [<span className="invisible">https://www.</span>, <span className="ellipsis">google.com/longlon…</span>, <span className="invisible">gpath</span>]
         const [_, pre, __, rest] =
           uri.match(/(https?:\/\/(www\.)?)(.*)/i) || [];
-        const preComponent = <span className="invisible">{pre}</span>;
+        const preComponent = (
+          <span key="pre" className="invisible">
+            {pre}
+          </span>
+        );
         let midComponent;
         let postComponent = null;
         if (rest.length > URL_MAX_LENGTH) {
           const mid = rest.slice(0, URL_MAX_LENGTH);
-          midComponent = <span className="ellipsis">{mid}</span>;
+          midComponent = (
+            <span key="mid" className="ellipsis">
+              {mid}
+            </span>
+          );
           const rest2 = rest.slice(URL_MAX_LENGTH);
-          postComponent = <span className="invisible">{rest2}</span>;
+          postComponent = (
+            <span key="post" className="invisible">
+              {rest2}
+            </span>
+          );
         } else if (/\/$/.test(rest)) {
           const mid = rest.slice(0, rest.length - 1);
-          midComponent = <span>{mid}</span>;
-          postComponent = <span className="invisible">/</span>;
+          midComponent = <span key="mid">{mid}</span>;
+          postComponent = (
+            <span key="post" className="invisible">
+              /
+            </span>
+          );
         } else {
-          midComponent = <span>{rest}</span>;
+          midComponent = <span key="mid">{rest}</span>;
         }
         linkText = [preComponent, midComponent, postComponent];
       }
