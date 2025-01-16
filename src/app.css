@@ -826,6 +826,12 @@ header {
       --radius: calc(var(--recursive-radius) / 2);
     }
 
+    .post-image,
+    .post-video,
+    .post-gif {
+      max-height: 25vh !important;
+    }
+
     position: relative;
     .post-quote-view-action {
       display: flex;
