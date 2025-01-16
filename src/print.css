@@ -1,0 +1,39 @@
+:root {
+  color-scheme: light;
+  --text-size: 13pt;
+
+  --header-height: 0 !important;
+  --link-color: var(--fg-color);
+}
+
+.post-content a.link {
+  .ellipsis:after {
+    content: none !important;
+  }
+  .invisible {
+    clip: unset !important;
+    clip-path: unset !important;
+    height: unset !important;
+    overflow: unset !important;
+    position: unset !important;
+    white-space: unset !important;
+    width: unset !important;
+  }
+}
+
+a[href].link:not(.is-url):after {
+  content: ' (' attr(href) ')';
+}
+
+.nav-global,
+main > header {
+  display: none !important;
+}
+
+.post-thread {
+  page-break-inside: avoid;
+
+  &:last-child {
+    padding-bottom: 0 !important;
+  }
+}

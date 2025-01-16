@@ -1,3 +1,5 @@
+@import './print.css' print;
+
 #root {
   display: flex;
   flex-direction: column-reverse;
