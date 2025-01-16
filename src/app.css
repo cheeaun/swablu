@@ -1846,7 +1846,7 @@ header {
   }
 }
 
-.tab-bar {
+.tab-bar:not([hidden]) {
   list-style: none;
   margin: 0;
   display: flex;

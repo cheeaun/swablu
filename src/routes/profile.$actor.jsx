@@ -251,7 +251,7 @@ export function Profile() {
           </div>
         </>
       )}
-      <Bar as="ul" className="tab-bar">
+      <Bar as="ul" className="tab-bar" hidden={!profileData}>
         <li>
           <Link
             to="."
