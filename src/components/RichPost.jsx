@@ -270,7 +270,7 @@ export default function RichPost({
 
   const following = !!post?.author?.viewer?.following;
 
-  if (isEmpty) return null;
+  // if (isEmpty) return null;
 
   let allowReplyGate = 'all';
   if (threadgate?.record) {
