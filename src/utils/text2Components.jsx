@@ -31,23 +31,37 @@ export default function text2Components({ text, facets }) {
       const { text, link } = segment;
       const { uri } = link;
       let linkText = text;
-      const linkHasText = uri.includes(text.replace(/(\.{3}|…)$/, ''));
+      const linkHasText = uri
+        .toLowerCase()
+        .includes(text.toLowerCase().replace(/(\.{3}|…)$/, ''));
       if (linkHasText) {
-        let displayURL = uri
-          .replace(/^https?:\/\//, '')
-          .replace(/(^www\.|\/$)/, '')
-          .replace(/\/$/, '');
-        if (displayURL.length > URL_MAX_LENGTH) {
-          displayURL = `${displayURL.slice(0, URL_MAX_LENGTH)}…`;
+        // Split link into 3 components
+        // E.g. https://www.google.com/longlongpath -> [<span className="invisible">https://www.</span>, <span className="ellipsis">google.com/longlon…</span>, <span className="invisible">gpath</span>]
+        const [_, pre, __, rest] =
+          uri.match(/(https?:\/\/(www\.)?)(.*)/i) || [];
+        const preComponent = <span className="invisible">{pre}</span>;
+        let midComponent;
+        let postComponent = null;
+        if (rest.length > URL_MAX_LENGTH) {
+          const mid = rest.slice(0, URL_MAX_LENGTH);
+          midComponent = <span className="ellipsis">{mid}</span>;
+          const rest2 = rest.slice(URL_MAX_LENGTH);
+          postComponent = <span className="invisible">{rest2}</span>;
+        } else if (/\/$/.test(rest)) {
+          const mid = rest.slice(0, rest.length - 1);
+          midComponent = <span>{mid}</span>;
+          postComponent = <span className="invisible">/</span>;
+        } else {
+          midComponent = <span>{rest}</span>;
         }
-        linkText = displayURL;
+        linkText = [preComponent, midComponent, postComponent];
       }
       paragraphChildren.push(
         <a
           key={`${keyIndex++}-${segment.text}`}
           href={uri}
           target="_blank"
-          className="link"
+          className={`link ${linkHasText ? 'is-url' : ''}`}
           rel="noreferrer"
         >
           {linkText}
