@@ -77,7 +77,7 @@ const ComposerInstance = memo(
       const formData = new FormData(e.target);
       const text = formData.get('text');
       console.log('FORM DATA', { text, data });
-      if (text) {
+      if (text || data) {
         (async () => {
           const toastId = toast(id);
           try {
@@ -96,11 +96,8 @@ const ComposerInstance = memo(
             if (record) {
               Object.assign(payload, record);
             }
-            if (selectedLanguages.length) {
-              payload.langs = selectedLanguages;
-            }
-            setIsPosting(true);
             if (hasImages) {
+              setIsPosting(true);
               const imageFiles = images.map((file, i) => {
                 const alt = formData.get(`image-alt-${i}`);
                 const dimension = formData.get(`image-dimension-${i}`);
@@ -145,6 +142,7 @@ const ComposerInstance = memo(
                 });
               }
             } else if (video) {
+              setIsPosting(true);
               // TODO: In progress, this doesn't work yet
               const blob = video instanceof Blob ? video : new Blob([video]);
               toast.loading(
@@ -156,9 +154,20 @@ const ComposerInstance = memo(
               const videoResult = await agent.app.bsky.video.uploadVideo(blob);
               console.log('VIDEO RESULT', videoResult);
             }
+            if (Object.keys(payload).length === 0) {
+              toast.dismiss(toastId);
+              return;
+            }
+            if (!payload.text) {
+              payload.text = '';
+            }
+            if (selectedLanguages.length) {
+              payload.langs = selectedLanguages;
+            }
             toast.loading('Posting…', {
               id: toastId,
             });
+            console.log('PAYLOAD', payload);
             const result = await agent.post(payload);
             console.log('POST RESULT', result);
             toast.success('Posted!', {
