@@ -1868,6 +1868,10 @@ header {
   padding-inline: var(--spacing);
   overflow: auto;
   /* flex-direction: row-reverse; */
+
+  @media (width <= 400px) and (hover: none) and (pointer: coarse) {
+    padding-inline: 0;
+  }
 }
 .composer-dialog {
   &:first-child {
@@ -1897,6 +1901,15 @@ header {
     outline: 2px solid var(--fg-color);
     outline-offset: -2px;
     overflow-anchor: auto;
+  }
+
+  @media (width <= 400px) and (hover: none) and (pointer: coarse) {
+    &:not(.collapsed) {
+      block-size: 100%;
+      border: 0;
+      border-radius: 0;
+      outline: 0 !important;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -1937,6 +1950,8 @@ header {
 
   &:not(.collapsed) {
     padding-bottom: var(--sai-bottom);
+    padding-left: var(--sai-left);
+    padding-right: var(--sai-right);
   }
 }
 .composer-instance {
