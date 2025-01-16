@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useTitle } from 'react-use';
 import { useLingui } from '@lingui/react/macro';
 import { useAuth } from '../hooks/useAuth';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -15,7 +14,6 @@ function Search() {
   const { t } = useLingui();
   const navigate = useNavigate();
   const { q, sort } = Route.useSearch();
-  useTitle(t`Search${q ? `: ${q}` : ''}`);
   const { agent } = useAuth();
   const query = useInfiniteQuery({
     queryKey: ['search', q, sort],
@@ -47,6 +45,7 @@ function Search() {
   return (
     <main className="view-search">
       <FeedHeader
+        title={q ? t`Search: ${q}` : t`Search`}
         TitleComponent={
           <form
             onSubmit={(e) => {
