@@ -161,12 +161,12 @@ export function Notifications() {
                         )}
                       </span>{' '}
                       {author?.handle && <AuthorText author={author} />}
-                      {record?.text ? (
+                      {record?.text || reason === 'quote' ? (
                         <Link
                           className="post-author-reason-subject"
                           to={`/post/${encodeURIComponent(uri)}`}
                         >
-                          ‒{record.text}
+                          {record.text ? `‒${record.text}` : '→'}
                         </Link>
                       ) : reasonSubject ? (
                         <Link
