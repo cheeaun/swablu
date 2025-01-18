@@ -4,6 +4,7 @@ import RichPost from './RichPost';
 import RichReason from './RichReason';
 import { useModeratePost } from '../hooks/useModeratePost';
 import { memo } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Feed({ query, massageFeed }) {
   const {
@@ -65,7 +66,10 @@ export default function Feed({ query, massageFeed }) {
 }
 
 function _FeedPage({ posts, context, reset, moderatePost }) {
-  const feed = context ? feedMassage(posts, context, reset) : posts;
+  const { agent } = useAuth();
+  const feed = context
+    ? feedMassage(posts, { context, reset, authDid: agent?.did })
+    : posts;
   return feed.map((item) => {
     if (!item?.post) item = { post: item };
     const { post, reason } = item;
@@ -204,8 +208,8 @@ function seenPostsStoreContext(context, reset) {
   return store;
 }
 
-function feedMassage(feed, context, reset) {
-  console.log('FEED MASSAGE', { feed, context, reset });
+function feedMassage(feed, { context, reset, authDid }) {
+  console.log('FEED MASSAGE', { feed, context, reset, authDid });
   const store = seenPostsStoreContext(context, reset);
   return feed.filter((item) => {
     const { post, reply, reason } = item;
@@ -217,6 +221,13 @@ function feedMassage(feed, context, reset) {
     const hasRoot = !!root?.uri && root?.uri !== parent?.uri;
     const followingRoot = root?.author?.viewer?.following;
     const rootSameAuthor = root?.author?.did === post?.author?.did;
+
+    const self = authDid === post?.author?.did;
+    if (self) return true;
+    const parentSelf = authDid === parent?.author?.did;
+    if (parentSelf) return true;
+    const rootSelf = authDid === root?.author?.did;
+    if (rootSelf) return true;
 
     // If not following parent author and not the same as post author
     if (hasParent && !followingParent && !parentSameAuthor) {
