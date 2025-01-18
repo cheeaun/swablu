@@ -18,7 +18,7 @@ export function Login() {
   const navigate = useNavigate();
 
   const identityRef = useRef();
-  const lastLoginIdentity = store.session.get('lastLoginIdentity');
+  const lastLoginIdentity = store.local.get('lastLoginIdentity');
   useEffect(() => {
     if (lastLoginIdentity) {
       identityRef.current.value = lastLoginIdentity;
@@ -50,7 +50,7 @@ export function Login() {
               await login(value, { handleResolver: provider });
               // 1s wait
               await new Promise((resolve) => setTimeout(resolve, 1000));
-              store.session.set('lastLoginIdentity', value);
+              store.local.set('lastLoginIdentity', value);
               navigate({ to: '/' });
             } catch (error) {
               console.error(error);
