@@ -63,6 +63,10 @@ export default function RichPost({
   if (record?.value) record = { ...record, ...record.value };
   const author = post.author || record?.author;
   const { text, facets, createdAt, langs } = record || {};
+  likeCount ||= record?.likeCount;
+  quoteCount ||= record?.quoteCount;
+  replyCount ||= record?.replyCount;
+  repostCount ||= record?.repostCount;
 
   const richPost = text ? text2Components({ text, facets }) : null;
 

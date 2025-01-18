@@ -65,6 +65,7 @@ export default function RichEmbed({ embed }) {
           <RichPost
             post={embed?.record?.record ? embed?.record : embed}
             small
+            showFooter
           />
           <Link
             to={`/post/${encodeURIComponent(embed?.record?.record?.uri || embed.record.uri)}`}
