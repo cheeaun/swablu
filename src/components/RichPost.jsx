@@ -393,7 +393,7 @@ export default function RichPost({
         <div className="post-side">
           <Link to={`/profile/${author?.did}`} state={{ profile: author }}>
             <img
-              className={`post-author-avatar ${following ? 'post-author-following' : ''}`}
+              className={`post-author-avatar ${following ? 'post-author-following' : ''} ${agent?.did === author?.did ? 'post-author-self' : ''}`}
               src={author?.avatar}
               alt=""
               width="36"

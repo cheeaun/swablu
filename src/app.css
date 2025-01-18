@@ -540,7 +540,7 @@ header {
       var(--header-height, 58px) + var(--bar-height, 0px) + var(--spacing)
     );
 
-    &:not(.post-author-following) {
+    &:not(.post-author-following, .post-author-self) {
       opacity: 0.5;
       transition: opacity 1s ease-in-out;
 
