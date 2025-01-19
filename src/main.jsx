@@ -143,6 +143,28 @@ const router = createRouter({
       </main>
     );
   },
+  defaultErrorComponent: ({ error, reset }) => {
+    console.log('ERROR', router);
+    return (
+      <main>
+        <div className="main-body">
+          <h1>
+            <Trans>An error occurred</Trans>
+          </h1>
+          {error.message && <p>{error.message}</p>}
+          <p>
+            <button type="button" onClick={reset}>
+              <Trans>Retry</Trans>
+            </button>{' '}
+            or{' '}
+            <button type="button" onClick={() => router.invalidate()}>
+              <Trans>Reload</Trans>
+            </button>
+          </p>
+        </div>
+      </main>
+    );
+  },
   defaultNotFoundComponent: (params) => {
     console.log('NOT FOUND', router);
     return (

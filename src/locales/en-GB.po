@@ -182,6 +182,18 @@ msgid "Pinned"
 msgstr "Pinned"
 
 #: src/main.jsx
+msgid "An error occurred"
+msgstr "An error occurred"
+
+#: src/main.jsx
+msgid "Retry"
+msgstr "Retry"
+
+#: src/main.jsx
+msgid "Reload"
+msgstr "Reload"
+
+#: src/main.jsx
 msgid "Page not found"
 msgstr "Page not found"
 
