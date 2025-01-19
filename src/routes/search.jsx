@@ -4,7 +4,8 @@ import { useAuth } from '../hooks/useAuth';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Feed from '../components/Feed';
 import FeedHeader from '../components/FeedHeader';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, Fragment } from 'react';
+import AuthorText from '../components/AuthorText';
 
 export const Route = createFileRoute('/search')({
   component: Search,
@@ -29,7 +30,18 @@ function Search() {
     enabled: !!q,
   });
 
-  console.debug('SEARCH DATA', { query });
+  const actorsQuery = useInfiniteQuery({
+    queryKey: ['searchActors', q],
+    queryFn: ({ pageParam }) =>
+      agent.app.bsky.actor.searchActors({
+        q,
+        limit: 25,
+        cursor: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage?.data?.cursor,
+    enabled: !!q,
+  });
 
   const searchFieldRef = useRef(null);
   useEffect(() => {
@@ -41,6 +53,8 @@ function Search() {
       }
     }
   }, [q]);
+
+  console.debug('SEARCH DATA', { query, actorsQuery });
 
   return (
     <main className="view-search">
@@ -64,7 +78,55 @@ function Search() {
         queryKey={['search', q, sort]}
         query={query}
       />
+      <ActorsList query={actorsQuery} />
       <Feed query={query} />
     </main>
+  );
+}
+
+function ActorsList({ query }) {
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    refetch,
+    isRefetching,
+  } = query;
+
+  const { pages } = data || {};
+
+  if (!pages?.length) return null;
+
+  return (
+    <ul className="actors-list">
+      {pages.map((page, index) => {
+        const actors = page.data?.actors || [];
+        const firstActorID = actors?.[0]?.did;
+        return (
+          <Fragment key={firstActorID}>
+            {actors.map((actor) => (
+              <li key={actor.did}>
+                <AuthorText author={actor} showAvatar showName />
+                {actor.description && (
+                  <p className="actor-description">{actor.description}</p>
+                )}
+              </li>
+            ))}
+          </Fragment>
+        );
+      })}
+      {hasNextPage && (
+        <button
+          type="button"
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+        >
+          More…
+        </button>
+      )}
+    </ul>
   );
 }

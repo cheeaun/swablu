@@ -2248,4 +2248,42 @@ header {
       width: 100%;
     }
   }
+
+  .actors-list {
+    list-style: none;
+    margin: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing);
+    padding: var(--spacing);
+    max-width: 100% !important;
+    border-bottom: var(--hairline-width) solid var(--border-color);
+    width: fit-content;
+
+    li {
+      flex-shrink: 0;
+      width: 10em;
+      max-width: 80vw;
+    }
+
+    .post-author-link {
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .actor-description {
+      opacity: 0.6;
+      font-size: smaller;
+      /* clamp 2 lines */
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      overflow: hidden;
+      padding: 0;
+      margin: calc(var(--spacing) / 2) 0 0;
+      text-align: center;
+    }
+  }
 }
