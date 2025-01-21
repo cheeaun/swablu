@@ -2342,14 +2342,17 @@ header {
         .post-immersive:not(.post-quote .post-immersive)
     ) {
     padding-block: 0 !important;
-    height: calc(100vh - var(--nav-global-height, 0) - var(--header-height, 0));
+    height: calc(
+      100vh - var(--nav-global-height, 0) - var(--header-height, 0) -
+        var(--sai-bottom, 0)
+    );
     flex-shrink: 0;
     flex-grow: 1;
     scroll-snap-stop: always;
     overflow-y: auto;
 
     @media (width > calc(40em + 72px)) {
-      height: calc(100vh - var(--header-height, 0));
+      height: calc(100vh - var(--header-height, 0) - var(--sai-bottom, 0));
     }
 
     position: relative;
