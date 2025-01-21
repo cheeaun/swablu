@@ -48,9 +48,9 @@ export function Login() {
               const provider = e.target.provider?.value?.trim?.();
               const value = e.target.identity.value.trim();
               await login(value, { handleResolver: provider });
+              store.local.set('lastLoginIdentity', value);
               // 1s wait
               await new Promise((resolve) => setTimeout(resolve, 1000));
-              store.local.set('lastLoginIdentity', value);
               navigate({ to: '/' });
             } catch (error) {
               console.error(error);
