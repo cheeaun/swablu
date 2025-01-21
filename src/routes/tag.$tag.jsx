@@ -7,6 +7,7 @@ import Feed from '../components/Feed';
 import FeedHeader from '../components/FeedHeader';
 import { useAuth } from '../hooks/useAuth';
 import Bar from '../components/Bar';
+import { ViewModeProvider } from '../hooks/useViewMode';
 
 const STALE_TIME = Number.POSITIVE_INFINITY;
 const GC_TIME = 6 * 60 * 60 * 1000; // 6 hours
@@ -48,7 +49,7 @@ export function TagRoute() {
   console.debug('TAG DATA', { query, dataUpdatedAt: query.dataUpdatedAt });
 
   return (
-    <>
+    <ViewModeProvider>
       <main className="view-feed">
         <FeedHeader
           title={t`#${tag}`}
@@ -84,6 +85,6 @@ export function TagRoute() {
         </Bar>
         <Feed query={query} />
       </main>
-    </>
+    </ViewModeProvider>
   );
 }

@@ -60,4 +60,39 @@ const store = {
   session: storageFactory(sessionStorage),
 };
 
+// Account-specific store, use localStorage, use key `${NAMESPACE}:${ACCOUNT_DID}:${key}`
+const accountStore = {
+  get: (category, key) => {
+    const did = store.session.get('currentAccountDid');
+    if (!did) return null;
+    const KEY = `@${did}:${category}`;
+    const categoryValue = store.local.getJSON(KEY);
+    if (!categoryValue) return null;
+    return categoryValue[key]?.value;
+  },
+  set: (category, key, value) => {
+    const did = store.session.get('currentAccountDid');
+    if (!did) return null;
+    const KEY = `@${did}:${category}`;
+    const categoryValue = store.local.getJSON(KEY) || {};
+    categoryValue[key] = { value, lastUpdated: Date.now() };
+    store.local.setJSON(KEY, categoryValue);
+  },
+  del: (category, key) => {
+    const did = store.session.get('currentAccountDid');
+    if (!did) return null;
+    const KEY = `@${did}:${category}`;
+    const categoryValue = store.local.getJSON(KEY);
+    if (!categoryValue) return null;
+    if (key) {
+      delete categoryValue[key];
+      store.local.setJSON(KEY, categoryValue);
+    } else {
+      store.local.del(KEY);
+    }
+  },
+};
+
+store.account = accountStore;
+
 export default store;

@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro';
 import {
   queryOptions,
-  useQuery,
+  useSuspenseQuery,
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -10,6 +10,7 @@ import AuthorText from '../components/AuthorText';
 import Feed from '../components/Feed';
 import FeedHeader from '../components/FeedHeader';
 import { useAuth } from '../hooks/useAuth';
+import { ViewModeProvider } from '../hooks/useViewMode';
 
 const STALE_TIME = Number.POSITIVE_INFINITY;
 const GC_TIME = 6 * 60 * 60 * 1000; // 6 hours
@@ -49,7 +50,7 @@ export function FeedPage() {
   const { t } = useLingui();
   const { agent, loaded } = useAuth();
   const { uri } = Route.useParams();
-  const feedGeneratorQuery = useQuery(
+  const feedGeneratorQuery = useSuspenseQuery(
     feedGeneratorQueryOptions({ agent, uri }),
   );
   const query = useSuspenseInfiniteQuery(feedQueryOptions({ agent, uri }));
@@ -65,9 +66,14 @@ export function FeedPage() {
   const title = feedGeneratorQuery.data?.data?.view?.displayName;
   const titleLoading = feedGeneratorQuery.isFetching;
   const creator = feedGeneratorQuery.data?.data?.view?.creator;
+  const contentMode = feedGeneratorQuery.data?.data?.view?.contentMode;
 
   return (
-    <>
+    <ViewModeProvider
+      value={{
+        viewMode: /contentModeVideo/i.test(contentMode) ? 'carousel' : 'list',
+      }}
+    >
       <main className="view-feed">
         <FeedHeader
           title={titleLoading ? '⋯' : title || t`Feed`}
@@ -84,9 +90,10 @@ export function FeedPage() {
           queryKey={['feed', uri]}
           query={query}
           autoRefresh
+          showViewMode
         />
         <Feed query={query} />
       </main>
-    </>
+    </ViewModeProvider>
   );
 }

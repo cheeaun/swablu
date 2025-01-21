@@ -271,7 +271,7 @@ function Replies(props) {
   const router = useRouter();
   const { latestLocation } = router;
   const detailsRef = useRef();
-  const key = `${id}-${latestLocation}`;
+  const key = `${id}-${latestLocation.pathname}`;
   const detailsDefaultOpen = useRef(detailsToggleStore.get(key));
   useLayoutEffect(() => {
     if (detailsRef.current && detailsDefaultOpen.current) {

@@ -5,6 +5,7 @@ import RichReason from './RichReason';
 import { useModeratePost } from '../hooks/useModeratePost';
 import { memo } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useViewMode } from '../hooks/useViewMode';
 
 export default function Feed({ query, massageFeed }) {
   const {
@@ -24,12 +25,14 @@ export default function Feed({ query, massageFeed }) {
 
   const { moderatePost } = useModeratePost();
 
+  const { viewMode } = useViewMode();
+
   return (
     <>
       {!!pages?.length && (
         <ul
           // className={`feed ${isFetching && !isFetchingNextPage ? 'loading' : ''}`}
-          className="feed"
+          className={`feed ${viewMode || ''}`}
         >
           {pages.map((page, index) => {
             const posts = page.data.feed || page.data.posts;
@@ -70,6 +73,15 @@ function _FeedPage({ posts, context, reset, moderatePost }) {
   const feed = context
     ? feedMassage(posts, { context, reset, authDid: agent?.did })
     : posts;
+  const repostsCount = feed.reduce((count, item) => {
+    const { reason } = item;
+    if (/#reasonRepost/i.test(reason?.$type)) {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  console.log('REPOSTS', repostsCount, posts.length);
+
   return feed.map((item) => {
     if (!item?.post) item = { post: item };
     const { post, reason } = item;

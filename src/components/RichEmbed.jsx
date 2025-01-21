@@ -56,7 +56,7 @@ export default function RichEmbed({ embed }) {
         </div>
       )}
       {hasVideo && (
-        <div>
+        <div className="post-immersive">
           <Video embed={embed} />
         </div>
       )}

@@ -6,6 +6,7 @@ import Feed from '../components/Feed';
 import FeedHeader from '../components/FeedHeader';
 import { useAuth } from '../hooks/useAuth';
 import { About } from './about';
+import { ViewModeProvider } from '../hooks/useViewMode';
 
 const STALE_TIME = Number.POSITIVE_INFINITY;
 const GC_TIME = 6 * 60 * 60 * 1000; // 6 hours
@@ -13,7 +14,8 @@ const GC_TIME = 6 * 60 * 60 * 1000; // 6 hours
 const timelineQueryOptions = ({ agent, ...props }) =>
   queryOptions({
     queryKey: ['timeline'],
-    queryFn: ({ pageParam }) => agent?.getTimeline({ cursor: pageParam }),
+    queryFn: ({ pageParam }) =>
+      agent?.getTimeline({ cursor: pageParam, limit: 100 }),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage?.data?.cursor,
     staleTime: STALE_TIME,
@@ -55,7 +57,7 @@ export function Index() {
   console.debug('INDEX DATA', { query, dataUpdatedAt: query.dataUpdatedAt });
 
   return (
-    <>
+    <ViewModeProvider>
       <main className="view-feed">
         <FeedHeader
           title={t`Following`}
@@ -66,6 +68,6 @@ export function Index() {
         />
         <Feed query={query} massageFeed="timeline" />
       </main>
-    </>
+    </ViewModeProvider>
   );
 }

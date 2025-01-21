@@ -1,9 +1,24 @@
 import { useLingui } from '@lingui/react/macro';
-import { IconReload } from '@tabler/icons-react';
+import {
+  IconReload,
+  IconLayoutDashboard,
+  IconCheck,
+} from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useIdle, useTitle } from 'react-use';
 import BackButton from './BackButton';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MenuTrigger,
+  Popover,
+  Tooltip,
+  TooltipTrigger,
+} from 'react-aria-components';
+import { Trans } from '@lingui/react/macro';
+import { useViewMode } from '../hooks/useViewMode';
 
 export default function FeedHeader({
   title,
@@ -13,6 +28,7 @@ export default function FeedHeader({
   autoRefresh,
   noBack,
   headerStart = null,
+  showViewMode,
 }) {
   useTitle(title);
   const headerRef = useRef(null);
@@ -45,6 +61,11 @@ export default function FeedHeader({
         )}
       </div>
       <div>
+        {showViewMode && (
+          <>
+            <FeedViewMode />{' '}
+          </>
+        )}
         <FeedRefresh
           queryKey={queryKey}
           query={query}
@@ -52,6 +73,44 @@ export default function FeedHeader({
         />
       </div>
     </header>
+  );
+}
+
+function FeedViewMode() {
+  const { viewMode, setViewMode } = useViewMode();
+  return (
+    <TooltipTrigger>
+      <MenuTrigger>
+        <Button>
+          <IconLayoutDashboard size={16} />
+        </Button>
+        <Popover>
+          <Menu>
+            <MenuItem data-icon onAction={() => setViewMode('list')}>
+              <IconCheck
+                size={16}
+                style={{
+                  opacity: viewMode === 'list' ? 1 : 0,
+                }}
+              />
+              List
+            </MenuItem>
+            <MenuItem data-icon onAction={() => setViewMode('carousel')}>
+              <IconCheck
+                size={16}
+                style={{
+                  opacity: viewMode === 'carousel' ? 1 : 0,
+                }}
+              />
+              Carousel
+            </MenuItem>
+          </Menu>
+        </Popover>
+      </MenuTrigger>
+      <Tooltip>
+        <Trans>View mode</Trans>
+      </Tooltip>
+    </TooltipTrigger>
   );
 }
 

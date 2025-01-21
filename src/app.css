@@ -147,6 +147,7 @@ header {
   grid-template-areas: 'start title end';
 
   > *:first-child {
+    white-space: nowrap;
   }
   > *:nth-child(2) {
     text-align: center;
@@ -155,6 +156,7 @@ header {
     text-overflow: ellipsis;
   }
   > *:last-child {
+    white-space: nowrap;
     text-align: end;
   }
 
@@ -2285,6 +2287,246 @@ header {
       padding: 0;
       margin: calc(var(--spacing) / 2) 0 0;
       text-align: center;
+    }
+  }
+}
+
+.view-feeds {
+  display: flex;
+  overflow-x: auto;
+  height: calc(100vh - var(--nav-global-height, 0));
+
+  @media (width > calc(40em + 72px)) {
+    height: 100vh;
+  }
+
+  & > .column {
+    content-visibility: auto;
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 420px;
+    max-width: 100%;
+    overflow-y: auto;
+    border-right: var(--hairline-width) solid var(--border-color);
+
+    & > main {
+      width: 100% !important;
+    }
+  }
+}
+
+:is(html, body):has(.feed.carousel) {
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: var(--header-height, 0);
+}
+.feed.carousel {
+  display: flex;
+  flex-direction: column;
+
+  .post-contextmenu-container {
+    --header-height: 0;
+  }
+
+  & > li,
+  + .feed-more {
+    scroll-snap-align: start;
+  }
+
+  + .feed-more {
+    padding-bottom: calc(100vh - 10em);
+  }
+
+  &
+    > li:has(
+      .post:not(.post-root, .post-parent)
+        .post-immersive:not(.post-quote .post-immersive)
+    ) {
+    padding-block: 0 !important;
+    height: calc(100vh - var(--nav-global-height, 0) - var(--header-height, 0));
+    flex-shrink: 0;
+    flex-grow: 1;
+    scroll-snap-stop: always;
+    overflow-y: auto;
+
+    @media (width > calc(40em + 72px)) {
+      height: calc(100vh - var(--header-height, 0));
+    }
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .post-side .post-author-avatar {
+      top: 0;
+    }
+
+    > .post-reason {
+      flex-shrink: 0;
+    }
+
+    > .post-reason:has(
+        + .post:not(.post-root, .post-parent)
+          .post-immersive:not(.post-quote .post-immersive)
+      ) {
+      z-index: 1;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+        to bottom right,
+        var(--bg-alpha-color),
+        transparent 50%
+      );
+      background-size: 100% 3em;
+      background-repeat: no-repeat;
+    }
+
+    & {
+      justify-content: flex-end;
+      overflow: hidden;
+
+      .post-root,
+      .post-parent,
+      .post-view-thread,
+      .post-quote {
+        display: none;
+      }
+
+      & > .post:not(.post-root, .post-parent) {
+        position: absolute;
+        inset: 0;
+        align-content: flex-end;
+        pointer-events: none;
+        grid-template-columns: 1fr var(--avatar-side);
+
+        &:after {
+          content: '';
+          position: absolute;
+          inset-inline: 0;
+          bottom: 0;
+          height: 5em;
+          background-image: linear-gradient(
+            to bottom,
+            transparent,
+            var(--bg-alpha-color) 50%
+          );
+          z-index: 0;
+        }
+
+        &:hover,
+        &:focus {
+          background-color: var(--bg-color);
+        }
+
+        .post-contextmenu-container {
+          position: absolute;
+          right: calc(var(--spacing) / 2);
+          top: auto;
+          bottom: 4em;
+          height: auto;
+          opacity: 1 !important;
+
+          .post-contextmenu {
+            background-color: transparent;
+            border: 0;
+            transform: none !important;
+
+            .actions {
+              pointer-events: auto;
+              flex-direction: column;
+
+              button,
+              .button {
+                background-color: transparent !important;
+                flex-direction: column;
+                filter: drop-shadow(0 0 2px var(--bg-color))
+                  drop-shadow(2px 0 2px var(--bg-color))
+                  drop-shadow(-2px 0 2px var(--bg-color))
+                  drop-shadow(0 2px 2px var(--bg-color))
+                  drop-shadow(0 -2px 2px var(--bg-color));
+
+                .tabler-icon {
+                  width: 24px;
+                  height: 24px;
+                  stroke-width: 1.5px;
+                }
+              }
+            }
+          }
+        }
+
+        > .post-side {
+          position: relative;
+          z-index: 1;
+          order: 1;
+        }
+
+        > .post-main {
+          .post-header {
+            position: relative;
+            z-index: 1;
+
+            .post-timestamp {
+              display: none;
+            }
+          }
+          > .post-body {
+            > .post-content {
+              max-height: 1.5em;
+              overflow: hidden;
+              z-index: 1;
+            }
+
+            > .post-immersive {
+              pointer-events: auto;
+              position: absolute;
+              inset: 0;
+              z-index: 0;
+
+              &:not(.post-images.multiple) {
+                place-content: center;
+              }
+
+              .post-gif,
+              .post-image {
+                border-radius: 0;
+                outline: 0;
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                max-width: 100% !important;
+                object-fit: scale-down;
+              }
+              .post-video {
+                background-color: transparent;
+                border-radius: 0;
+                outline: 0;
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+              }
+
+              media-control-bar {
+                background-image: none;
+
+                > *:not(media-mute-button) {
+                  display: none;
+                }
+                media-mute-button {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                }
+              }
+            }
+          }
+
+          > .post-footer,
+          .post-inline-translation {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

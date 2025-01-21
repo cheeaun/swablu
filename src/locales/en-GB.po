@@ -52,6 +52,10 @@ msgid "View full thread"
 msgstr "View full thread"
 
 #: src/components/FeedHeader.jsx
+msgid "View mode"
+msgstr "View mode"
+
+#: src/components/FeedHeader.jsx
 #: src/routes/notifications.jsx
 #: src/routes/post.$uri.jsx
 msgid "Refresh"
