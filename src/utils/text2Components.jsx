@@ -46,7 +46,7 @@ export default function text2Components({ text, facets }) {
         );
         let midComponent;
         let postComponent = null;
-        if (rest.length > URL_MAX_LENGTH) {
+        if (rest?.length > URL_MAX_LENGTH) {
           const mid = rest.slice(0, URL_MAX_LENGTH);
           midComponent = (
             <span key="mid" className="ellipsis">
