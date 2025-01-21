@@ -220,30 +220,31 @@ header {
 
     &.thread-same-author {
       .post-parent {
-        .post-side > *,
-        .post-header {
+        > .post-side > *,
+        > .post-main > .post-header {
           display: none;
         }
       }
 
       .post:last-child {
-        .post-header .post-author {
-          display: none;
-        }
-        .post-main {
+        > .post-main {
           display: grid;
           grid-template-areas:
             'body body'
             'footer header';
           grid-template-columns: 1fr 1fr;
 
-          .post-header {
+          > .post-header {
             grid-area: header;
             margin-top: calc(var(--spacing) * 0.75);
             text-align: end;
             display: block;
+
+            .post-author {
+              display: none;
+            }
           }
-          .post-body {
+          > .post-body {
             grid-area: body;
           }
         }
