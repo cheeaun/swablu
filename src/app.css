@@ -2490,7 +2490,7 @@ header {
                 place-content: center;
               }
 
-              .post-gif,
+              /* .post-gif,
               .post-image {
                 border-radius: 0;
                 outline: 0;
@@ -2499,7 +2499,7 @@ header {
                 max-height: 100% !important;
                 max-width: 100% !important;
                 object-fit: scale-down;
-              }
+              } */
               .post-video {
                 background-color: transparent;
                 border-radius: 0;
@@ -2507,10 +2507,16 @@ header {
                 width: 100% !important;
                 height: 100% !important;
                 max-height: 100% !important;
+                position: static;
+
+                &.not-intersecting > * {
+                  content-visibility: hidden;
+                }
               }
 
               media-control-bar {
                 background-image: none;
+                opacity: 1;
 
                 > *:not(media-mute-button) {
                   display: none;
@@ -2519,6 +2525,7 @@ header {
                   position: absolute;
                   top: 0;
                   right: 0;
+                  color: var(--fg-color);
                 }
               }
             }

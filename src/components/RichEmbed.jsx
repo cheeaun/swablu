@@ -9,7 +9,7 @@ import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
 
-const INTERSECTION_THRESHOLD = [0.5, 0.75, 1];
+const INTERSECTION_THRESHOLD = [0.75, 0.9, 1];
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -216,8 +216,8 @@ function Video({ embed }) {
   }, []);
 
   const intersection = useIntersection(videoRef, {
-    trackVisibility: true,
-    delay: 100,
+    // trackVisibility: true,
+    // delay: 100,
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
@@ -234,7 +234,7 @@ function Video({ embed }) {
 
   return (
     <media-controller
-      class="post-video"
+      class={`post-video ${intersection?.isIntersecting ? 'intersecting' : 'not-intersecting'}`}
       data-orientation={
         embed.aspectRatio?.width < embed.aspectRatio?.height
           ? 'portrait'
