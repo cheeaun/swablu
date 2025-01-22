@@ -25,7 +25,8 @@ export default function AuthorText({
   className,
 }) {
   const { agent } = useAuth();
-  const { did, avatar, displayName, handle } = author || {};
+  const { did, avatar, displayName, handle, viewer } = author || {};
+  const { following } = viewer || {};
 
   const [hovered, setHovered] = useState(false);
 
@@ -69,7 +70,8 @@ export default function AuthorText({
       displayHandle
     );
 
-  if (typeof children === 'function') {
+  const customChildren = typeof children === 'function';
+  if (customChildren) {
     children = children({
       niceDisplayHandle,
     });
@@ -97,6 +99,8 @@ export default function AuthorText({
             <br />
             {niceDisplayHandle}
           </>
+        ) : following ? (
+          displayName
         ) : (
           niceDisplayHandle
         )}
@@ -139,6 +143,7 @@ export default function AuthorText({
         <Tooltip placement="top start" crossOffset={showAvatar ? 8 : -12}>
           <TooltipContent
             author={profileData || author}
+            customChildren={customChildren}
             showAvatar={!hideTooltipAvatar && !showAvatar}
           />
         </Tooltip>
@@ -147,7 +152,7 @@ export default function AuthorText({
   );
 }
 
-function TooltipContent({ author, showAvatar }) {
+function TooltipContent({ author, showAvatar, customChildren }) {
   const { t, i18n } = useLingui();
   const actor = author?.did;
   if (!actor) return null;
@@ -155,6 +160,7 @@ function TooltipContent({ author, showAvatar }) {
   const {
     avatar,
     displayName,
+    handle,
     followersCount,
     viewer: { followedBy, following } = {},
   } = author || {};
@@ -174,7 +180,9 @@ function TooltipContent({ author, showAvatar }) {
           decoding="async"
         />
       )}
-      {!!displayName && <b>{displayName}</b>}
+      {following && !customChildren
+        ? handle
+        : !!displayName && <b>{displayName}</b>}
       {(followedBy || following) && (
         <span className="meta">
           {followedBy && following
