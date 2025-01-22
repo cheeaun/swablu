@@ -138,6 +138,7 @@ function Gif({ embed }) {
   // React's famous video[muted] bug
   // https://github.com/facebook/react/issues/10389
   useEffect(() => {
+    if (!gifRef.current) return;
     gifRef.current.defaultMuted = true;
     gifRef.current.muted = true;
   }, []);
@@ -211,6 +212,7 @@ function Video({ embed }) {
   // React's famous video[muted] bug
   // https://github.com/facebook/react/issues/10389
   useEffect(() => {
+    if (!videoRef.current) return;
     videoRef.current.defaultMuted = true;
     videoRef.current.muted = true;
   }, []);
@@ -221,16 +223,23 @@ function Video({ embed }) {
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
+    if (!videoRef.current) return;
     try {
       if (intersection?.isIntersecting) {
-        videoRef.current?.play();
+        videoRef.current.src = embed.playlist;
+        videoRef.current.load();
+        setTimeout(() => {
+          videoRef.current.play();
+        }, 100);
       } else if (document.pictureInPictureElement !== videoRef.current) {
-        videoRef.current?.pause();
+        // videoRef.current.pause();
+        videoRef.current.src = '';
+        videoRef.current.load();
       }
     } catch (e) {
       console.warn(e);
     }
-  }, [intersection?.isIntersecting]);
+  }, [embed, intersection?.isIntersecting]);
 
   return (
     <media-controller
@@ -250,7 +259,8 @@ function Video({ embed }) {
     >
       <hls-video
         ref={videoRef}
-        src={embed.playlist}
+        // src={embed.playlist}
+        data-src={embed.playlist}
         poster={embed.thumbnail}
         width={embed.aspectRatio?.width}
         height={embed.aspectRatio?.height}
