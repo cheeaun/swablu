@@ -777,6 +777,10 @@ header {
     }
 
     a.link {
+      &:not(.is-url) {
+        color: inherit;
+      }
+
       .ellipsis:after {
         content: '…';
       }
