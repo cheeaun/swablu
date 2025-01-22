@@ -231,12 +231,20 @@ function Video({ embed }) {
     try {
       console.log('INTERSECTION', intersection);
       if (intersection?.isIntersecting) {
+        let startLoad = false;
         if (!videoRef.current.src) {
           videoRef.current.src = embed.playlist;
           videoRef.current.load();
+          startLoad = true;
         }
         if (intersection?.intersectionRatio >= 0.9) {
-          videoRef.current.play();
+          if (startLoad) {
+            timer = setTimeout(() => {
+              videoRef.current.play();
+            }, 100);
+          } else {
+            videoRef.current.play();
+          }
         } else {
           videoRef.current.pause();
         }
