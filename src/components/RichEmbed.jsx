@@ -283,7 +283,9 @@ function Video({ embed }) {
         width: embed.aspectRatio?.width,
         maxWidth: '100%',
       }}
-      onClick={() => {
+      onClick={(e) => {
+        // if it's a click on media-control-bar, don't do anything
+        if (e.target?.closest('media-control-bar')) return;
         // If video is playing, if muted, unmute, else mute and pause
         if (videoRef.current.paused) {
           videoRef.current.play();
