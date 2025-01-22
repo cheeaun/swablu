@@ -9,7 +9,9 @@ import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
 
-const INTERSECTION_THRESHOLD = [0.75, 0.9, 1];
+const INTERSECTION_THRESHOLD = [
+  0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+];
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -220,29 +222,46 @@ function Video({ embed }) {
   const intersection = useIntersection(videoRef, {
     // trackVisibility: true,
     // delay: 100,
+    rootMargin: `${window.innerHeight / 2}px`,
     threshold: INTERSECTION_THRESHOLD,
   });
   useEffect(() => {
     if (!videoRef.current) return;
+    let timer;
     try {
+      console.log('INTERSECTION', intersection);
       if (intersection?.isIntersecting) {
-        videoRef.current.src = embed.playlist;
-        videoRef.current.load();
-        setTimeout(() => {
+        if (!videoRef.current.src) {
+          videoRef.current.src = embed.playlist;
+          videoRef.current.load();
+        }
+        if (intersection?.intersectionRatio >= 0.9) {
           videoRef.current.play();
-        }, 100);
+        } else {
+          videoRef.current.pause();
+        }
       } else if (document.pictureInPictureElement !== videoRef.current) {
         // videoRef.current.pause();
-        videoRef.current.src = '';
-        videoRef.current.load();
+        if (videoRef.current.src) {
+          videoRef.current.src = '';
+          videoRef.current.load();
+        }
       }
     } catch (e) {
       console.warn(e);
     }
-  }, [embed, intersection?.isIntersecting]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [
+    embed,
+    intersection?.isIntersecting,
+    intersection?.intersectionRatio.toFixed(1),
+  ]);
 
   return (
     <media-controller
+      gesturesdisabled
       class={`post-video ${intersection?.isIntersecting ? 'intersecting' : 'not-intersecting'}`}
       data-orientation={
         embed.aspectRatio?.width < embed.aspectRatio?.height
@@ -255,6 +274,19 @@ function Video({ embed }) {
         '--height': embed.aspectRatio?.height,
         width: embed.aspectRatio?.width,
         maxWidth: '100%',
+      }}
+      onClick={() => {
+        // If video is playing, if muted, unmute, else mute and pause
+        if (videoRef.current.paused) {
+          videoRef.current.play();
+          videoRef.current.muted = false;
+        } else {
+          if (videoRef.current.muted) {
+            videoRef.current.muted = false;
+          } else {
+            videoRef.current.pause();
+          }
+        }
       }}
     >
       <hls-video
