@@ -1015,6 +1015,10 @@ header {
     min-height: 88px;
     max-height: 50vh;
 
+    &:not([mediapaused]) {
+      border-radius: calc(var(--radius) / 3);
+    }
+
     /* HLS video dimensions might change halfway while playing */
     /* width: 100%; */
 
