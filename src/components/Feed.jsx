@@ -227,10 +227,10 @@ function feedMassage(feed, { context, reset, authDid }) {
     const { post, reply, reason } = item;
     const { root, parent } = reply || {};
 
-    const hasParent = !!parent?.uri;
+    const hasParent = !!parent?.uri && !parent.blocked;
     const followingParent = parent?.author?.viewer?.following;
     const parentSameAuthor = parent?.author?.did === post?.author?.did;
-    const hasRoot = !!root?.uri && root?.uri !== parent?.uri;
+    const hasRoot = !!root?.uri && root?.uri !== parent?.uri && !root.blocked;
     const followingRoot = root?.author?.viewer?.following;
     const rootSameAuthor = root?.author?.did === post?.author?.did;
 

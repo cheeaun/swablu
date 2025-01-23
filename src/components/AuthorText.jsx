@@ -47,7 +47,13 @@ export default function AuthorText({
       })
     : {};
 
-  const trueHandle = punycode.toUnicode(handle);
+  if (!handle) console.warn('NO HANDLE', author);
+  let trueHandle = handle || '';
+  try {
+    trueHandle = punycode.toUnicode(handle);
+  } catch (e) {
+    console.error(e);
+  }
   const handleTooLong = trueHandle.length > MAX_HANDLE_LENGTH;
   const displayHandle = handleTooLong
     ? `${trueHandle.slice(0, MAX_HANDLE_LENGTH)}…`
