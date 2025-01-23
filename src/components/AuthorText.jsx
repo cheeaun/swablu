@@ -99,7 +99,7 @@ export default function AuthorText({
             <br />
             {niceDisplayHandle}
           </>
-        ) : following ? (
+        ) : following && displayName?.trim?.() ? (
           displayName
         ) : (
           niceDisplayHandle
