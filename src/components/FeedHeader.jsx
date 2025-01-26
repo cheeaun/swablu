@@ -133,15 +133,21 @@ function FeedRefresh({ queryKey, query, autoRefresh }) {
   useEffect(() => {
     if (!autoRefresh) return;
     let timeoutId = null;
+    let rafId = null;
     function refetch() {
-      refresh();
-      timeoutId = setTimeout(refetch, 30 * 1000);
+      rafId = requestAnimationFrame(() => {
+        refresh();
+        timeoutId = setTimeout(refetch, 30 * 1000);
+      });
     }
     const isInert = document.querySelector('.media-dialog[open]');
     if (isIdle && window.scrollY === 0 && !isInert) {
       refetch();
     }
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    };
   }, [isIdle, autoRefresh, refresh]);
 
   const scrollToTop = () => {
