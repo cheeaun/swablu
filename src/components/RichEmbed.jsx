@@ -9,9 +9,8 @@ import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
 
-const INTERSECTION_THRESHOLD = [
-  0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
-];
+const OUTER_INTERSECTION_THRESHOLD = [0, 0.1, 0.5, 0.9, 1];
+const INTERSECTION_THRESHOLD = [0.7, 0.8, 0.9, 1];
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -208,69 +207,103 @@ function Gif({ embed }) {
   return null;
 }
 
+const intersectingVideos = new Set();
+// Track and make sure only one video is playing
+let playingVideo = null;
+const playVideo = (video) => {
+  if (!video?.play) return;
+  if (intersectingVideos.size > 1) {
+    // Get the video nearest to center of viewport
+    const centerVideo = Array.from(intersectingVideos).reduce((prev, curr) => {
+      const prevCenter =
+        prev.getBoundingClientRect().top + prev.offsetHeight / 2;
+      const currCenter =
+        curr.getBoundingClientRect().top + curr.offsetHeight / 2;
+      return Math.abs(currCenter - window.innerHeight / 2) <
+        Math.abs(prevCenter - window.innerHeight / 2)
+        ? curr
+        : prev;
+    }, intersectingVideos.values().next().value);
+    centerVideo.play();
+  } else {
+    video.play();
+  }
+};
+
 function Video({ embed }) {
+  const outerVideoRef = useRef();
   const videoRef = useRef();
 
   // React's famous video[muted] bug
   // https://github.com/facebook/react/issues/10389
   useEffect(() => {
+    if (!outerVideoRef.current) return;
     if (!videoRef.current) return;
     videoRef.current.defaultMuted = true;
     videoRef.current.muted = true;
   }, []);
 
-  const intersection = useIntersection(videoRef, {
-    // trackVisibility: true,
-    // delay: 100,
+  const outerIntersection = useIntersection(outerVideoRef, {
     rootMargin: `${window.innerHeight / 2}px`,
+    threshold: OUTER_INTERSECTION_THRESHOLD,
+  });
+  const intersection = useIntersection(videoRef, {
     threshold: INTERSECTION_THRESHOLD,
   });
+
   useEffect(() => {
+    if (!outerVideoRef.current) return;
     if (!videoRef.current) return;
     let timer;
     try {
-      console.log('INTERSECTION', intersection);
-      if (intersection?.isIntersecting) {
+      console.log('INTERSECTION', { outerIntersection, intersection });
+      if (outerIntersection?.isIntersecting) {
+        intersectingVideos.add(videoRef.current);
         let startLoad = false;
         if (!videoRef.current.src) {
           videoRef.current.src = embed.playlist;
           videoRef.current.load();
           startLoad = true;
         }
-        if (intersection?.intersectionRatio >= 0.9) {
+        if (intersection?.isIntersecting) {
           if (startLoad) {
             timer = setTimeout(() => {
-              videoRef.current.play();
+              // videoRef.current.play();
+              playVideo(videoRef.current);
             }, 100);
           } else {
-            videoRef.current.play();
+            // videoRef.current.play();
+            playVideo(videoRef.current);
           }
         } else {
           videoRef.current.pause();
         }
       } else if (document.pictureInPictureElement !== videoRef.current) {
+        intersectingVideos.delete(videoRef.current);
         // videoRef.current.pause();
         if (videoRef.current.src) {
           videoRef.current.src = '';
           videoRef.current.load();
         }
       }
+      console.log(
+        'INTERSECTING VIDEOS',
+        intersectingVideos.size,
+        intersectingVideos,
+      );
     } catch (e) {
       console.warn(e);
     }
     return () => {
       clearTimeout(timer);
     };
-  }, [
-    embed,
-    intersection?.isIntersecting,
-    intersection?.intersectionRatio.toFixed(1),
-  ]);
+  }, [embed, outerIntersection?.isIntersecting, intersection?.isIntersecting]);
 
   return (
     <media-controller
+      ref={outerVideoRef}
       gesturesdisabled
-      class={`post-video ${intersection?.isIntersecting ? 'intersecting' : 'not-intersecting'}`}
+      class={`post-video ${outerIntersection?.isIntersecting ? 'intersecting' : 'not-intersecting'}`}
       data-orientation={
         embed.aspectRatio?.width < embed.aspectRatio?.height
           ? 'portrait'
@@ -288,7 +321,8 @@ function Video({ embed }) {
         if (e.target?.closest('media-control-bar')) return;
         // If video is playing, if muted, unmute, else mute and pause
         if (videoRef.current.paused) {
-          videoRef.current.play();
+          // videoRef.current.play();
+          playVideo(videoRef.current);
           videoRef.current.muted = false;
         } else {
           if (videoRef.current.muted) {
@@ -312,6 +346,15 @@ function Video({ embed }) {
         playsinline
         // muted
         loop
+        onPlay={() => {
+          if (playingVideo && playingVideo !== videoRef.current) {
+            playingVideo.pause();
+          }
+          playingVideo = videoRef.current;
+        }}
+        onPause={() => {
+          playingVideo = null;
+        }}
       />
       {/* <media-play-button slot="centered-chrome" notooltip /> */}
       <media-control-bar>
