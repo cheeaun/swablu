@@ -210,7 +210,7 @@ function Gif({ embed }) {
 const intersectingVideos = new Set();
 // Track and make sure only one video is playing
 let playingVideo = null;
-const playVideo = (video) => {
+const playVideo = (video, { muted } = {}) => {
   if (!video?.play) return;
   if (intersectingVideos.size > 1) {
     // Get the video nearest to center of viewport
@@ -225,10 +225,14 @@ const playVideo = (video) => {
         : prev;
     }, intersectingVideos.values().next().value);
     centerVideo.play();
+    centerVideo.muted = typeof muted === 'boolean' ? muted : true;
   } else {
     video.play();
+    video.muted = typeof muted === 'boolean' ? muted : true;
   }
 };
+
+let globalMuted = true;
 
 function Video({ embed }) {
   const outerVideoRef = useRef();
@@ -269,11 +273,15 @@ function Video({ embed }) {
           if (startLoad) {
             timer = setTimeout(() => {
               // videoRef.current.play();
-              playVideo(videoRef.current);
+              playVideo(videoRef.current, {
+                muted: globalMuted,
+              });
             }, 100);
           } else {
             // videoRef.current.play();
-            playVideo(videoRef.current);
+            playVideo(videoRef.current, {
+              muted: globalMuted,
+            });
           }
         } else {
           videoRef.current.pause();
@@ -324,9 +332,11 @@ function Video({ embed }) {
           // videoRef.current.play();
           playVideo(videoRef.current);
           videoRef.current.muted = false;
+          globalMuted = false;
         } else {
           if (videoRef.current.muted) {
             videoRef.current.muted = false;
+            globalMuted = false;
           } else {
             videoRef.current.pause();
           }
@@ -361,7 +371,11 @@ function Video({ embed }) {
         <media-play-button />
         <media-time-display showduration notoggle />
         <media-time-range />
-        <media-mute-button />
+        <media-mute-button
+          onClick={() => {
+            globalMuted = videoRef.current.muted;
+          }}
+        />
         <media-pip-button />
         <media-fullscreen-button />
       </media-control-bar>
