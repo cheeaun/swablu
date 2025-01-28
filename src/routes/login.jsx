@@ -1,10 +1,21 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useDeferredValue } from 'react';
 import { useTitle } from 'react-use';
 import { useAuth } from '../hooks/useAuth';
 import store from '../utils/store';
 import { toast } from 'sonner';
+import {
+  Button,
+  ComboBox,
+  Input,
+  Label,
+  ListBox,
+  ListBoxItem,
+  Popover,
+} from 'react-aria-components';
+import AuthorText from '../components/AuthorText';
+import { useDebounce } from 'react-use';
 
 export const Route = createFileRoute('/login')({
   component: Login,
@@ -25,6 +36,33 @@ export function Login() {
     }
   }, [lastLoginIdentity]);
 
+  const [identityValue, setIdentityValue] = useState('');
+  const deferredIdentityValue = useDeferredValue(identityValue);
+  const [actors, setActors] = useState([]);
+
+  useDebounce(
+    () => {
+      if (deferredIdentityValue) {
+        agent.app.bsky.actor
+          .searchActorsTypeahead({
+            q: deferredIdentityValue,
+            limit: 5,
+          })
+          .then((res) => {
+            const actors = res?.data?.actors || [];
+            if (actors.length) {
+              setActors(actors);
+            }
+          })
+          .catch((err) => {
+            console.warn(err);
+          });
+      }
+    },
+    300,
+    [deferredIdentityValue],
+  );
+
   return (
     <main>
       <div className="main-body">
@@ -32,9 +70,7 @@ export function Login() {
           <Trans>Log in</Trans>
         </h1>
         <form
-          style={{
-            paddingBottom: 20,
-          }}
+          className="login-form"
           onSubmit={async (e) => {
             e.preventDefault();
             if (agent?.did) {
@@ -47,8 +83,8 @@ export function Login() {
             try {
               const provider = e.target.provider?.value?.trim?.();
               const value = e.target.identity.value.trim();
-              await login(value, { handleResolver: provider });
               store.local.set('lastLoginIdentity', value);
+              await login(value, { handleResolver: provider });
               // 1s wait
               await new Promise((resolve) => setTimeout(resolve, 1000));
               navigate({ to: '/' });
@@ -76,17 +112,45 @@ export function Login() {
           </label>
           <br /> */}
           @{' '}
-          <input
-            ref={identityRef}
-            type="text"
-            name="identity"
-            required
-            autoCapitalize="off"
-            autoCorrect="off"
-            spellCheck="false"
-            disabled={uiState === 'loading'}
-            placeholder="handle.bsky.social"
-          />{' '}
+          <ComboBox
+            defaultFilter={() => true}
+            allowsCustomValue
+            aria-label="Search for a user by handle"
+          >
+            <Input
+              name="identity"
+              ref={identityRef}
+              required
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck="false"
+              disabled={uiState === 'loading'}
+              placeholder="handle.bsky.social"
+              onInput={(e) => {
+                setIdentityValue(e.target.value);
+              }}
+            />
+            <Popover>
+              <ListBox
+                items={actors.map((actor) => ({
+                  id: actor.did,
+                  ...actor,
+                }))}
+              >
+                {(item) => (
+                  <ListBoxItem textValue={item.handle}>
+                    <AuthorText
+                      as="span"
+                      className="typeahead-item"
+                      showAvatar
+                      showName
+                      author={item}
+                    />
+                  </ListBoxItem>
+                )}
+              </ListBox>
+            </Popover>
+          </ComboBox>{' '}
           <button type="submit" disabled={uiState === 'loading'}>
             <Trans>Log in</Trans>
           </button>

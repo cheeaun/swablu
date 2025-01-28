@@ -2549,3 +2549,29 @@ header {
     }
   }
 }
+
+.typeahead-item {
+  display: flex;
+  gap: calc(var(--spacing) / 2);
+  align-items: center;
+  font-size: small;
+
+  .post-author-avatar {
+    width: 2em;
+    height: 2em;
+  }
+
+  .post-author-name {
+    flex-shrink: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.login-form {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}

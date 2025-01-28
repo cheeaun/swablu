@@ -127,7 +127,7 @@
   background: var(--bg-color);
   border-radius: var(--radius);
   color: var(--text-color);
-  width: 14em;
+  width: 20em;
   max-width: 90vw;
   max-height: 75vh;
   overflow: hidden;
@@ -244,5 +244,37 @@
       stroke: none;
       fill: var(--checkmark-color);
     }
+  }
+}
+
+/* Listbox */
+
+.react-aria-ListBox {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  overflow: auto;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.react-aria-ListBoxItem {
+  /* margin: 2px; */
+  padding: calc(var(--spacing) / 2) var(--spacing);
+  outline: none;
+  cursor: default;
+  color: var(--fg-color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &[data-focused] {
+    color: var(--link-color);
+    background-color: var(--link-lighter-color);
+  }
+
+  &[data-selected] {
+    font-weight: 500;
+    background-color: var(--bg-light-color);
   }
 }

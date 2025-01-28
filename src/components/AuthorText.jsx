@@ -121,7 +121,9 @@ export default function AuthorText({
 
   if (as) {
     const Component = as;
-    return <Component>{linkChildren}</Component>;
+    return (
+      <Component className={className || undefined}>{linkChildren}</Component>
+    );
   }
 
   const theAuthor = profileData || author;
