@@ -31,7 +31,8 @@ export default function RichEmbed({ embed }) {
     /embed\.external/i.test(embed?.$type) && embed?.external?.uri;
   const hasGIF = hasExternal && /\.gif($|\?)/i.test(embed.external.uri);
   const hasStarterPack = /starterPack/i.test(embed?.record?.$type);
-  const hasFeed = /feed\.defs/i.test(embed?.record?.$type);
+  const hasFeed = /generatorView/i.test(embed?.record?.$type);
+  const hasList = /listView/i.test(embed?.record?.$type);
 
   // For debugging
   const hasUnrenderedEmbed =
@@ -44,7 +45,8 @@ export default function RichEmbed({ embed }) {
     !hasBlocked &&
     !hasGIF &&
     !hasStarterPack &&
-    !hasFeed;
+    !hasFeed &&
+    !hasList;
 
   return (
     <>
@@ -88,6 +90,7 @@ export default function RichEmbed({ embed }) {
         </blockquote>
       )}
       {hasFeed && <FeedEmbed embed={embed} />}
+      {hasList && <ListEmbed embed={embed} />}
       {hasStarterPack && <StarterPackEmbed embed={embed} />}
       {hasGIF ? (
         <div>
@@ -380,6 +383,24 @@ function Video({ embed }) {
         <media-fullscreen-button />
       </media-control-bar>
     </media-controller>
+  );
+}
+
+function ListEmbed({ embed }) {
+  const { record } = embed || {};
+  const { creator, description, name, uri } = record || {};
+  // I know this is not "external", maybe need better class name
+  return (
+    <Link to={`/list/${encodeURIComponent(uri)}`} className="post-external">
+      <div className="post-external-body">
+        <div className="post-external-title">{name}</div>
+        <div className="post-external-description">
+          List by <AuthorText author={creator} as="b" />
+          <br />
+          {description}
+        </div>
+      </div>
+    </Link>
   );
 }
 
