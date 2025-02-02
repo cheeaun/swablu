@@ -251,7 +251,16 @@ export function Profile() {
           </div>
         </>
       )}
-      <Bar as="ul" className="tab-bar" hidden={!profileData}>
+      <Bar
+        as="ul"
+        className="tab-bar"
+        hidden={
+          !(
+            query?.data?.pages?.length &&
+            query?.data?.pages?.[0]?.data?.feed?.length
+          )
+        }
+      >
         <li>
           <Link
             to="."

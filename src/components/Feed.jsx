@@ -37,15 +37,23 @@ export default function Feed({ query, massageFeed }) {
           {pages.map((page, index) => {
             const posts = page.data.feed || page.data.posts;
             const firstPostID = posts?.[0]?.post?.uri;
+            if (firstPostID) {
+              return (
+                <FeedPage
+                  key={firstPostID}
+                  firstPostID={firstPostID}
+                  posts={posts}
+                  context={massageFeed}
+                  reset={index === 0 && pages.length === 1}
+                  moderatePost={moderatePost}
+                />
+              );
+            }
+
             return (
-              <FeedPage
-                key={firstPostID}
-                firstPostID={firstPostID}
-                posts={posts}
-                context={massageFeed}
-                reset={index === 0 && pages.length === 1}
-                moderatePost={moderatePost}
-              />
+              <li key="nada">
+                <p className="post-nada">No posts.</p>
+              </li>
             );
           })}
         </ul>

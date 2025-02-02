@@ -1198,6 +1198,11 @@ header {
   }
 }
 
+.post-nada {
+  padding: var(--spacing) var(--spacing);
+  opacity: 0.5;
+}
+
 .view-post {
   --line-position-start: calc(var(--spacing) + var(--avatar-side) / 2);
   --line-position-top: calc(var(--spacing) + var(--avatar-top-margin));
@@ -1898,7 +1903,7 @@ header {
   z-index: 10;
 
   &[hidden] {
-    opacity: 0;
+    display: none;
   }
 
   li {
