@@ -842,6 +842,30 @@ header {
     outline-offset: calc(var(--hairline-width) * -1);
     border-radius: var(--radius);
     background-color: var(--bg-alpha-color);
+    background-image: linear-gradient(
+      135deg,
+      var(--bg-light-color),
+      transparent calc(var(--radius) * 10)
+    );
+
+    &:before {
+      /* Add dog ear effect in top left corner */
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--radius);
+      height: var(--radius);
+      border-style: solid;
+      border-width: 0 var(--hairline-width) var(--hairline-width) 0;
+      border-color: var(--border-strong-color);
+      background-image: linear-gradient(
+        to top left,
+        var(--bg-color),
+        transparent
+      );
+      transform: skew(-5deg, -5deg) translate(1px, 1px);
+    }
 
     .post-quote,
     .post-images,
