@@ -1393,7 +1393,9 @@ header {
       padding-inline: 0;
 
       summary.button {
-        margin-inline-start: calc(var(--line-position-start) + var(--spacing));
+        --summary-indent: calc(var(--line-position-start) + var(--spacing));
+        margin-inline-start: var(--summary-indent);
+        max-width: calc(100% - var(--summary-indent) - var(--spacing));
       }
     }
 
@@ -1427,7 +1429,7 @@ header {
       }
 
       .replies-preview {
-        max-width: 100%;
+        width: 100%;
         border-bottom: var(--hairline-width) solid var(--border-color);
         padding-block-end: calc(var(--spacing) / 2);
         margin-block-end: calc(var(--spacing) / 2);
