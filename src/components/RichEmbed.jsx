@@ -8,9 +8,9 @@ import AuthorText from './AuthorText';
 import MediaCarousel from './MediaCarousel';
 import RichPost from './RichPost';
 import { IconArrowRight } from '@tabler/icons-react';
+import { throttle } from 'throttle-debounce';
 
-const OUTER_INTERSECTION_THRESHOLD = [0, 0.1, 0.5, 0.9, 1];
-const INTERSECTION_THRESHOLD = [0.7, 0.8, 0.9, 1];
+const INTERSECTION_THRESHOLD = [0, 0.25, 0.5, 0.75, 1];
 
 export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
@@ -211,110 +211,170 @@ function Gif({ embed }) {
 }
 
 const intersectingVideos = new Set();
-// Track and make sure only one video is playing
 let playingVideo = null;
+let globalMuted = true;
+let globalVolume = 1;
+
+const videoIntersectionObserver = new IntersectionObserver(
+  (entries) => {
+    console.log('INTERSECTING VIDEOS', entries);
+    entries.forEach((entry) => {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        intersectingVideos.add(video);
+        // Swap the src and data-src
+        if (!video.src) {
+          video.src = video.dataset.src;
+          video.load();
+        }
+        throttledPlayVideo();
+      } else {
+        intersectingVideos.delete(video);
+        video.src = '';
+        video.load();
+      }
+    });
+  },
+  {
+    rootMargin: '50%',
+    threshold: [0.5, 1],
+  },
+);
+
 const playVideo = (video, { muted } = {}) => {
-  if (!video?.play) return;
-  if (intersectingVideos.size > 1) {
-    // Get the video nearest to center of viewport
-    const centerVideo = Array.from(intersectingVideos).reduce((prev, curr) => {
-      const prevCenter =
-        prev.getBoundingClientRect().top + prev.offsetHeight / 2;
-      const currCenter =
-        curr.getBoundingClientRect().top + curr.offsetHeight / 2;
-      return Math.abs(currCenter - window.innerHeight / 2) <
-        Math.abs(prevCenter - window.innerHeight / 2)
-        ? curr
-        : prev;
-    }, intersectingVideos.values().next().value);
-    centerVideo.play();
-    centerVideo.muted = typeof muted === 'boolean' ? muted : true;
-  } else {
+  const hasMuted = typeof muted === 'boolean';
+  if (video?.play && video !== playingVideo) {
+    console.log('PLAY VIDEO', { video, playingVideo, muted });
     video.play();
-    video.muted = typeof muted === 'boolean' ? muted : true;
+    video.muted = hasMuted ? muted : globalMuted;
+    if (hasMuted) globalMuted = muted;
+    video.volume = globalVolume;
+    return;
+  }
+
+  // Clean-up disconnected videos
+  intersectingVideos.forEach((video) => {
+    if (!video.isConnected) {
+      intersectingVideos.delete(video);
+    }
+  });
+
+  const videosCount = intersectingVideos.size;
+  if (videosCount === 1 && intersectingVideos.has(playingVideo)) {
+    console.log('PLAY VIDEO (DO NOTHING)', { video, playingVideo, muted });
+    // Do nothing
+    return;
+  }
+  if (videosCount) {
+    // Get the video nearest to center of viewport
+    const winHeight = window.innerHeight;
+    const centerPoint = winHeight / 2;
+    const firstVideo = intersectingVideos.values().next().value;
+    const centerVideo =
+      videosCount === 1
+        ? firstVideo
+        : Array.from(intersectingVideos).reduce((prev, curr) => {
+            const prevRect = prev.getBoundingClientRect();
+            const prevCenter = prevRect.top + prevRect.height / 2;
+            const currRect = curr.getBoundingClientRect();
+            const currCenter = currRect.top + currRect.height / 2;
+            return Math.abs(currCenter - centerPoint) <
+              Math.abs(prevCenter - centerPoint)
+              ? curr
+              : prev;
+          }, firstVideo);
+
+    // Pause all non-center videos
+    if (videosCount > 1) {
+      intersectingVideos.forEach((video) => {
+        if (video !== centerVideo) {
+          video.pause();
+        }
+      });
+    }
+
+    if (centerVideo !== playingVideo) {
+      console.log('PLAY VIDEO', {
+        centerVideo,
+        muted,
+        playingVideo,
+        intersectingVideos,
+      });
+      centerVideo.play();
+      centerVideo.muted = hasMuted ? muted : globalMuted;
+      if (hasMuted) globalMuted = muted;
+      centerVideo.volume = globalVolume;
+    }
   }
 };
-
-let globalMuted = true;
+const throttledPlayVideo = throttle(
+  600,
+  () => {
+    playVideo(null, {
+      muted: globalMuted,
+    });
+  },
+  {
+    noLeading: true,
+  },
+);
+document.addEventListener(
+  'scroll',
+  () => {
+    throttledPlayVideo();
+  },
+  { passive: true },
+);
 
 function Video({ embed }) {
-  const outerVideoRef = useRef();
   const videoRef = useRef();
 
   // React's famous video[muted] bug
   // https://github.com/facebook/react/issues/10389
   useEffect(() => {
-    if (!outerVideoRef.current) return;
     if (!videoRef.current) return;
     videoRef.current.defaultMuted = true;
     videoRef.current.muted = true;
   }, []);
 
-  const outerIntersection = useIntersection(outerVideoRef, {
-    rootMargin: `${window.innerHeight / 2}px`,
-    threshold: OUTER_INTERSECTION_THRESHOLD,
-  });
-  const intersection = useIntersection(videoRef, {
-    threshold: INTERSECTION_THRESHOLD,
-  });
-
   useEffect(() => {
-    if (!outerVideoRef.current) return;
     if (!videoRef.current) return;
-    let timer;
-    try {
-      console.log('INTERSECTION', { outerIntersection, intersection });
-      if (outerIntersection?.isIntersecting) {
-        intersectingVideos.add(videoRef.current);
-        let startLoad = false;
-        if (!videoRef.current.src) {
-          videoRef.current.src = embed.playlist;
-          videoRef.current.load();
-          startLoad = true;
-        }
-        if (intersection?.isIntersecting) {
-          if (startLoad) {
-            timer = setTimeout(() => {
-              // videoRef.current.play();
-              playVideo(videoRef.current, {
-                muted: globalMuted,
-              });
-            }, 100);
-          } else {
-            // videoRef.current.play();
-            playVideo(videoRef.current, {
-              muted: globalMuted,
-            });
-          }
-        } else {
-          videoRef.current.pause();
-        }
-      } else if (document.pictureInPictureElement !== videoRef.current) {
-        intersectingVideos.delete(videoRef.current);
-        // videoRef.current.pause();
-        if (videoRef.current.src) {
-          videoRef.current.src = '';
-          videoRef.current.load();
-        }
+    const video = videoRef.current;
+    const handlePlay = () => {
+      console.log('ONPLAY');
+      if (playingVideo && playingVideo !== video) {
+        playingVideo.pause();
       }
-      console.log(
-        'INTERSECTING VIDEOS',
-        intersectingVideos.size,
-        intersectingVideos,
-      );
-    } catch (e) {
-      console.warn(e);
-    }
-    return () => {
-      clearTimeout(timer);
+      playingVideo = video;
     };
-  }, [embed, outerIntersection?.isIntersecting, intersection?.isIntersecting]);
+    video.addEventListener('play', handlePlay);
+    const handlePause = (e) => {
+      console.log('ONPAUSE', e);
+      if (playingVideo === video) {
+        playingVideo = null;
+      }
+      // playingVideo = null;
+    };
+    video.addEventListener('pause', handlePause);
+    const handleVolumeChange = (e) => {
+      globalVolume = e.target.volume;
+      // globalMuted = e.target.muted;
+    };
+    video.addEventListener('volumechange', handleVolumeChange);
+    videoIntersectionObserver.observe(video);
+    return () => {
+      intersectingVideos.delete(video);
+      videoIntersectionObserver.unobserve(video);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('volumechange', handleVolumeChange);
+    };
+  }, []);
 
   return (
     <media-controller
-      ref={outerVideoRef}
       gesturesdisabled
-      class={`post-video ${outerIntersection?.isIntersecting ? 'intersecting' : 'not-intersecting'}`}
+      class="post-video"
       data-orientation={
         embed.aspectRatio?.width < embed.aspectRatio?.height
           ? 'portrait'
@@ -328,24 +388,32 @@ function Video({ embed }) {
         maxWidth: '100%',
       }}
       onClick={(e) => {
+        console.log('MEDIA CONTROLLER CLICK', e, videoRef.current.paused);
         // if it's a click on media-control-bar, don't do anything
         if (e.target?.closest('media-control-bar')) return;
+        console.log('MEDIA CONTROLLER CLICK 2', e, videoRef.current.paused);
         // If video is playing, if muted, unmute, else mute and pause
         if (videoRef.current.paused) {
+          console.log('MEDIA CONTROLLER CLICK 3', e, videoRef.current.paused);
           // videoRef.current.play();
-          playVideo(videoRef.current);
-          videoRef.current.muted = false;
-          globalMuted = false;
+          playVideo(videoRef.current, {
+            muted: false,
+          });
         } else {
           if (videoRef.current.muted) {
             videoRef.current.muted = false;
             globalMuted = false;
           } else {
             videoRef.current.pause();
+            videoRef.current.muted = true;
+            globalMuted = true;
           }
         }
       }}
     >
+      {embed.thumbnail && (
+        <img className="post-video-bg" src={embed.thumbnail} alt="" />
+      )}
       <hls-video
         ref={videoRef}
         // src={embed.playlist}
@@ -359,15 +427,6 @@ function Video({ embed }) {
         playsinline
         // muted
         loop
-        onPlay={() => {
-          if (playingVideo && playingVideo !== videoRef.current) {
-            playingVideo.pause();
-          }
-          playingVideo = videoRef.current;
-        }}
-        onPause={() => {
-          playingVideo = null;
-        }}
       />
       {/* <media-play-button slot="centered-chrome" notooltip /> */}
       <media-control-bar>

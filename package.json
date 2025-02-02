@@ -44,6 +44,7 @@
     "react-dom": "~19.0.0",
     "react-use": "~17.6.0",
     "sonner": "~1.7.2",
+    "throttle-debounce": "~5.0.2",
     "tippy.js": "~6.3.7",
     "tldts": "~6.1.75",
     "workbox-navigation-preload": "~7.3.0"

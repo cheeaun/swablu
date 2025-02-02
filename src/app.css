@@ -1043,6 +1043,23 @@ header {
       border-radius: calc(var(--radius) / 3);
     }
 
+    .post-video-bg {
+      position: absolute;
+      --outer-spacing: 24px;
+      inset: calc(var(--outer-spacing) * -1);
+      width: calc(100% + var(--outer-spacing) + var(--outer-spacing));
+      height: calc(100% + var(--outer-spacing) + var(--outer-spacing));
+      opacity: 1;
+      object-fit: cover;
+      pointer-events: none;
+      filter: blur(32px) opacity(0.5);
+
+      + * {
+        position: relative;
+        z-index: 1;
+      }
+    }
+
     /* HLS video dimensions might change halfway while playing */
     /* width: 100%; */
 
@@ -2521,6 +2538,7 @@ header {
             }
 
             > .post-immersive {
+              content-visibility: auto;
               pointer-events: auto;
               position: absolute;
               inset: 0;
@@ -2561,12 +2579,18 @@ header {
                 > *:not(media-mute-button) {
                   display: none;
                 }
-                media-mute-button {
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                  color: var(--fg-color);
-                }
+              }
+              .post-video[mediamuted] media-mute-button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 1;
+              }
+              .post-video:not([mediamuted]) media-mute-button {
+                display: none;
+              }
+              .post-video .post-video-bg {
+                filter: blur(32px) opacity(0.75) brightness(0.75);
               }
             }
           }
