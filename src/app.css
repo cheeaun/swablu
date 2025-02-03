@@ -1076,6 +1076,7 @@ header {
         transparent,
         rgb(20 20 30 / 0.7) 75%
       );
+      z-index: 1;
     }
 
     @container video-control-bar (width <= 290px) {
