@@ -36,7 +36,7 @@ export default function Feed({ query, massageFeed }) {
         >
           {pages.map((page, index) => {
             const posts = page.data.feed || page.data.posts;
-            const firstPostID = posts?.[0]?.post?.uri;
+            const firstPostID = posts?.[0]?.post?.uri || posts?.[0]?.uri;
             if (firstPostID) {
               return (
                 <FeedPage
