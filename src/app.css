@@ -1013,6 +1013,7 @@ header {
           display: block;
           text-align: center;
           /* margin: auto; */
+          pointer-events: auto;
 
           img {
             max-width: none;
