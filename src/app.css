@@ -1029,6 +1029,8 @@ header {
         padding: var(--spacing);
         flex-shrink: 0;
         pointer-events: auto;
+        display: flex;
+        gap: var(--spacing);
       }
     }
   }

@@ -1,4 +1,10 @@
-import { IconX, IconZoomIn, IconZoomOut } from '@tabler/icons-react';
+import {
+  IconX,
+  IconZoomIn,
+  IconZoomOut,
+  IconArrowLeft,
+  IconArrowRight,
+} from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -50,6 +56,8 @@ export default function MediaCarousel(props) {
     }
   };
 
+  const carouselRef = useRef();
+
   return (
     <>
       {images.map((image, i) => (
@@ -98,6 +106,7 @@ export default function MediaCarousel(props) {
         }}
       >
         <div
+          ref={carouselRef}
           className="media-carousel"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -119,7 +128,13 @@ export default function MediaCarousel(props) {
             images.map(
               (image, i) =>
                 ((open && i === index) || openAll) && (
-                  <MediaCarouselItem key={image.fullsize} tabIndex="0">
+                  <MediaCarouselItem
+                    key={image.fullsize}
+                    tabIndex="0"
+                    showNext={i < imagesCount - 1}
+                    showPrev={i > 0}
+                    parentRef={carouselRef}
+                  >
                     <img
                       // Load thumb first
                       src={index === i ? image.thumb : image.fullsize}
@@ -165,7 +180,7 @@ export default function MediaCarousel(props) {
 }
 
 function MediaCarouselItem(props) {
-  const { children, ...otherProps } = props;
+  const { children, parentRef, showNext, showPrev, ...otherProps } = props;
   const imageRef = useRef();
   const [zoomedIn, setZoomedIn] = useState(false);
   useEffect(() => {
@@ -203,6 +218,32 @@ function MediaCarouselItem(props) {
         >
           {zoomedIn ? <IconZoomOut size={16} /> : <IconZoomIn size={16} />}
         </button>
+        {showPrev && (
+          <button
+            type="button"
+            onClick={() => {
+              parentRef.current.scrollBy({
+                left: -imageRef.current.clientWidth,
+                behavior: 'smooth',
+              });
+            }}
+          >
+            <IconArrowLeft size={16} />
+          </button>
+        )}
+        {showNext && (
+          <button
+            type="button"
+            onClick={() => {
+              parentRef.current.scrollBy({
+                left: imageRef.current.clientWidth,
+                behavior: 'smooth',
+              });
+            }}
+          >
+            <IconArrowRight size={16} />
+          </button>
+        )}
       </div>
     </div>
   );
