@@ -42,6 +42,11 @@ msgstr "{followersCount, plural, one {{0} follower} other {{1} followers}}"
 msgid "More…"
 msgstr "More…"
 
+#. placeholder {0}: posts.length
+#: src/components/Feed.jsx
+msgid "{0, plural, one {# repost} other {# reposts}}"
+msgstr "{0, plural, one {# repost} other {# reposts}}"
+
 #. placeholder {0}: root.replyCount
 #: src/components/Feed.jsx
 msgid "{0, plural, one {# reply. View full thread} other {# replies. View full thread}}"

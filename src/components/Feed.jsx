@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useViewMode } from '../hooks/useViewMode';
 
-export default function Feed({ query, massageFeed }) {
+export default function Feed({ query, massageFeed, allowSubFeed }) {
   const {
     data,
     error,
@@ -46,6 +46,7 @@ export default function Feed({ query, massageFeed }) {
                   context={massageFeed}
                   reset={index === 0 && pages.length === 1}
                   moderatePost={moderatePost}
+                  allowSubFeed={allowSubFeed}
                 />
               );
             }
@@ -76,21 +77,107 @@ export default function Feed({ query, massageFeed }) {
   );
 }
 
-function _FeedPage({ posts, context, reset, moderatePost }) {
-  const { agent } = useAuth();
-  const feed = context
-    ? feedMassage(posts, { context, reset, authDid: agent?.did })
-    : posts;
-  const repostsCount = feed.reduce((count, item) => {
+const SUB_FEED_LIMIT = 3;
+function subFeedify(feed) {
+  // Group reposts into separate feed items
+  const subFeed = [];
+  const feedCopy = [];
+  const feedCount = feed.length;
+  for (let i = 0; i < feedCount; i++) {
+    const item = feed[i];
     const { reason } = item;
     if (/#reasonRepost/i.test(reason?.$type)) {
-      return count + 1;
+      subFeed.push(item);
+    } else {
+      feedCopy.push(item);
     }
-    return count;
-  }, 0);
-  console.log('REPOSTS', repostsCount, posts.length);
+  }
+  const subFeedCount = subFeed.length;
+  console.log('REPOSTS', subFeedCount, feedCount);
+
+  if (subFeedCount <= SUB_FEED_LIMIT) {
+    return feed;
+  }
+
+  const feedCopyCount = feedCopy.length;
+  const subFeedRatio = subFeedCount / feedCount;
+
+  // If > 90% of feed, give up
+  if (subFeedRatio > 0.9 || feedCopyCount <= SUB_FEED_LIMIT) {
+    return feed;
+  }
+
+  // If > 50% of feed, split subFeed in half, insert at one third and two third of feedCopy
+  if (subFeedRatio > 0.5) {
+    const half = Math.floor(subFeedCount / 2);
+    feedCopy.splice(feedCopyCount / 3, 0, {
+      kind: 'sub-feed',
+      type: 'repost',
+      posts: subFeed.slice(0, half),
+    });
+    feedCopy.splice((feedCopyCount / 3) * 2, 0, {
+      kind: 'sub-feed',
+      type: 'repost',
+      posts: subFeed.slice(half),
+    });
+    return feedCopy;
+  }
+  // If < 50% of feed, insert subFeed at half of feedCopy
+  const index = Math.floor(feedCopyCount / 2);
+  feedCopy.splice(index, 0, {
+    kind: 'sub-feed',
+    type: 'repost',
+    posts: subFeed,
+  });
+  return feedCopy;
+}
+
+function _FeedPage({ posts, context, reset, moderatePost, allowSubFeed }) {
+  const { agent } = useAuth();
+  let feed = context
+    ? feedMassage(posts, { context, reset, authDid: agent?.did })
+    : posts;
+
+  if (allowSubFeed) {
+    feed = subFeedify(feed);
+  }
 
   return feed.map((item) => {
+    if (item?.kind === 'sub-feed') {
+      const posts = item?.posts?.filter((item) => {
+        if (!item?.post) item = { post: item };
+        const { post, reason } = item;
+        const mod = moderatePost(post);
+        const modUI = mod?.ui?.('contentList');
+        const isFiltered = modUI?.filter;
+        if (isFiltered) {
+          console.info(
+            'FILTERED POST',
+            post?.uri,
+            modUI?.filters?.[0]?.label?.val || modUI?.filters?.[0]?.type,
+            {
+              post,
+              modUI,
+            },
+          );
+          return false;
+        }
+        return true;
+      });
+
+      const key = posts[0].post.uri;
+
+      return (
+        <li key={key} className={`sub-feed sub-feed-${item?.type}`}>
+          {item?.type === 'repost' && (
+            <h3 className="repost-heading">
+              <Plural value={posts.length} one="# repost" other="# reposts" />
+            </h3>
+          )}
+          <FeedCarousel posts={posts} />
+        </li>
+      );
+    }
     if (!item?.post) item = { post: item };
     const { post, reason } = item;
 
@@ -122,8 +209,35 @@ const FeedPage = memo(_FeedPage, (oldProps, newProps) => {
   return oldFirstPostID === newFirstPostID;
 });
 
+function FeedCarousel(props) {
+  const { posts } = props;
+
+  return (
+    <ul className="carousel">
+      {posts.map((item) => {
+        if (!item?.post) item = { post: item };
+        const { post, reason } = item;
+
+        const key =
+          post.uri + (reason?.indexedAt ? `_${reason.indexedAt}` : '');
+
+        return (
+          <FeedItem
+            as="li"
+            key={key}
+            item={item}
+            richPostProps={{
+              small: true,
+            }}
+          />
+        );
+      })}
+    </ul>
+  );
+}
+
 function _FeedItem(props) {
-  const { as, item, ...otherProps } = props;
+  const { as, item, richPostProps, ...otherProps } = props;
   const Component = as || 'div';
 
   const { post, reason, reply } = item;
@@ -187,6 +301,7 @@ function _FeedItem(props) {
           post?.record?.reply?.parent?.uri === parent?.uri &&
           parent?.author
         }
+        {...richPostProps}
       />
     </Component>
   );

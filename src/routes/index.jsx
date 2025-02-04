@@ -66,7 +66,7 @@ export function Index() {
           autoRefresh
           noBack
         />
-        <Feed query={query} massageFeed="timeline" />
+        <Feed query={query} massageFeed="timeline" allowSubFeed />
       </main>
     </ViewModeProvider>
   );
