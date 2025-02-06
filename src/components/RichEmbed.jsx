@@ -263,6 +263,9 @@ const playVideo = (video, { muted } = {}) => {
   if (videosCount === 1 && intersectingVideos.has(playingVideo)) {
     console.log('PLAY VIDEO (DO NOTHING)', { video, playingVideo, muted });
     // Do nothing
+    if (playingVideo?.paused) {
+      playingVideo.play();
+    }
     return;
   }
   if (videosCount) {
