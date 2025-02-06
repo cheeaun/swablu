@@ -267,21 +267,39 @@ const playVideo = (video, { muted } = {}) => {
   }
   if (videosCount) {
     // Get the video nearest to center of viewport
-    const winHeight = window.innerHeight;
-    const centerPoint = winHeight / 2;
+    const { innerHeight: winHeight, innerWidth: winWidth } = window;
+    // const centerPoint = winHeight / 2;
+    const centerPoint = [winHeight / 2, winWidth / 2];
     const firstVideo = intersectingVideos.values().next().value;
     const centerVideo =
       videosCount === 1
         ? firstVideo
         : Array.from(intersectingVideos).reduce((prev, curr) => {
             const prevRect = prev.getBoundingClientRect();
-            const prevCenter = prevRect.top + prevRect.height / 2;
+            // const prevCenter = prevRect.top + prevRect.height / 2;
+            const prevCenter = [
+              prevRect.top + prevRect.height / 2,
+              prevRect.left + prevRect.width / 2,
+            ];
             const currRect = curr.getBoundingClientRect();
-            const currCenter = currRect.top + currRect.height / 2;
-            return Math.abs(currCenter - centerPoint) <
-              Math.abs(prevCenter - centerPoint)
-              ? curr
-              : prev;
+            // const currCenter = currRect.top + currRect.height / 2;
+            const currCenter = [
+              currRect.top + currRect.height / 2,
+              currRect.left + currRect.width / 2,
+            ];
+            // return Math.abs(currCenter - centerPoint) <
+            //   Math.abs(prevCenter - centerPoint)
+            //   ? curr
+            //   : prev;
+            const prevDistance = Math.sqrt(
+              (prevCenter[0] - centerPoint[0]) ** 2 +
+                (prevCenter[1] - centerPoint[1]) ** 2,
+            );
+            const currDistance = Math.sqrt(
+              (currCenter[0] - centerPoint[0]) ** 2 +
+                (currCenter[1] - centerPoint[1]) ** 2,
+            );
+            return currDistance < prevDistance ? curr : prev;
           }, firstVideo);
 
     // Pause all non-center videos
