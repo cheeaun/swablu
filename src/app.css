@@ -306,6 +306,14 @@ header {
             position: absolute;
             padding: calc(var(--spacing) / 3);
           }
+
+          .post-contextmenu-container {
+            position: relative;
+            top: 0;
+          }
+          .post-reason + * > .post-contextmenu-container {
+            top: -1em;
+          }
         }
       }
     }
