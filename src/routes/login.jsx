@@ -28,13 +28,7 @@ export function Login() {
   const { agent, login } = useAuth();
   const navigate = useNavigate();
 
-  const identityRef = useRef();
   const lastLoginIdentity = store.local.get('lastLoginIdentity');
-  useEffect(() => {
-    if (lastLoginIdentity) {
-      identityRef.current.value = lastLoginIdentity;
-    }
-  }, [lastLoginIdentity]);
 
   const [identityValue, setIdentityValue] = useState('');
   const deferredIdentityValue = useDeferredValue(identityValue);
@@ -116,10 +110,10 @@ export function Login() {
             defaultFilter={() => true}
             allowsCustomValue
             aria-label="Search for a user by handle"
+            defaultInputValue={lastLoginIdentity || ''}
           >
             <Input
               name="identity"
-              ref={identityRef}
               required
               autoCapitalize="off"
               autoCorrect="off"
