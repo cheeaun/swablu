@@ -15,6 +15,7 @@ import {
   IconBrightnessFilled,
   IconInfoSquareRounded,
   IconSearch,
+  IconTextSize,
 } from '@tabler/icons-react';
 import { useLinkProps, useMatchRoute } from '@tanstack/react-router';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -235,6 +236,10 @@ export default function NavGlobal() {
   );
 }
 
+const DEFAULT_TEXT_SIZE = 16;
+const MAX_TEXT_SIZE = 32;
+const MIN_TEXT_SIZE = 14;
+
 export function NavSecondary({ popoverPlacement }) {
   const { agent, logout } = useAuth();
   const signedIn = !!agent?.did;
@@ -247,6 +252,31 @@ export function NavSecondary({ popoverPlacement }) {
     store.local.set('appearance', appearance);
     setAppearance(appearance);
     document.documentElement.dataset.theme = appearance;
+  };
+
+  const [textSize, setTextSize] = useState(
+    Number(store.local.get('textSize')) || DEFAULT_TEXT_SIZE,
+  );
+  const updateTextSize = (textSize) => {
+    if (!textSize || typeof textSize !== 'number') {
+      setTextSize(DEFAULT_TEXT_SIZE);
+      document.documentElement.style.removeProperty('--text-size');
+      return;
+    }
+    const clampedTextSize = Math.max(
+      MIN_TEXT_SIZE,
+      Math.min(MAX_TEXT_SIZE, textSize),
+    );
+    store.local.set('textSize', clampedTextSize);
+    setTextSize(clampedTextSize);
+    if (textSize === DEFAULT_TEXT_SIZE) {
+      document.documentElement.style.removeProperty('--text-size');
+    } else if (textSize) {
+      document.documentElement.style.setProperty(
+        '--text-size',
+        `${textSize}px`,
+      );
+    }
   };
 
   return (
@@ -286,7 +316,7 @@ export function NavSecondary({ popoverPlacement }) {
                   <IconBrightnessFilled size={16} />
                   Appearance
                 </MenuItem>
-                <Popover placement="top end">
+                <Popover placement="top end" offset={0}>
                   <Menu>
                     <MenuItem
                       data-icon
@@ -321,6 +351,46 @@ export function NavSecondary({ popoverPlacement }) {
                         }}
                       />
                       Auto
+                    </MenuItem>
+                  </Menu>
+                </Popover>
+              </SubmenuTrigger>
+              <SubmenuTrigger>
+                <MenuItem data-icon>
+                  <IconTextSize size={16} />
+                  Text Size{' '}
+                  <span
+                    className="insignificant"
+                    style={{
+                      textAlign: 'end',
+                      fontWeight: 'normal',
+                    }}
+                  >
+                    {textSize}
+                  </span>
+                </MenuItem>
+                <Popover placement="top end" offset={0}>
+                  <Menu selectionMode="multiple">
+                    <MenuItem
+                      data-icon
+                      onAction={() => updateTextSize(+textSize + 1)}
+                      isDisabled={textSize === MAX_TEXT_SIZE}
+                    >
+                      Larger
+                    </MenuItem>
+                    <MenuItem
+                      data-icon
+                      onAction={() => updateTextSize(+textSize - 1)}
+                      isDisabled={textSize === MIN_TEXT_SIZE}
+                    >
+                      Smaller
+                    </MenuItem>
+                    <MenuItem
+                      data-icon
+                      onAction={() => updateTextSize(null)}
+                      isDisabled={textSize === DEFAULT_TEXT_SIZE}
+                    >
+                      Reset
                     </MenuItem>
                   </Menu>
                 </Popover>

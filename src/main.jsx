@@ -108,6 +108,15 @@ if (currentAppearance) {
   document.documentElement.dataset.theme = currentAppearance;
 }
 
+// Set text size
+const currentTextSize = store.local.get('textSize');
+if (currentTextSize) {
+  document.documentElement.style.setProperty(
+    '--text-size',
+    `${currentTextSize}px`,
+  );
+}
+
 // Load the messages for the default language
 i18n.load('en-GB', messages);
 i18n.activate('en-GB');
