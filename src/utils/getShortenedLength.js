@@ -19,7 +19,7 @@ function toShortUrl(url) {
   }
 }
 
-function shortenLinks(rt) {
+export function shortenLinks(rt) {
   if (!rt.facets?.length) {
     return rt;
   }

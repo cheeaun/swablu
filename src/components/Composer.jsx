@@ -32,7 +32,7 @@ import RichPost from './RichPost';
 import Editor from './Editor';
 import { LANGUAGES_MAP_CODE2 } from '../utils/languages';
 import drafts from '../utils/drafts-store';
-import getShortenedLength from '../utils/getShortenedLength';
+import getShortenedLength, { shortenLinks } from '../utils/getShortenedLength';
 
 const ComposerInstances = new Map();
 let rerenderComposer = () => {};
@@ -83,8 +83,12 @@ const ComposerInstance = memo(
           try {
             const payload = {};
             if (text) {
-              const rt = new RichText({ text });
+              let rt = new RichText(
+                { text: text.trimEnd() },
+                { cleanNewlines: true },
+              );
               await rt.detectFacets(agent);
+              rt = shortenLinks(rt);
               // const data = {
               //   text: rt.text,
               //   facets: rt.facets,
