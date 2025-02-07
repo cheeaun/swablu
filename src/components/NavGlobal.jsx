@@ -258,7 +258,12 @@ export function NavSecondary({ popoverPlacement }) {
     Number(store.local.get('textSize')) || DEFAULT_TEXT_SIZE,
   );
   const updateTextSize = (textSize) => {
-    if (!textSize || typeof textSize !== 'number') {
+    if (
+      !textSize ||
+      typeof textSize !== 'number' ||
+      textSize === DEFAULT_TEXT_SIZE
+    ) {
+      store.local.del('textSize');
       setTextSize(DEFAULT_TEXT_SIZE);
       document.documentElement.style.removeProperty('--text-size');
       return;
@@ -269,14 +274,10 @@ export function NavSecondary({ popoverPlacement }) {
     );
     store.local.set('textSize', clampedTextSize);
     setTextSize(clampedTextSize);
-    if (textSize === DEFAULT_TEXT_SIZE) {
-      document.documentElement.style.removeProperty('--text-size');
-    } else if (textSize) {
-      document.documentElement.style.setProperty(
-        '--text-size',
-        `${textSize}px`,
-      );
-    }
+    document.documentElement.style.setProperty(
+      '--text-size',
+      `${clampedTextSize}px`,
+    );
   };
 
   return (
