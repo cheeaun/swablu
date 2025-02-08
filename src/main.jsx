@@ -138,6 +138,7 @@ import { routeTree } from './routeTree.gen';
 const hashHistory = createHashHistory();
 const router = createRouter({
   routeTree,
+  scrollRestoration: true,
   history: hashHistory,
   defaultViewTransition: true,
   defaultPendingComponent: (params) => {

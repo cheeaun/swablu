@@ -1,6 +1,5 @@
 import {
   Outlet,
-  ScrollRestoration,
   createRootRouteWithContext,
   redirect,
 } from '@tanstack/react-router';
@@ -61,7 +60,6 @@ export const Route = createRootRouteWithContext()({
         richColors
       />
       <Composer />
-      <ScrollRestoration />
     </>
   ),
   errorComponent: (error) => <h1>{error.message}</h1>,
