@@ -639,7 +639,8 @@ header {
     }
   }
 
-  .post-body > *:not(.post-content):only-child {
+  .post-body > *:not(.post-content):only-child,
+  .post-body > .post-quote:first-child {
     margin-top: calc(var(--spacing) / 2);
   }
 

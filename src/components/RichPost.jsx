@@ -288,6 +288,10 @@ export default function RichPost({
     }
   }
 
+  const hasQuote =
+    /embed\.record/i.test(embed?.$type) &&
+    (embed.record?.value || embed.record?.record?.value);
+
   return (
     <div
       data-uri={post?.uri}
@@ -426,6 +430,7 @@ export default function RichPost({
           </Link>
         </div>
         <div className="post-body">
+          {hasQuote && <RichEmbed embed={embed} />}
           {!!richPost && (
             <div className="post-content">
               {!!parentAuthor?.did && parentAuthor?.did !== author?.did && (
@@ -443,7 +448,7 @@ export default function RichPost({
               detectedLangCode={showInlineTranslation.detectedLangCode}
             />
           )}
-          <RichEmbed embed={embed} />
+          {!hasQuote && <RichEmbed embed={embed} />}
           {embeds?.length > 0 && (
             <div className="post-embeds">
               {embeds.map((embed) => (
