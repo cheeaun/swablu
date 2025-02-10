@@ -908,7 +908,7 @@ header {
   .post-quote {
     margin: 0;
     padding: 0;
-    outline: var(--hairline-width) solid var(--border-strong-color);
+    /* outline: var(--hairline-width) solid var(--border-strong-color);
     outline-offset: calc(var(--hairline-width) * -1);
     border-radius: var(--radius);
     background-color: var(--bg-alpha-color);
@@ -916,11 +916,35 @@ header {
       135deg,
       var(--bg-light-color),
       transparent calc(var(--radius) * 10)
-    );
+    );*/
+
+    position: relative;
+    background-color: var(--bg-alpha-color);
+    border-start-end-radius: var(--radius);
+    border-end-end-radius: var(--radius);
+    &:before {
+      content: '';
+      position: absolute;
+      inset-inline-start: -2px;
+      display: block;
+      width: 4px;
+      height: 100%;
+      background-color: var(--link-color);
+      border-radius: var(--radius);
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.3)
+      );
+    }
+
+    > .post {
+      padding-block: calc(var(--spacing) / 2);
+    }
 
     &:before {
       /* Add dog ear effect in top left corner */
-      content: '';
+      /* content: '';
       pointer-events: none;
       position: absolute;
       top: 0;
@@ -936,7 +960,7 @@ header {
         transparent
       );
       transform: skew(-5deg, -5deg) translate(1px, 1px);
-      filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+      filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15)); */
     }
 
     .post-quote,
@@ -953,13 +977,23 @@ header {
       max-height: 25vh !important;
     }
 
+    .post-images {
+      mask-image: linear-gradient(
+        to right,
+        black calc(100% - var(--spacing)),
+        transparent
+      );
+    }
+
     position: relative;
     .post-quote-view-action {
       display: flex;
       gap: calc(var(--spacing) / 2);
       position: absolute;
-      top: var(--spacing);
-      right: var(--spacing);
+      /* top: var(--spacing); */
+      /* right: var(--spacing); */
+      top: calc(var(--spacing) / 2);
+      right: calc(var(--spacing) / 2);
       opacity: 0;
       transition: opacity 0.3s ease-in;
       background-color: var(--link-lighter-color);
