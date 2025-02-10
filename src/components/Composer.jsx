@@ -345,6 +345,11 @@ const ComposerInstance = memo(
                 <RichPost post={replyPreview} small preview />
               </div>
             )}
+            {quotePreview && (
+              <div className="composer-quote-preview">
+                <RichPost post={quotePreview} small preview />
+              </div>
+            )}
             <TextArea
               ref={textareaRef}
               name="text"
@@ -536,11 +541,6 @@ const ComposerInstance = memo(
                     <IconTrashX size={16} />
                   </Button>
                 </div>
-              </div>
-            )}
-            {quotePreview && (
-              <div className="composer-quote-preview">
-                <RichPost post={quotePreview} small preview />
               </div>
             )}
             <input

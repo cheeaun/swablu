@@ -2281,6 +2281,32 @@ header {
       max-height: 25vh !important;
     }
   }
+
+  .composer-quote-preview {
+    border: 0;
+    background-color: var(--bg-color);
+    border-start-start-radius: 2px;
+    border-end-start-radius: 2px;
+    > .post {
+      padding-block: calc(var(--spacing) / 2);
+
+      &:before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        display: block;
+        width: 4px;
+        height: 100%;
+        background-color: var(--link-color);
+        border-radius: var(--radius);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.6),
+          rgba(0, 0, 0, 0.3)
+        );
+      }
+    }
+  }
 }
 
 .editor {
