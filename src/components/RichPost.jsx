@@ -59,7 +59,7 @@ export default function RichPost({
     viewer,
     threadgate,
   } = post;
-  const embeds = record?.embeds;
+  let embeds = record?.embeds;
   if (record?.value) record = { ...record, ...record.value };
   const author = post.author || record?.author;
   const { text, facets, createdAt, langs } = record || {};
@@ -288,11 +288,11 @@ export default function RichPost({
     }
   }
 
-  const hasQuote =
+  let hasQuote =
     /embed\.record/i.test(embed?.$type) &&
     (embed.record?.value || embed.record?.record?.value);
   const hasQuoteOnly = hasQuote && /embed\.record#/i.test(embed?.$type);
-  const embedWithQuoteOnly = hasQuote
+  let embedWithQuoteOnly = hasQuote
     ? {
         ...embed,
         media: undefined,
@@ -306,6 +306,42 @@ export default function RichPost({
         record: undefined,
       }
     : embed;
+
+  if (!hasQuote && embeds?.length > 0) {
+    const emsWithQuoteOnly = [];
+    embeds = embeds
+      .map((em) => {
+        hasQuote =
+          /embed\.record/i.test(em.$type) &&
+          (em.record?.value || em.record?.record?.value);
+        const hasQuoteOnly = hasQuote && /embed\.record#/i.test(em.$type);
+        const emWithQuoteOnly = hasQuote
+          ? {
+              ...em,
+              media: undefined,
+              images: undefined,
+              playlist: undefined,
+            }
+          : em;
+        emsWithQuoteOnly.push(emWithQuoteOnly);
+        const emWithoutQuote = hasQuote
+          ? {
+              ...em,
+              record: undefined,
+            }
+          : em;
+        if (!hasQuoteOnly) {
+          return emWithoutQuote;
+        }
+      })
+      .filter(Boolean);
+    if (emsWithQuoteOnly.length > 0) {
+      embedWithQuoteOnly = emsWithQuoteOnly[0];
+      if (emsWithQuoteOnly.length > 1) {
+        console.warn('Multiple quote posts???');
+      }
+    }
+  }
 
   return (
     <div
