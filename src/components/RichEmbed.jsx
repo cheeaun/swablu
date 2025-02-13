@@ -16,6 +16,8 @@ export default function RichEmbed({ embed }) {
   const hasEmbed = !!embed;
   if (!hasEmbed) return null;
 
+  const external = embed?.external || embed?.media?.external;
+
   const hasImages =
     (/embed\.images/i.test(embed?.$type) && embed?.images) ||
     (embed?.media && /embed\.images/i.test(embed.media.$type));
@@ -29,9 +31,8 @@ export default function RichEmbed({ embed }) {
     /embed\.record/i.test(embed?.$type) && embed.record?.notFound;
   const hasBlocked =
     /embed\.record/i.test(embed?.$type) && embed.record?.blocked;
-  const hasExternal =
-    /embed\.external/i.test(embed?.$type) && embed?.external?.uri;
-  const hasGIF = hasExternal && /\.gif($|\?)/i.test(embed.external.uri);
+  const hasExternal = external?.uri;
+  const hasGIF = hasExternal && /\.gif($|\?)/i.test(external?.uri);
   const hasStarterPack = /starterPack/i.test(embed?.record?.$type);
   const hasFeed = /generatorView/i.test(embed?.record?.$type);
   const hasList = /listView/i.test(embed?.record?.$type);
@@ -52,7 +53,15 @@ export default function RichEmbed({ embed }) {
 
   return (
     <>
-      {hasUnrenderedEmbed && <mark>EMBED: {embed.$type}</mark>}
+      {hasUnrenderedEmbed && (
+        <mark
+          onMouseEnter={(e) => {
+            console.log('EMBED', embed);
+          }}
+        >
+          EMBED: {embed.$type}
+        </mark>
+      )}
       {hasImages && (
         <div
           className={`post-images ${(embed.images || embed.media.images).length > 1 ? 'multiple' : ''}`}
@@ -102,15 +111,15 @@ export default function RichEmbed({ embed }) {
         hasExternal && (
           <a
             className="post-external"
-            href={embed?.external?.uri}
+            href={external?.uri}
             target="_blank"
             rel="noreferrer"
           >
-            {embed?.external?.thumb && (
+            {external?.thumb && (
               <div className="post-external-thumb">
                 <img
                   className=""
-                  src={embed?.external?.thumb}
+                  src={external?.thumb}
                   alt=""
                   loading="lazy"
                   decoding="async"
@@ -119,15 +128,15 @@ export default function RichEmbed({ embed }) {
             )}
             <div className="post-external-body">
               <div className="post-external-domain">
-                {new URL(embed?.external?.uri).hostname.replace(/^www\./, '')}
+                {new URL(external?.uri).hostname.replace(/^www\./, '')}
               </div>
               <div className="post-external-title">
-                {embed?.external?.title || embed?.external?.uri}
+                {external?.title || external?.uri}
               </div>
-              {embed?.external?.description &&
-                embed?.external?.description !== embed?.external?.title && (
+              {external?.description &&
+                external?.description !== external?.title && (
                   <div className="post-external-description">
-                    {embed?.external?.description}
+                    {external?.description}
                   </div>
                 )}
             </div>
