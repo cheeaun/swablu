@@ -288,9 +288,24 @@ export default function RichPost({
     }
   }
 
-  const hasQuoteOnly =
-    /embed\.record#/i.test(embed?.$type) &&
+  const hasQuote =
+    /embed\.record/i.test(embed?.$type) &&
     (embed.record?.value || embed.record?.record?.value);
+  const hasQuoteOnly = hasQuote && /embed\.record#/i.test(embed?.$type);
+  const embedWithQuoteOnly = hasQuote
+    ? {
+        ...embed,
+        media: undefined,
+        images: undefined,
+        playlist: undefined,
+      }
+    : embed;
+  const embedWithoutQuote = hasQuote
+    ? {
+        ...embed,
+        record: undefined,
+      }
+    : embed;
 
   return (
     <div
@@ -430,7 +445,7 @@ export default function RichPost({
           </Link>
         </div>
         <div className="post-body">
-          {hasQuoteOnly && <RichEmbed embed={embed} />}
+          {hasQuote && <RichEmbed embed={embedWithQuoteOnly} />}
           {!!richPost && (
             <div className="post-content">
               {!!parentAuthor?.did && parentAuthor?.did !== author?.did && (
@@ -448,7 +463,7 @@ export default function RichPost({
               detectedLangCode={showInlineTranslation.detectedLangCode}
             />
           )}
-          {!hasQuoteOnly && <RichEmbed embed={embed} />}
+          {!hasQuoteOnly && <RichEmbed embed={embedWithoutQuote} />}
           {embeds?.length > 0 && (
             <div className="post-embeds">
               {embeds.map((embed) => (

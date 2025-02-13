@@ -19,7 +19,9 @@ export default function RichEmbed({ embed }) {
   const hasImages =
     (/embed\.images/i.test(embed?.$type) && embed?.images) ||
     (embed?.media && /embed\.images/i.test(embed.media.$type));
-  const hasVideo = /embed\.video/i.test(embed?.$type) && embed?.playlist;
+  const hasVideo =
+    (/embed\.video/i.test(embed?.$type) && embed?.playlist) ||
+    (embed?.media && /embed\.video/i.test(embed.media.$type));
   const hasQuote =
     /embed\.record/i.test(embed?.$type) &&
     (embed.record?.value || embed.record?.record?.value);
@@ -348,6 +350,7 @@ document.addEventListener(
 );
 
 function Video({ embed }) {
+  if (embed?.media) embed = embed.media;
   const videoRef = useRef();
 
   // React's famous video[muted] bug
