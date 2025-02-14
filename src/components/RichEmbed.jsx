@@ -118,7 +118,14 @@ export default function RichEmbed({ embed }) {
             {external?.thumb && (
               <div className="post-external-thumb">
                 <img
-                  className=""
+                  className="post-external-thumb-bg"
+                  src={external?.thumb}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <img
                   src={external?.thumb}
                   alt=""
                   loading="lazy"
@@ -531,12 +538,14 @@ function StarterPackEmbed({ embed }) {
     >
       <div className="post-external-thumb">
         <img
-          className=""
+          className="post-external-thumb-bg"
           src={thumbURL}
           alt=""
           loading="lazy"
           decoding="async"
+          aria-hidden="true"
         />
+        <img src={thumbURL} alt="" loading="lazy" decoding="async" />
       </div>
       <div className="post-external-body">
         <div className="post-external-domain">bsky.app</div>

@@ -1162,6 +1162,7 @@ header {
       object-fit: cover;
       pointer-events: none;
       filter: blur(32px) opacity(0.5);
+      content-visibility: auto;
 
       + * {
         position: relative;
@@ -1244,6 +1245,18 @@ header {
       border-inline-end: var(--hairline-width) solid var(--border-strong-color);
       vertical-align: top;
       background: var(--checkerboard-bg);
+      overflow: hidden;
+
+      .post-external-thumb-bg {
+        position: absolute;
+        inset: -32px;
+        width: calc(100% + 32px + 32px);
+        height: calc(100% + 32px + 32px);
+        object-fit: cover;
+        filter: blur(32px);
+        pointer-events: none;
+        content-visibility: auto;
+      }
 
       img {
         position: absolute;
