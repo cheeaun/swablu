@@ -290,7 +290,10 @@ export default function RichPost({
 
   let hasQuote =
     /embed\.record/i.test(embed?.$type) &&
-    (embed.record?.value || embed.record?.record?.value);
+    (embed.record?.value ||
+      embed.record?.record?.value ||
+      embed.record?.notFound ||
+      embed.record?.blocked);
   const hasQuoteOnly = hasQuote && /embed\.record#/i.test(embed?.$type);
   let embedWithQuoteOnly = hasQuote
     ? {
