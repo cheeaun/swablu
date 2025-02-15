@@ -1860,6 +1860,10 @@ header {
         text-transform: lowercase;
       }
 
+      .profile-did {
+        color: inherit;
+      }
+
       .profile-puny,
       .profile-did {
         opacity: 0.6;

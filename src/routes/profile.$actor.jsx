@@ -195,7 +195,15 @@ export function Profile() {
                 @{trueHandle}
               </a>
               {handleHasPuny && <div className="profile-puny">{handle}</div>}
-              <div className="profile-did">{profileDid}</div>
+              <br />
+              <a
+                className="profile-did"
+                href={handleToPermalink(profileDid)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {profileDid}
+              </a>
               {!!(richDescription || description) && (
                 <div className="profile-description">
                   {richDescription || description}
