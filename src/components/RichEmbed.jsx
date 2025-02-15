@@ -155,6 +155,7 @@ export default function RichEmbed({ embed }) {
 }
 
 function Gif({ embed }) {
+  if (embed?.media) embed = embed.media;
   const gifRef = useRef();
 
   // React's famous video[muted] bug
