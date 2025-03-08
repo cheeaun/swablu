@@ -81,16 +81,21 @@ const throttle = pThrottle({
   limit: 1,
   interval: 1000,
 });
-const INSTANCE = 'lingva.phanpy.social';
-// e.g. /api/v1/:source/:target/:query
+const INSTANCE = 'simplytranslate.org';
 const translateText = throttle(async (text, { detectedLangCode }) => {
   if (!text) return null;
   if (!detectedLangCode) return null;
   console.log('TRANSLATE', { text, detectedLangCode });
   const result = await fetch(
-    `https://${INSTANCE}/api/v1/auto/${detectedLangCode}/${encodeURIComponent(text)}`,
+    `https://${INSTANCE}/api/translate?from=auto&to=en&text=${encodeURIComponent(
+      text,
+    )}`,
   );
   const json = await result.json();
-  if (json.info?.detectedSource === detectedLangCode) return null;
-  return json;
+  if (json?.source_language === detectedLangCode) {
+    return null;
+  }
+  return {
+    translation: json.translated_text,
+  };
 });
