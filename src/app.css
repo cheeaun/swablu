@@ -490,8 +490,12 @@ header {
     background-position: var(--line-position-start) 0;
   }
 
-  & + .post,
-  & + .post-reason + .post {
+  & ~ .post-parent {
+    background-position: var(--line-position-start) 0;
+  }
+
+  & ~ .post:last-child,
+  & + .post-reason ~ .post:last-child {
     background-image: linear-gradient(
       to right,
       var(--line-color),

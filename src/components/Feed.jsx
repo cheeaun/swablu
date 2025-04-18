@@ -142,6 +142,8 @@ function _FeedPage({ posts, context, reset, moderatePost, allowSubFeed }) {
     feed = subFeedify(feed);
   }
 
+  feed = threadifyFeed(feed);
+
   return feed.map((item) => {
     if (item?.kind === 'sub-feed') {
       const posts = item?.posts?.filter((item) => {
@@ -242,12 +244,13 @@ function _FeedItem(props) {
 
   const { post, reason, reply } = item;
 
-  const { root, parent, grandparentAuthor } = reply || {};
+  const { root, parent, _parents, grandparentAuthor } = reply || {};
   const showRoot =
     !reason && root?.cid && parent?.cid && root.cid !== parent.cid;
   const showViewThread =
     !reason && showRoot && parent?.record?.reply?.parent?.uri !== root?.uri;
-  const showParent = !reason && parent?.cid;
+  const showParents = !reason && !!_parents?.length;
+  const showParent = !reason && parent?.cid && !showParents;
 
   const threadSameAuthor =
     showRoot &&
@@ -263,6 +266,7 @@ function _FeedItem(props) {
       className={threadSameAuthor ? 'thread-same-author' : ''}
       {...otherProps}
     >
+      {/* {showRoot && <mark>R</mark>} */}
       {showRoot && <RichPost post={root} className="post-root" />}
       {showViewThread && (
         <div className="post-view-thread">
@@ -283,6 +287,7 @@ function _FeedItem(props) {
           </Link>
         </div>
       )}
+      {/* {showParent && <mark>P</mark>} */}
       {showParent && (
         <RichPost
           post={parent}
@@ -292,12 +297,27 @@ function _FeedItem(props) {
           }
         />
       )}
+      {/* {showParents && <mark>PS</mark>} */}
+      {showParents &&
+        _parents.map((parent, i) => (
+          <RichPost
+            key={parent.uri}
+            post={parent}
+            className="post-parent"
+            parentAuthor={
+              parent?.author?.did !== _parents[i - 1]?.author?.did &&
+              parent?.author?.did !== root?.author?.did &&
+              parent?.author
+            }
+          />
+        ))}
       <RichReason reason={reason} />
       <RichPost
         post={post}
         showFooter
         parentAuthor={
           !showParent &&
+          !showParents &&
           post?.record?.reply?.parent?.uri === parent?.uri &&
           parent?.author
         }
@@ -385,4 +405,51 @@ function feedMassage(feed, { context, reset, authDid }) {
     if (post?.embed?.record?.uri) store.add(post.embed.record.uri);
     return true;
   });
+}
+
+const sortPostsByCreatedAt = (a, b) => {
+  return new Date(a.record?.createdAt) - new Date(b.record?.createdAt);
+};
+
+function threadifyFeed(feed) {
+  const newFeed = [];
+  feed.forEach((item) => {
+    const { post, reply, reason, kind } = item;
+    const { root, parent } = reply || {};
+
+    const hasRoot = !!root?.uri;
+    if (reason || kind === 'sub-feed' || !hasRoot) {
+      newFeed.push(item);
+    } else {
+      const newFeedItemWithSameRoot =
+        hasRoot && newFeed.find((item) => item?.reply?.root?.uri === root?.uri);
+      if (newFeedItemWithSameRoot) {
+        newFeedItemWithSameRoot.reply._thread.push(post);
+      } else {
+        newFeed.push({
+          ...item,
+          reply: {
+            ...reply,
+            _thread: [parent, post],
+          },
+        });
+      }
+    }
+  });
+
+  newFeed.forEach((item) => {
+    if (item?.reply?._thread) {
+      item.reply._thread.sort(sortPostsByCreatedAt);
+      // Split [...parents, post] from _thread array
+      // post is the last item
+      const thread = item.reply._thread;
+      const parents = thread.slice(0, -1);
+      const post = thread[thread.length - 1];
+      item.reply._parents = parents;
+      item._post = { ...item.post }; // Backup post
+      item.post = post; // Override post
+    }
+  });
+
+  return newFeed;
 }
