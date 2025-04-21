@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from 'react-aria-components';
 import { toast } from 'sonner';
+import { lookup } from 'bcp-47-match';
 import { useAuth } from '../hooks/useAuth';
 import usePostMeta from '../hooks/usePostMeta';
 import { STAT_NUMBER_FORMAT } from '../utils/constants';
@@ -255,16 +256,13 @@ export default function RichPost({
     if (!langs?.length) return;
     const detectedLang = store.session.getJSON('detectedLang');
     if (!detectedLang?.length) return;
-    // TODO: Filter detected lang codes to the ones that engines can support
-    // But for now, let's do this the lazy hacky way
-    // Get the first 2-char code
-    const detectedLangCode = detectedLang.find((code) => code.length === 2);
-    if (!detectedLangCode) return;
-    // If there's one code in langs that's not in detectedLang, show inline translation
-    const containsDetectedLang = langs.find((code) =>
-      detectedLang.includes(code),
-    );
-    if (!containsDetectedLang) {
+    const detectedLangCode = lookup(detectedLang, langs);
+    console.log('detectedLangCode', {
+      detectedLang,
+      langs,
+      detectedLangCode,
+    });
+    if (!detectedLangCode) {
       setShowInlineTranslation({
         text,
         detectedLangCode,
