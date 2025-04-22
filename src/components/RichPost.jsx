@@ -256,13 +256,16 @@ export default function RichPost({
     if (!langs?.length) return;
     const detectedLang = store.session.getJSON('detectedLang');
     if (!detectedLang?.length) return;
-    const detectedLangCode = lookup(detectedLang, langs);
-    console.log('detectedLangCode', {
+    const detectedLangCode =
+      detectedLang.find((code) => code.length === 2) || detectedLang[0];
+    if (!detectedLangCode) return;
+    const containsDetectedLang = lookup(detectedLang, langs);
+    console.log('containsDetectedLang', {
       detectedLang,
       langs,
-      detectedLangCode,
+      containsDetectedLang,
     });
-    if (!detectedLangCode) {
+    if (!containsDetectedLang) {
       setShowInlineTranslation({
         text,
         detectedLangCode,
