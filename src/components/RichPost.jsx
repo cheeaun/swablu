@@ -480,6 +480,7 @@ export default function RichPost({
             to={`/post/${encodeURIComponent(postUri)}`}
             className="post-timestamp"
             state={{ post }}
+            resetScroll={false}
           >
             <TimeAgo dateTime={record?.createdAt} />
           </Link>
@@ -519,6 +520,7 @@ export default function RichPost({
                 to={`/post/${encodeURIComponent(postUri)}`}
                 className="post-reply-count"
                 state={{ post }}
+                resetScroll={false}
               >
                 <Plural value={replyCount} one="# reply" other="# replies" />
               </Link>
@@ -749,7 +751,12 @@ function PostActions({
       )}
       {!!postLink && (
         <TooltipTrigger delay={ACTIONS_TOOLTIP_DELAY}>
-          <RALink className="button" to={postLink} state={postState}>
+          <RALink
+            className="button"
+            to={postLink}
+            state={postState}
+            resetScroll={false}
+          >
             <IconArrowRight size={16} />
           </RALink>
           <Tooltip>
