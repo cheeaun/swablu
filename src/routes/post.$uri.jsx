@@ -5,14 +5,20 @@ import {
   IconArrowUp,
   IconArrowDown,
 } from '@tabler/icons-react';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createFileRoute,
   useParams,
   useRouterState,
   useRouter,
 } from '@tanstack/react-router';
-import { useLayoutEffect, useRef, useState, useCallback } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import { useTitle } from 'react-use';
 import AuthorText from '../components/AuthorText';
 import BackButton from '../components/BackButton';
@@ -42,6 +48,7 @@ export const Route = createFileRoute('/post/$uri')({
 export function Post() {
   const { t } = useLingui();
   const { agent } = useAuth();
+  const queryClient = useQueryClient();
   const placeholderPost = useRouterState({
     select: ({ location }) => location.state?.post,
   });
@@ -75,6 +82,28 @@ export function Post() {
   const thread = walkThread(post, _replies);
   const parents = walkParents(parent);
   console.log('POST THREAD', { parent, parents, post, thread });
+
+  const [moreThread, setMoreThread] = useState(null);
+  useEffect(() => {
+    console.log('THREAD', { thread });
+    if (thread[thread.length - 1]?.moreReplies) {
+      const uri = thread[thread.length - 1].post.uri;
+      // fetch more
+      (async () => {
+        const data = await queryClient.fetchQuery(
+          postQueryOptions({
+            agent,
+            uri,
+          }),
+        );
+        const post = data?.data?.thread?.post;
+        const _replies = data?.data?.thread?.replies;
+        const thread = walkThread(post, _replies);
+        console.log('POST THREAD MORE', { post, thread });
+        setMoreThread(thread);
+      })();
+    }
+  }, [thread[thread.length - 1]?.moreReplies]);
 
   const headerRef = useRef();
   const viewportRef = useRef();
@@ -204,6 +233,9 @@ export function Post() {
       <Parents parents={parents} />
       <div className="viewport" ref={viewportRef}>
         <Thread thread={thread} />
+        {moreThread && (
+          <Thread thread={moreThread} startIndex={thread.length} />
+        )}
       </div>
     </main>
   );
@@ -229,7 +261,7 @@ function Parents({ parents }) {
   );
 }
 
-function Thread({ thread }) {
+function Thread({ thread, startIndex = 0 }) {
   if (!thread?.length) return null;
 
   const onlyOneThread = thread.length === 1;
@@ -247,7 +279,7 @@ function Thread({ thread }) {
           if (e.shiftKey) console.log(th);
         }}
       >
-        <RichPost post={post} thread={i} />
+        <RichPost post={post} thread={i + startIndex} />
         <Replies
           replies={replies}
           open={onlyOneThread || (onlyOneReply && allRepliesCount < 5)}
@@ -477,9 +509,11 @@ function walkThread(post, replies = [], thread = []) {
       repliesByOthers.push(r);
     }
   }
+  const replyCount = post?.replyCount || 0;
   thread.push({
     post,
     replies: repliesByOthers,
+    moreReplies: replyCount > replies.length,
   });
   if (repliesBySameAuthor.length) {
     for (const r of repliesBySameAuthor) {
