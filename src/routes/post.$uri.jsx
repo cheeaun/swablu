@@ -24,7 +24,7 @@ const STALE_TIME = Number.POSITIVE_INFINITY;
 const postQueryOptions = ({ agent, uri }) =>
   queryOptions({
     queryKey: ['post', uri],
-    queryFn: () => agent.getPostThread({ uri, depth: 10, parentHeight: 100 }),
+    queryFn: () => agent.getPostThread({ uri, depth: 30, parentHeight: 100 }),
     staleTime: STALE_TIME,
   });
 
