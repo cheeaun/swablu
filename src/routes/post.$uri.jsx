@@ -86,7 +86,7 @@ export function Post() {
   const [moreThread, setMoreThread] = useState(null);
   useEffect(() => {
     console.log('THREAD', { thread });
-    if (thread[thread.length - 1]?.moreReplies) {
+    if (thread.length > 1 && thread[thread.length - 1]?.moreReplies) {
       const uri = thread[thread.length - 1].post.uri;
       // fetch more
       (async () => {
