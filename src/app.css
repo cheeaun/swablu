@@ -281,9 +281,7 @@ header {
 
         @media (width > calc(40em + 72px)) {
           --carousel-full-width: calc(100vw - 72px * 2);
-          --carousel-indent-start: calc(
-            (var(--carousel-full-width) - 100%) / 2
-          );
+          --carousel-indent-start: calc((var(--carousel-full-width) - 100%) / 2);
           width: var(--carousel-full-width);
           margin-inline-start: calc(var(--carousel-indent-start) * -1);
           padding-inline-start: var(--carousel-indent-start);
@@ -512,7 +510,9 @@ header {
   display: block;
   padding-block: var(--spacing);
   padding-inline-start: calc(
-    var(--spacing) + var(--avatar-side) + var(--avatar-gap)
+    var(--spacing) +
+    var(--avatar-side) +
+    var(--avatar-gap)
   );
   padding-inline-end: var(--spacing);
   background-image: linear-gradient(
@@ -613,7 +613,9 @@ header {
     margin-top: var(--avatar-top-margin);
     position: sticky;
     top: calc(
-      var(--header-height, 58px) + var(--bar-height, 0px) + var(--spacing)
+      var(--header-height, 58px) +
+      var(--bar-height, 0px) +
+      var(--spacing)
     );
 
     &:not(.post-author-following, .post-author-self) {
@@ -748,8 +750,10 @@ header {
       position: sticky;
       z-index: 1;
       top: calc(
-        var(--header-height, 58px) + var(--bar-height, 0px) +
-          var(--shift-position) + (var(--spacing) / 4)
+        var(--header-height, 58px) +
+        var(--bar-height, 0px) +
+        var(--shift-position) +
+        (var(--spacing) / 4)
       );
     }
   }
@@ -888,10 +892,7 @@ header {
     display: flex;
     overflow: hidden;
     white-space: pre-wrap;
-    transition:
-      margin-top 0.5s,
-      opacity 0.5s,
-      block-size 0.5s;
+    transition: margin-top 0.5s, opacity 0.5s, block-size 0.5s;
 
     svg {
       opacity: 0.6;
@@ -1014,7 +1015,9 @@ header {
     align-items: center;
     gap: calc(var(--spacing) / 2);
     --start-margin: calc(
-      var(--spacing) + var(--avatar-side) + var(--avatar-gap)
+      var(--spacing) +
+      var(--avatar-side) +
+      var(--avatar-gap)
     );
     --end-margin: var(--spacing);
     .post-quote & {
@@ -1416,7 +1419,10 @@ header {
     padding: 0;
     margin: 0;
     --line-position-start: calc(
-      var(--spacing) * var(--level) + var(--line-size) * (var(--level) - 1)
+      var(--spacing) *
+      var(--level) +
+      var(--line-size) *
+      (var(--level) - 1)
     );
     --curve-size: calc(var(--spacing) * 0.7);
     --pointer-top: calc(var(--spacing) + (22px / 2) - var(--curve-size));
@@ -1523,9 +1529,7 @@ header {
         opacity: 0;
         block-size: 0;
         overflow-y: clip;
-        transition:
-          content-visibility 0.5s allow-discrete,
-          opacity 0.5s,
+        transition: content-visibility 0.5s allow-discrete, opacity 0.5s,
           block-size 0.5s;
       }
       &[open]::details-content {
@@ -1583,11 +1587,8 @@ header {
         padding-block-end: calc(var(--spacing) / 2);
         margin-block-end: calc(var(--spacing) / 2);
 
-        transition:
-          content-visibility 0.5s allow-discrete,
-          opacity 0.5s,
-          block-size 0.5s,
-          inline-size 0.5s;
+        transition: content-visibility 0.5s allow-discrete, opacity 0.5s,
+          block-size 0.5s, inline-size 0.5s;
         @media (prefers-reduced-motion: no-preference) {
           interpolate-size: allow-keywords;
         }
@@ -2028,9 +2029,7 @@ header {
         inline-size: 0;
       }
 
-      transition:
-        opacity 0.5s,
-        inline-size 0.1s;
+      transition: opacity 0.5s, inline-size 0.1s;
       /* opacity 10s,
         inline-size 10s; */
     }
@@ -2127,11 +2126,8 @@ header {
 
   @media (prefers-reduced-motion: no-preference) {
     transition-behavior: allow-discrete;
-    transition:
-      block-size 0.3s,
-      inline-size 0.1s,
-      opacity 0.5s,
-      margin-bottom 0.3s;
+    transition: block-size 0.3s, inline-size 0.1s, opacity 0.5s, margin-bottom
+      0.3s;
   }
 
   @starting-style {
@@ -2186,11 +2182,8 @@ header {
     flex-direction: column;
     gap: var(--spacing);
     block-size: fit-content;
-    transition:
-      content-visibility 0.5s allow-discrete,
-      block-size 0.3s,
-      opacity 0.3s ease-in,
-      margin-bottom 0.3s;
+    transition: content-visibility 0.5s allow-discrete, block-size 0.3s, opacity
+      0.3s ease-in, margin-bottom 0.3s;
 
     @media (prefers-reduced-motion: no-preference) {
       interpolate-size: allow-keywords;
@@ -2556,9 +2549,7 @@ header {
         .post-immersive:not(.post-quote .post-immersive)
     ) {
     padding-block: 0 !important;
-    height: calc(
-      100svh - var(--nav-global-height, 0) - var(--header-height, 0)
-    );
+    height: calc(100svh - var(--nav-global-height, 0) - var(--header-height, 0));
     flex-shrink: 0;
     flex-grow: 1;
     scroll-snap-stop: always;

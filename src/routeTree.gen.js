@@ -10,17 +10,17 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SearchImport } from './routes/search'
-import { Route as NotificationsImport } from './routes/notifications'
-import { Route as LoginImport } from './routes/login'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
-import { Route as TagTagImport } from './routes/tag.$tag'
-import { Route as ProfileActorImport } from './routes/profile.$actor'
-import { Route as PostUriImport } from './routes/post.$uri'
-import { Route as ListUriImport } from './routes/list.$uri'
-import { Route as FeedUriImport } from './routes/feed.$uri'
+import { Route as rootRoute } from './routes/__root';
+import { Route as SearchImport } from './routes/search';
+import { Route as NotificationsImport } from './routes/notifications';
+import { Route as LoginImport } from './routes/login';
+import { Route as AboutImport } from './routes/about';
+import { Route as IndexImport } from './routes/index';
+import { Route as TagTagImport } from './routes/tag.$tag';
+import { Route as ProfileActorImport } from './routes/profile.$actor';
+import { Route as PostUriImport } from './routes/post.$uri';
+import { Route as ListUriImport } from './routes/list.$uri';
+import { Route as FeedUriImport } from './routes/feed.$uri';
 
 // Create/Update Routes
 
@@ -28,61 +28,61 @@ const SearchRoute = SearchImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRoute,
-})
+});
 
 const NotificationsRoute = NotificationsImport.update({
   id: '/notifications',
   path: '/notifications',
   getParentRoute: () => rootRoute,
-})
+});
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-})
+});
 
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRoute,
-})
+});
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-})
+});
 
 const TagTagRoute = TagTagImport.update({
   id: '/tag/$tag',
   path: '/tag/$tag',
   getParentRoute: () => rootRoute,
-})
+});
 
 const ProfileActorRoute = ProfileActorImport.update({
   id: '/profile/$actor',
   path: '/profile/$actor',
   getParentRoute: () => rootRoute,
-})
+});
 
 const PostUriRoute = PostUriImport.update({
   id: '/post/$uri',
   path: '/post/$uri',
   getParentRoute: () => rootRoute,
-})
+});
 
 const ListUriRoute = ListUriImport.update({
   id: '/list/$uri',
   path: '/list/$uri',
   getParentRoute: () => rootRoute,
-})
+});
 
 const FeedUriRoute = FeedUriImport.update({
   id: '/feed/$uri',
   path: '/feed/$uri',
   getParentRoute: () => rootRoute,
-})
+});
 
 // Create and export the route tree
 
@@ -97,9 +97,9 @@ const rootRouteChildren = {
   PostUriRoute: PostUriRoute,
   ProfileActorRoute: ProfileActorRoute,
   TagTagRoute: TagTagRoute,
-}
+};
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)
+export const routeTree = rootRoute._addFileChildren(rootRouteChildren);
 
 /* ROUTE_MANIFEST_START
 {

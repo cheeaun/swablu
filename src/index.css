@@ -10,11 +10,7 @@
   --spacing: 12px;
   --radius: 8px;
   --link-color: light-dark(RoyalBlue, SkyBlue);
-  --link-light-color: color-mix(
-    in srgb,
-    var(--link-color) 30%,
-    var(--bg-color)
-  );
+  --link-light-color: color-mix(in srgb, var(--link-color) 30%, var(--bg-color));
   --link-lighter-color: color-mix(
     in srgb,
     var(--link-color) 15%,
@@ -79,16 +75,8 @@ html[data-theme='dark'] {
 }
 
 body {
-  font-family:
-    ui-rounded,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Ubuntu,
-    Cantarell,
-    Noto Sans,
-    sans-serif;
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Ubuntu, Cantarell, Noto Sans, sans-serif;
   font-size: var(--text-size);
   margin: 0;
   padding: 0;
