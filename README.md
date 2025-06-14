@@ -40,7 +40,6 @@ Technologies
 - [Tiptap](https://tiptap.dev/product/editor) - Rich text editor
 - [react-use](https://github.com/streamich/react-use) - React hooks
 - [Biome](https://biomejs.dev/) - Code formatter & linter
-  - [Prettier](https://prettier.io/) - Code formatter for CSS because Biome doesn't support it yet
 
 Design
 ---
