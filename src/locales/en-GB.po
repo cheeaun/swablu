@@ -39,6 +39,7 @@ msgstr "{followersCount, plural, one {{0} follower} other {{1} followers}}"
 
 #: src/components/Feed.jsx
 #: src/routes/notifications.jsx
+#: src/routes/post.$uri.jsx
 msgid "More…"
 msgstr "More…"
 
@@ -251,6 +252,11 @@ msgstr "{0, plural, one {# reply} other {# replies}}"
 #: src/routes/post.$uri.jsx
 msgid "{allRepliesCount, plural, one {# comment} other {# comments}}"
 msgstr "{allRepliesCount, plural, one {# comment} other {# comments}}"
+
+#. placeholder {0}: count || allPosts.length
+#: src/routes/post.$uri.jsx
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, one {# quote} other {# quotes}}"
 
 #: src/routes/profile.$actor.jsx
 msgid "{followersCount, plural, one {# follower} other {# followers}}"

@@ -5,7 +5,12 @@ import {
   IconArrowUp,
   IconArrowDown,
 } from '@tabler/icons-react';
-import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   createFileRoute,
   useParams,
@@ -33,6 +38,14 @@ const postQueryOptions = ({ agent, uri }) =>
     queryFn: () => agent.getPostThread({ uri, depth: 30, parentHeight: 100 }),
     staleTime: STALE_TIME,
   });
+
+const quotesInfiniteQueryOptions = ({ agent, uri }) => ({
+  queryKey: ['quotes', uri],
+  queryFn: ({ pageParam }) =>
+    agent.app.bsky.feed.getQuotes({ uri, cursor: pageParam, limit: 100 }),
+  initialPageParam: undefined,
+  getNextPageParam: (lastPage) => lastPage?.data?.cursor,
+});
 
 export const Route = createFileRoute('/post/$uri')({
   // loader: ({ context, params }) =>
@@ -62,7 +75,7 @@ export function Post() {
     }),
   );
 
-  console.debug('POST DATA', { query });
+  console.debug('POST DATA', { query, data: query.data });
 
   const { data, error, isFetching, isStale, refetch } = query;
 
@@ -284,6 +297,7 @@ function Thread({ thread, startIndex = 0 }) {
           replies={replies}
           open={onlyOneThread || (onlyOneReply && allRepliesCount < 5)}
         />
+        <Quotes postUri={post.uri} count={post.quoteCount} />
       </div>
     );
   });
@@ -539,3 +553,119 @@ const detailsToggleStore = {
     this.cache.delete(key);
   },
 };
+
+function Quotes({ postUri, count }) {
+  const { agent } = useAuth();
+  const quotesQuery = useInfiniteQuery(
+    quotesInfiniteQueryOptions({
+      agent,
+      uri: postUri,
+    }),
+  );
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = quotesQuery;
+  const allPosts = data?.pages?.flatMap((page) => page?.data?.posts) || [];
+
+  allPosts.sort((a, b) => {
+    const aDate = new Date(a.record.createdAt);
+    const bDate = new Date(b.record.createdAt);
+    return aDate - bDate;
+  });
+
+  const router = useRouter();
+  const { latestLocation } = router;
+  const detailsRef = useRef();
+  const key = `quotes-${postUri}-${latestLocation.pathname}`;
+  const detailsDefaultOpen = useRef(detailsToggleStore.get(key));
+  useLayoutEffect(() => {
+    if (detailsRef.current && detailsDefaultOpen.current) {
+      detailsRef.current.open = true;
+    }
+  }, []);
+
+  const handleToggle = useCallback(
+    (e) => {
+      const open = e.currentTarget.open;
+      if (open) {
+        detailsToggleStore.set(key, open);
+      } else {
+        detailsToggleStore.del(key);
+        // Remove the default open state
+        detailsDefaultOpen.current = false;
+      }
+    },
+    [postUri, latestLocation],
+  );
+
+  if (!allPosts.length) return null;
+
+  return (
+    <details
+      ref={detailsRef}
+      className={`quotes-disclosure ${detailsDefaultOpen.current ? 'default-open' : ''}`}
+      onToggle={handleToggle}
+    >
+      <summary className="button">
+        <div className="quotes-preview">
+          <QuotesPreview posts={allPosts} />
+        </div>
+        <div>
+          <Plural
+            value={count || allPosts.length}
+            one="# quote"
+            other="# quotes"
+          />{' '}
+          <IconChevronDown className="arrow" size={16} />
+        </div>
+      </summary>
+      <div className="quotes-list">
+        <ul data-level="1">
+          {allPosts.map((post) => (
+            <li key={post.uri}>
+              <RichPost post={post} small context="quote" />
+            </li>
+          ))}
+        </ul>
+        {hasNextPage && (
+          <div className="quotes-more">
+            <button
+              type="button"
+              disabled={isFetchingNextPage}
+              onClick={(e) => {
+                e.preventDefault();
+                fetchNextPage();
+              }}
+            >
+              <Trans>More…</Trans>
+            </button>
+          </div>
+        )}
+      </div>
+    </details>
+  );
+}
+
+function QuotesPreview({ posts }) {
+  if (!posts?.length) return null;
+
+  // First 3 with posts text
+  const somePosts = posts.filter((r) => r.record.text).slice(0, 3);
+  return (
+    <ul>
+      {somePosts.map((post) => (
+        <li key={post.uri}>
+          <img
+            className="post-author-avatar"
+            src={post.author?.avatar}
+            alt=""
+            width={16}
+            height={16}
+            loading="lazy"
+            decoding="async"
+          />{' '}
+          {post.record.text}
+        </li>
+      ))}
+    </ul>
+  );
+}

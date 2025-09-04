@@ -1414,7 +1414,7 @@ header {
     text-align: center;
   }
 
-  .replies {
+  .replies, .quotes-list ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -1632,6 +1632,134 @@ header {
     &[open] > summary.button .arrow {
       transform: rotate(-180deg);
     }
+  }
+
+  .quotes-disclosure {
+    --level: 1;
+
+    &:not(.default-open) {
+      @media (prefers-reduced-motion: no-preference) {
+        interpolate-size: allow-keywords;
+      }
+      &::details-content {
+        opacity: 0;
+        block-size: 0;
+        overflow-y: clip;
+        transition: content-visibility 0.5s allow-discrete, opacity 0.5s,
+          block-size 0.5s;
+      }
+      &[open]::details-content {
+        overflow-y: initial;
+        opacity: 1;
+        block-size: auto;
+      }
+    }
+
+    padding: 0 var(--spacing) var(--spacing)
+      calc(var(--spacing) + var(--avatar-side) + var(--avatar-gap));
+
+    li > .post + & {
+      padding-inline: 0;
+
+      summary.button {
+        --summary-indent: calc(var(--line-position-start) + var(--spacing));
+        margin-inline-start: var(--summary-indent);
+        max-width: calc(100% - var(--summary-indent) - var(--spacing));
+      }
+    }
+
+    .thread ~ & {
+      padding-inline-start: var(--spacing);
+    }
+
+    & > summary.button {
+      max-width: 90%;
+      display: inline-block;
+      list-style: none;
+      justify-items: flex-start;
+      text-size-adjust: none;
+      --webkit-text-size-adjust: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      .insignificant {
+        font-weight: normal;
+      }
+
+      .arrow {
+        display: inline-block;
+        margin-inline-start: calc(var(--spacing) / 2);
+        opacity: 0.6;
+        transform-origin: 50% 45%;
+        transition: transform 0.3s ease-in-out;
+        vertical-align: middle;
+      }
+
+      .quotes-preview {
+        width: 100%;
+        border-bottom: var(--hairline-width) solid var(--border-color);
+        padding-block-end: calc(var(--spacing) / 2);
+        margin-block-end: calc(var(--spacing) / 2);
+
+        transition: content-visibility 0.5s allow-discrete, opacity 0.5s,
+          block-size 0.5s, inline-size 0.5s;
+        @media (prefers-reduced-motion: no-preference) {
+          interpolate-size: allow-keywords;
+        }
+        .quotes-disclosure[open] > summary > & {
+          /* display: none; */
+          margin-block-end: 0;
+          padding-block-end: 0;
+          border-bottom: none;
+          opacity: 0;
+          block-size: 0;
+          inline-size: 1em;
+          overflow-y: clip;
+        }
+
+        :where(ul, li) {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        li {
+          background-image: none;
+          font-weight: normal;
+          display: flex;
+          gap: calc(var(--spacing) / 2);
+          align-items: center;
+          padding-block: calc(var(--spacing) / 4);
+          opacity: 0.8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: small;
+
+          &:before {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &[open] > summary.button .arrow {
+      transform: rotate(-180deg);
+    }
+
+    li > .post {
+      .post-quote {
+        display: none;
+      }
+    }
+  }
+
+  .quotes-more {
+    padding-inline-start: calc(2 * var(--spacing));
+    margin-block-start: calc(var(--spacing) * -1);
+    position: relative;
   }
 
   .minimap {
