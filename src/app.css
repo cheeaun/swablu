@@ -2104,6 +2104,10 @@ header {
           display: inline-block;
           width: 12px;
           height: 12px;
+
+          svg + svg {
+            opacity: 0.5;
+          }
         }
         &.follow .notification-icon {
           color: var(--orange-color);
@@ -2113,10 +2117,12 @@ header {
           color: var(--blue-color);
         }
         &.quote .notification-icon,
-        &.repost .notification-icon {
+        &.repost .notification-icon,
+        &.repost-via-repost .notification-icon {
           color: var(--green-color);
         }
-        &.like .notification-icon {
+        &.like .notification-icon,
+        &.like-via-repost .notification-icon {
           color: var(--red-color);
         }
       }

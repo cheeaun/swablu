@@ -88,7 +88,19 @@ export function Notifications() {
   const notificationIcon = (reason) => {
     return {
       repost: <IconRepeat size={12} stroke="4" />,
+      'repost-via-repost': (
+        <>
+          <IconRepeat size={12} stroke="4" />
+          <IconRepeat size={12} stroke="4" />
+        </>
+      ),
       like: <IconHeartFilled size={12} />,
+      'like-via-repost': (
+        <>
+          <IconHeartFilled size={12} />
+          <IconRepeat size={12} stroke="4" />
+        </>
+      ),
       reply: <IconMessageCircleFilled size={12} />,
       mention: <IconMessageCircleFilled size={12} />,
       quote: <IconQuoteFilled size={12} />,
