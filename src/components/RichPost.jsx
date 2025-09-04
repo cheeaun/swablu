@@ -254,6 +254,7 @@ export default function RichPost({
   const [showInlineTranslation, setShowInlineTranslation] = useState(null);
   useEffect(() => {
     if (!langs?.length) return;
+    return; // TODO: disable for now, revisit later
     const detectedLang = store.session.getJSON('detectedLang');
     if (!detectedLang?.length) return;
     const detectedLangCode =
