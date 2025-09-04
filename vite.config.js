@@ -112,7 +112,7 @@ export default defineConfig({
             return 'video';
           }
           // Editor stuff
-          if (/(prosemirror|tiptap|popperjs|tippy)/i.test(id)) {
+          if (/(prosemirror|tiptap|popperjs|tippy|floating)/i.test(id)) {
             return 'editor';
           }
           // The rest

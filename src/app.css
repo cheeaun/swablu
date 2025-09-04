@@ -2371,6 +2371,7 @@ header {
   overflow: auto;
   padding: calc(var(--spacing) / 2);
   position: relative;
+  z-index: 9999;
 
   &:empty {
     display: none;

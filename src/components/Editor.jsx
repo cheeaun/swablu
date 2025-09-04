@@ -1,12 +1,12 @@
-import { ReactRenderer } from '@tiptap/react';
+import { computePosition, flip, shift } from '@floating-ui/dom';
+import { posToDOMRect, ReactRenderer } from '@tiptap/react';
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import HardBreak from '@tiptap/extension-hard-break';
-import { EditorContent, useEditor } from '@tiptap/react';
-import Placeholder from '@tiptap/extension-placeholder';
-import History from '@tiptap/extension-history';
 import Mention from '@tiptap/extension-mention';
+import { Placeholder, UndoRedo } from '@tiptap/extensions';
+import { EditorContent, useEditor } from '@tiptap/react';
 import {
   useState,
   useEffect,
@@ -14,7 +14,6 @@ import {
   useImperativeHandle,
   Fragment,
 } from 'react';
-import tippy from 'tippy.js';
 
 import { TAG_REGEX, URL_REGEX } from '@atproto/api';
 import AuthorText from './AuthorText';
@@ -46,7 +45,7 @@ export default function Editor({
       Paragraph,
       CustomHardBreak,
       Text,
-      History,
+      UndoRedo,
       HighlightRegex.configure({
         rules: [
           {
@@ -158,6 +157,28 @@ const MentionList = forwardRef((props, ref) => {
   );
 });
 
+const updatePosition = (editor, element) => {
+  const virtualElement = {
+    getBoundingClientRect: () =>
+      posToDOMRect(
+        editor.view,
+        editor.state.selection.from,
+        editor.state.selection.to,
+      ),
+  };
+
+  computePosition(virtualElement, element, {
+    placement: 'bottom-start',
+    strategy: 'absolute',
+    middleware: [shift(), flip()],
+  }).then(({ x, y, strategy }) => {
+    element.style.width = 'max-content';
+    element.style.position = strategy;
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+  });
+};
+
 function render() {
   let component;
   let popup;
@@ -173,15 +194,11 @@ function render() {
         return;
       }
 
-      popup = tippy('body', {
-        getReferenceClientRect: props.clientRect,
-        appendTo: () => document.body,
-        content: component.element,
-        showOnCreate: true,
-        interactive: true,
-        trigger: 'manual',
-        placement: 'bottom-start',
-      });
+      component.element.style.position = 'absolute';
+
+      document.body.appendChild(component.element);
+
+      updatePosition(props.editor, component.element);
     },
 
     onUpdate(props) {
@@ -191,14 +208,12 @@ function render() {
         return;
       }
 
-      popup[0].setProps({
-        getReferenceClientRect: props.clientRect,
-      });
+      updatePosition(props.editor, component.element);
     },
 
     onKeyDown(props) {
       if (props.event.key === 'Escape') {
-        popup[0].hide();
+        component.destroy();
 
         return true;
       }
@@ -207,7 +222,7 @@ function render() {
     },
 
     onExit() {
-      popup[0].destroy();
+      component.element.remove();
       component.destroy();
     },
   };

@@ -2,7 +2,7 @@ import { Plural, useLingui } from '@lingui/react/macro';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import punycode from 'punycode';
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import {
   Tooltip,
   Link as TooltipLink,
@@ -121,6 +121,10 @@ export default function AuthorText({
 
   if (as) {
     const Component = as;
+    // If component is a fragment, don't need className
+    if (Component === Fragment) {
+      return <Component>{linkChildren}</Component>;
+    }
     return (
       <Component className={className || undefined}>{linkChildren}</Component>
     );
